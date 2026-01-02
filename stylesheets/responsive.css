@@ -1,0 +1,530 @@
+/*
+    ╔═══════════════════════════════════════════════════╗
+    ║  📱 RESPONSIVE DESIGN                             ║
+    ║  Mobile-First Responsive Styles                  ║
+    ║                                                   ║
+    ║  Entwickler: Nico Kaschube                       ║
+    ║  Berufsbildungswerk im Oberlinhaus Potsdam | 2025║
+    ╚═══════════════════════════════════════════════════╝
+*/
+
+/* ========================================
+   MOBILE BREAKPOINTS
+   ======================================== */
+:root {
+    --mobile-s: 320px;
+    --mobile-m: 375px;
+    --mobile-l: 425px;
+    --tablet: 768px;
+    --laptop: 1024px;
+    --laptop-l: 1440px;
+    --desktop: 2560px;
+}
+
+/* ========================================
+   HAMBURGER MENU
+   ======================================== */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 10001;
+}
+
+.mobile-menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background: var(--text-primary, #e0aaff);
+    border-radius: 3px;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translateY(10px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translateY(-10px);
+}
+
+/* ========================================
+   MOBILE NAVIGATION OVERLAY
+   ======================================== */
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.98);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    padding: 80px 20px 20px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mobile-nav-menu li {
+    transform: translateX(-50px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-overlay.active .mobile-nav-menu li {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.mobile-nav-overlay.active .mobile-nav-menu li:nth-child(1) { transition-delay: 0.1s; }
+.mobile-nav-overlay.active .mobile-nav-menu li:nth-child(2) { transition-delay: 0.2s; }
+.mobile-nav-overlay.active .mobile-nav-menu li:nth-child(3) { transition-delay: 0.3s; }
+.mobile-nav-overlay.active .mobile-nav-menu li:nth-child(4) { transition-delay: 0.4s; }
+.mobile-nav-overlay.active .mobile-nav-menu li:nth-child(5) { transition-delay: 0.5s; }
+
+.mobile-nav-menu a {
+    display: block;
+    padding: 18px 24px;
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    border-radius: 12px;
+    color: var(--text-primary, #e0aaff);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-menu a:hover,
+.mobile-nav-menu a:active {
+    background: rgba(157, 77, 221, 0.2);
+    border-color: var(--accent, #9d4edd);
+    transform: translateX(10px);
+}
+
+/* ========================================
+   TOUCH-FRIENDLY BUTTONS
+   ======================================== */
+@media (max-width: 768px) {
+    .btn, .btn-primary, .btn-secondary, .btn-success,
+    button, input[type="button"], input[type="submit"] {
+        min-height: 44px; /* Apple's recommended touch target */
+        min-width: 44px;
+        padding: 14px 24px;
+        font-size: 1.05rem;
+    }
+
+    /* Größere Inputs für Touch */
+    input, textarea, select {
+        min-height: 44px;
+        font-size: 16px !important; /* Verhindert Zoom auf iOS */
+        padding: 12px 16px;
+    }
+
+    textarea {
+        min-height: 120px;
+    }
+}
+
+/* ========================================
+   MOBILE: < 768px
+   ======================================== */
+@media (max-width: 768px) {
+    /* Hamburger Menu anzeigen */
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    /* Desktop-Navigation ausblenden */
+    .nav-menu {
+        display: none;
+    }
+
+    /* Header anpassen */
+    header, .main-header, .game-header, .timer-header {
+        padding: 1rem !important;
+        flex-wrap: wrap;
+    }
+
+    .nav-container {
+        flex-wrap: wrap;
+    }
+
+    .nav-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-logo {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Container anpassen */
+    .container {
+        padding: 1rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Grid-Layouts */
+    .game-grid, .tools-grid, .features-grid,
+    .main-grid, .setup-grid, .input-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    /* Karten anpassen */
+    .card, .panel, .game-card, .tool-card {
+        padding: 1.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        padding: 3rem 1rem !important;
+        min-height: auto !important;
+    }
+
+    .hero-title {
+        font-size: 2rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+    }
+
+    /* Typography */
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    h3 {
+        font-size: 1.2rem !important;
+    }
+
+    /* Tabs */
+    .tabs {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .tab {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 140px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 10px !important;
+        max-height: 90vh !important;
+        overflow-y: auto !important;
+    }
+
+    /* Tables */
+    table {
+        font-size: 0.85rem;
+    }
+
+    th, td {
+        padding: 8px !important;
+    }
+
+    /* Button Groups */
+    .button-group {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .button-group .btn {
+        width: 100% !important;
+    }
+
+    /* Timer Display */
+    .timer-display {
+        font-size: 4rem !important;
+    }
+
+    .letter-display {
+        font-size: 5rem !important;
+    }
+
+    /* Result Display */
+    .result-display {
+        min-height: 200px !important;
+        padding: 20px !important;
+    }
+
+    /* Auth Buttons */
+    .nav-auth {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .user-display {
+        font-size: 0.9rem;
+    }
+}
+
+/* ========================================
+   TABLET: 768px - 1024px
+   ======================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    .game-grid, .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .setup-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ========================================
+   LANDSCAPE MOBILE
+   ======================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto !important;
+        padding: 2rem 1rem !important;
+    }
+
+    .timer-display {
+        font-size: 3rem !important;
+    }
+
+    .letter-display {
+        font-size: 4rem !important;
+    }
+
+    .modal-content {
+        max-height: 80vh !important;
+    }
+}
+
+/* ========================================
+   SMALL MOBILE: < 375px
+   ======================================== */
+@media (max-width: 375px) {
+    html {
+        font-size: 14px; /* Base font kleiner */
+    }
+
+    .btn, .btn-primary {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+
+    .card, .panel {
+        padding: 1rem !important;
+    }
+
+    .hero-title {
+        font-size: 1.6rem !important;
+    }
+
+    .nav-brand {
+        font-size: 1rem;
+    }
+
+    .nav-logo {
+        width: 30px;
+        height: 30px;
+    }
+
+    .timer-display {
+        font-size: 3rem !important;
+    }
+
+    .letter-display {
+        font-size: 4rem !important;
+    }
+
+    .tab {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+}
+
+/* ========================================
+   LARGE SCREENS: > 1440px
+   ======================================== */
+@media (min-width: 1441px) {
+    .container {
+        max-width: 1600px;
+    }
+
+    .game-grid, .tools-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.8rem;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+    .page-loader,
+    .mobile-menu-toggle,
+    .mobile-nav-overlay,
+    header,
+    .nav-menu,
+    .btn,
+    button {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .card, .panel {
+        border: 1px solid #000 !important;
+        page-break-inside: avoid;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --text-primary: #ffffff;
+        --bg-primary: #000000;
+        --border: #ffffff;
+    }
+
+    .btn, .card, .panel {
+        border: 2px solid #ffffff !important;
+    }
+}
+
+/* Dark Mode Preference */
+@media (prefers-color-scheme: light) {
+    /* Light mode wird separat im theme-toggle behandelt */
+}
+
+/* ========================================
+   HOVER SUPPORT CHECK
+   ======================================== */
+@media (hover: none) {
+    /* Keine Hover-Effekte auf Touch-Geräten */
+    .card:hover,
+    .btn:hover,
+    .panel:hover {
+        transform: none !important;
+    }
+
+    /* Stattdessen :active verwenden */
+    .card:active,
+    .btn:active,
+    .panel:active {
+        transform: scale(0.98);
+    }
+}
+
+/* ========================================
+   FOLDABLE DEVICES
+   ======================================== */
+@media (max-width: 280px) {
+    /* Galaxy Fold und ähnliche */
+    html {
+        font-size: 12px;
+    }
+
+    .hero-title {
+        font-size: 1.4rem !important;
+    }
+
+    .btn {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+/* ========================================
+   STICKY POSITIONING FIX
+   ======================================== */
+@supports (position: sticky) {
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+}

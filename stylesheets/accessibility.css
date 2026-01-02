@@ -1,0 +1,511 @@
+/*
+    ╔═══════════════════════════════════════════════════╗
+    ║  ♿ ACCESSIBILITY (WCAG 2.1 AA)                   ║
+    ║  Barrierefreie Styles & Screen-Reader Support    ║
+    ║                                                   ║
+    ║  Entwickler: Nico Kaschube                       ║
+    ║  Berufsbildungswerk im Oberlinhaus Potsdam | 2025║
+    ╚═══════════════════════════════════════════════════╝
+*/
+
+/* ========================================
+   SKIP NAVIGATION LINK
+   ======================================== */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #9d4edd;
+    color: #ffffff;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-weight: 700;
+    z-index: 100000;
+    border-radius: 0 0 8px 0;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid #e0aaff;
+    outline-offset: 2px;
+}
+
+/* ========================================
+   FOCUS INDICATORS (WCAG 2.4.7)
+   ======================================== */
+*:focus {
+    outline: 2px solid #e0aaff;
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 3px solid #e0aaff;
+    outline-offset: 3px;
+}
+
+/* Bessere Focus-Indikatoren für interaktive Elemente */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid #e0aaff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px rgba(224, 170, 255, 0.3);
+}
+
+/* ========================================
+   KEYBOARD NAVIGATION
+   ======================================== */
+.keyboard-nav-active *:focus {
+    outline: 3px dashed #e0aaff !important;
+    outline-offset: 4px !important;
+}
+
+/* ========================================
+   CONTRAST IMPROVEMENTS (WCAG 1.4.3)
+   ======================================== */
+:root {
+    /* Hoher Kontrast */
+    --text-high-contrast: #ffffff;
+    --bg-high-contrast: #000000;
+    --link-color: #b8a3ff; /* 4.5:1 Kontrast */
+}
+
+/* Text Kontrast verbessern */
+.high-contrast {
+    --text-primary: #ffffff !important;
+    --text-secondary: #f0f0f0 !important;
+    --bg-primary: #000000 !important;
+    --bg-secondary: #1a1a1a !important;
+}
+
+.high-contrast .btn,
+.high-contrast .card,
+.high-contrast .panel {
+    border: 2px solid #ffffff !important;
+}
+
+/* ========================================
+   SCREEN READER ONLY TEXT
+   ======================================== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: initial;
+    margin: initial;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ========================================
+   ARIA LIVE REGIONS
+   ======================================== */
+[aria-live="polite"],
+[aria-live="assertive"] {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.live-region-visible {
+    position: static;
+    left: auto;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
+
+/* ========================================
+   BUTTON & LINK ACCESSIBILITY
+   ======================================== */
+button,
+.btn,
+a {
+    min-height: 44px;
+    min-width: 44px; /* WCAG 2.5.5 Target Size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Link Kontrast */
+a {
+    color: #b8a3ff;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+}
+
+a:hover {
+    color: #e0aaff;
+    text-decoration-thickness: 3px;
+}
+
+a:focus {
+    background: rgba(184, 163, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+/* ========================================
+   FORM ACCESSIBILITY
+   ======================================== */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #ffffff; /* Hoher Kontrast */
+}
+
+input,
+textarea,
+select {
+    border: 2px solid #c77dff;
+}
+
+input:invalid,
+textarea:invalid,
+select:invalid {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+
+input:valid,
+textarea:valid,
+select:valid {
+    border-color: #38ef7d;
+}
+
+.form-error {
+    color: #ff6b6b;
+    font-weight: 600;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-error::before {
+    content: "⚠️";
+}
+
+.form-success {
+    color: #38ef7d;
+    font-weight: 600;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.form-success::before {
+    content: "✓";
+}
+
+/* Required Indicator */
+.required::after {
+    content: " *";
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* ========================================
+   TABLE ACCESSIBILITY
+   ======================================== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    font-weight: 700;
+    background: rgba(157, 77, 221, 0.3);
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid #c77dff;
+}
+
+caption {
+    caption-side: top;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #e0aaff;
+    text-align: left;
+}
+
+/* ========================================
+   HEADING HIERARCHY
+   ======================================== */
+h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    line-height: 1.3;
+    margin-bottom: 0.875rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: 0.625rem;
+}
+
+/* ========================================
+   TEXT SIZING & SPACING (WCAG 1.4.12)
+   ======================================== */
+body {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+}
+
+p {
+    margin-bottom: 1em;
+    max-width: 70ch; /* Lesbarkeit */
+}
+
+/* ========================================
+   COLOR BLIND MODES
+   ======================================== */
+.deuteranopia {
+    filter: url('#deuteranopia-filter');
+}
+
+.protanopia {
+    filter: url('#protanopia-filter');
+}
+
+.tritanopia {
+    filter: url('#tritanopia-filter');
+}
+
+/* ========================================
+   REDUCED MOTION (WCAG 2.3.3)
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .page-loader {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   HIGH CONTRAST MODE
+   ======================================== */
+@media (prefers-contrast: high) {
+    :root {
+        --text-primary: #ffffff;
+        --text-secondary: #ffffff;
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --border: #ffffff;
+    }
+
+    * {
+        border-color: #ffffff !important;
+    }
+
+    .btn,
+    .card,
+    .panel {
+        border: 3px solid #ffffff !important;
+    }
+}
+
+/* ========================================
+   FOCUS TRAP für Modals
+   ======================================== */
+.modal-open {
+    overflow: hidden;
+}
+
+.modal-open .modal {
+    overflow-y: auto;
+}
+
+/* ========================================
+   ERROR & SUCCESS PATTERNS
+   ======================================== */
+[role="alert"] {
+    padding: 16px;
+    border-left: 4px solid #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    margin: 16px 0;
+    border-radius: 4px;
+}
+
+[role="status"] {
+    padding: 16px;
+    border-left: 4px solid #38ef7d;
+    background: rgba(56, 239, 125, 0.1);
+    margin: 16px 0;
+    border-radius: 4px;
+}
+
+/* ========================================
+   LANDMARK ROLES
+   ======================================== */
+[role="banner"],
+[role="navigation"],
+[role="main"],
+[role="complementary"],
+[role="contentinfo"] {
+    display: block;
+}
+
+/* ========================================
+   DISABLED STATES
+   ======================================== */
+:disabled,
+[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+button:disabled,
+.btn:disabled {
+    background: #666666 !important;
+    color: #999999 !important;
+    border-color: #666666 !important;
+}
+
+/* ========================================
+   TOOLTIPS ACCESSIBILITY
+   ======================================== */
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.95);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    border: 1px solid #e0aaff;
+}
+
+/* ========================================
+   PROGRESS INDICATORS
+   ======================================== */
+progress {
+    width: 100%;
+    height: 24px;
+    border-radius: 12px;
+    border: 2px solid #c77dff;
+}
+
+progress::-webkit-progress-bar {
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 12px;
+}
+
+progress::-webkit-progress-value {
+    background: linear-gradient(45deg, #e0aaff, #9d4edd);
+    border-radius: 12px;
+}
+
+progress::-moz-progress-bar {
+    background: linear-gradient(45deg, #e0aaff, #9d4edd);
+    border-radius: 12px;
+}
+
+/* ========================================
+   NOTIFICATION ACCESSIBILITY
+   ======================================== */
+.notification[role="alert"] {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    min-width: 300px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: rgba(26, 26, 26, 0.95);
+    border: 2px solid #e0aaff;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   PRINT ACCESSIBILITY
+   ======================================== */
+@media print {
+    .skip-link,
+    .sr-only,
+    [aria-hidden="true"] {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    a {
+        color: #0000EE !important;
+        text-decoration: underline !important;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.875em;
+    }
+}

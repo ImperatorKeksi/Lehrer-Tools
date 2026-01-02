@@ -1,0 +1,490 @@
+/*
+    ╔═══════════════════════════════════════════════════╗
+    ║  📱 PWA STYLES                                    ║
+    ║  Install Banners, Offline Indicators, Updates    ║
+    ║                                                   ║
+    ║  Entwickler: Nico Kaschube                       ║
+    ║  Berufsbildungswerk im Oberlinhaus Potsdam | 2025║
+    ╚═══════════════════════════════════════════════════╝
+*/
+
+/* ========================================
+   INSTALL BANNER ANIMATIONS
+   ======================================== */
+@keyframes slideInUp {
+    from {
+        transform: translate(-50%, 100px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, 100px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translate(-50%, -100px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   ONLINE/OFFLINE INDICATOR
+   ======================================== */
+.online-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    z-index: 10002;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.online-status.online {
+    background: rgba(56, 239, 125, 0.15);
+    border: 1px solid #38ef7d;
+    color: #38ef7d;
+}
+
+.online-status.offline {
+    background: rgba(255, 87, 87, 0.15);
+    border: 1px solid #ff5757;
+    color: #ff5757;
+}
+
+.online-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.online-status.online .online-status-dot {
+    background: #38ef7d;
+    box-shadow: 0 0 10px #38ef7d;
+}
+
+.online-status.offline .online-status-dot {
+    background: #ff5757;
+    box-shadow: 0 0 10px #ff5757;
+}
+
+/* ========================================
+   INSTALL BUTTON (Alternative Style)
+   ======================================== */
+.install-btn-fab {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow: 0 8px 24px rgba(157, 77, 221, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease-out, float 3s ease-in-out infinite;
+}
+
+.install-btn-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 12px 32px rgba(157, 77, 221, 0.6);
+}
+
+.install-btn-fab:active {
+    transform: scale(0.95);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ========================================
+   UPDATE BADGE
+   ======================================== */
+.update-badge {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(56, 239, 125, 0.4);
+    cursor: pointer;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideInRight 0.5s ease-out, glow-pulse 2s ease-in-out infinite;
+}
+
+.update-badge:hover {
+    transform: scale(1.05);
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        box-shadow: 0 8px 24px rgba(56, 239, 125, 0.4);
+    }
+    50% {
+        box-shadow: 0 8px 32px rgba(56, 239, 125, 0.7);
+    }
+}
+
+/* ========================================
+   OFFLINE OVERLAY
+   ======================================== */
+.offline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.offline-content {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+}
+
+.offline-icon {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.offline-title {
+    font-size: 2rem;
+    color: #e0aaff;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.offline-text {
+    font-size: 1.1rem;
+    color: #c77dff;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.offline-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.offline-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(157, 77, 221, 0.5);
+}
+
+/* ========================================
+   SYNC INDICATOR
+   ======================================== */
+.sync-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid #38ef7d;
+    border-radius: 30px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10001;
+    animation: slideInUp 0.5s ease-out;
+}
+
+.sync-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(56, 239, 125, 0.3);
+    border-top-color: #38ef7d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.sync-text {
+    color: #38ef7d;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================
+   PERMISSION PROMPT
+   ======================================== */
+.permission-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(26, 26, 26, 0.98);
+    border: 2px solid #667eea;
+    border-radius: 16px;
+    padding: 20px;
+    max-width: 400px;
+    z-index: 10000;
+    animation: slideInUp 0.5s ease-out;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+}
+
+.permission-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.permission-title {
+    color: #e0aaff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.permission-text {
+    color: #c77dff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.permission-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.permission-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.permission-allow {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.permission-allow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(157, 77, 221, 0.4);
+}
+
+.permission-deny {
+    background: rgba(255, 255, 255, 0.1);
+    color: #c77dff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.permission-deny:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+    .install-banner {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none !important;
+        max-width: none !important;
+    }
+
+    .online-status {
+        top: 60px;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+
+    .install-btn-fab {
+        bottom: 70px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .update-badge {
+        top: 60px;
+        right: 10px;
+        font-size: 0.8rem;
+        padding: 8px 16px;
+    }
+
+    .offline-content {
+        padding: 20px;
+    }
+
+    .offline-icon {
+        font-size: 3.5rem;
+    }
+
+    .offline-title {
+        font-size: 1.5rem;
+    }
+
+    .offline-text {
+        font-size: 1rem;
+    }
+
+    .permission-prompt {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+        max-width: none;
+    }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+    .install-banner,
+    .online-status,
+    .install-btn-fab,
+    .update-badge,
+    .offline-overlay,
+    .sync-indicator,
+    .permission-prompt {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    .install-banner,
+    .online-status,
+    .install-btn-fab,
+    .update-badge,
+    .sync-indicator,
+    .permission-prompt {
+        animation: none !important;
+    }
+
+    .online-status-dot,
+    .sync-spinner,
+    .offline-icon {
+        animation: none !important;
+    }
+
+    * {
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ========================================
+   HIGH CONTRAST MODE
+   ======================================== */
+@media (prefers-contrast: high) {
+    .install-banner,
+    .permission-prompt {
+        border-width: 3px;
+    }
+
+    .online-status {
+        border-width: 2px;
+    }
+}
+
+/* ========================================
+   DARK MODE (Additional Support)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+    /* Already optimized for dark */
+}
+
+@media (prefers-color-scheme: light) {
+    .install-banner,
+    .permission-prompt {
+        background: rgba(255, 255, 255, 0.98);
+        color: #1a1a1a;
+    }
+
+    .install-text strong,
+    .permission-title {
+        color: #667eea;
+    }
+
+    .install-text small,
+    .permission-text {
+        color: #764ba2;
+    }
+}

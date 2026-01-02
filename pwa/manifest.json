@@ -1,0 +1,27 @@
+{
+  "name": "Lehrer Tools - Oberlinhaus",
+  "short_name": "Lehrer Tools",
+  "description": "Digitale Werkzeuge für Lehrer: Jeopardy Quiz, Timer & mehr",
+  "start_url": "../seiten/index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#9d4edd",
+  "orientation": "any",
+  "scope": "../",
+  "lang": "de",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "../icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "../icons/logo-simple.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
