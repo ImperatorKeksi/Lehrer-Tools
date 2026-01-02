@@ -1124,6 +1124,7 @@
                     <a href="#games" class="btn btn-primary">Zu den Spielen</a>
                     <a href="#tools" class="btn btn-primary">Zu den Tools</a>
                     <a href="#about" class="btn btn-secondary">Mehr erfahren</a>
+                    <button id="openFeedbackBtn" class="btn btn-secondary" type="button">Feedback geben</button>
                 </div>
             </div>
         </section>
@@ -1275,15 +1276,55 @@
     <div class="section-container">
         <h2 class="section-title">Changelog</h2>
         <p class="section-subtitle">Alle Änderungen und Verbesserungen im Überblick</p>
+        <div class="changelog-beta-hint" style="background:rgba(60,30,90,0.85);color:#e0c3fc;padding:1.2rem 1.7rem;border-radius:14px;border:1.5px solid #a259ec;margin-bottom:2rem;box-shadow:0 2px 16px 0 rgba(130,80,220,0.10);font-size:1.13rem;line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;">
+            <span style="font-weight:700;color:#c77dff;letter-spacing:0.5px;">Beta-Hinweis:</span> Diese Anwendung befindet sich noch in der <b style="color:#fff;">Beta-Phase</b>.<br>
+            Es sind noch nicht alle Funktionen fertiggestellt und es können Fehler auftreten.<br>
+            Wenn Sie einen Fehler finden, melden Sie ihn gerne über 
+            <a href="#" onclick="document.getElementById('feedbackModal').classList.remove('hidden');document.body.classList.add('modal-open');return false;" style="color:#a259ec;text-decoration:underline;font-weight:600;">Feedback geben</a>.
+        </div>
         <div class="games-grid">
-            <!-- Version 1.2.0 -->
+            
+            <!-- Version 1.1.3 (Aktuelle Version) -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">💬</div>
+                    <span class="game-badge">Aktuelle Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.3 – 02.01.2026</h3>
+                    <p class="game-description">Feedback-System und E-Mail-Integration für Kontakt und Bug-Reports.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Feedback-Button & Modal</span>
+                        <span class="feature-tag">Bezug-Auswahl mit Emojis</span>
+                        <span class="feature-tag">Feedback-Typen mit Emojis</span>
+                        <span class="feature-tag">Dringlichkeits-Auswahl bei Fehlern</span>
+                        <span class="feature-tag">Modernes, validiertes Formular</span>
+                        <span class="feature-tag">Feedback per E-Mail (PHPMailer)</span>
+                        <span class="feature-tag">Absenderadresse gefixt</span>
+                        <span class="feature-tag">Portfolio-Kontakt sendet E-Mail</span>
+                        <span class="feature-tag">Head-Bereich & Titel auf allen Seiten vereinheitlicht</span>
+                        <span class="feature-tag">Performance und Sicherheit verbessert und bearbeitet</span>
+
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat"><span class="stat-icon">💬</span><span>start.html</span></div>
+                        <div class="stat"><span class="stat-icon">📧</span><span>sendPortfolioEmail.php</span></div>
+                        <div class="stat"><span class="stat-icon">🐞</span><span>feedback.php</span></div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Aktuelle Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.1.2 -->
             <div class="game-card">
                 <div class="game-card-header">
                     <div class="game-icon">🖥️</div>
-                    <span class="game-badge">Aktuell</span>
+                    <span class="game-badge">Vorherige Version</span>
                 </div>
                 <div class="game-card-body">
-                    <h3 class="game-title">Version 1.2.0 – 01.01.2026</h3>
+                    <h3 class="game-title">Version 1.1.2 – 01.01.2026</h3>
                     <p class="game-description">Umfassende Desktop-Optimierung für timer.html und zufallsgenerator.html mit Desktop-First-Ansatz.</p>
                     <div class="game-features">
                         <span class="feature-tag">timer.html optimiert</span>
@@ -1300,18 +1341,18 @@
                     </div>
                 </div>
                 <div class="game-card-footer">
-                    <button class="btn-play" disabled>Aktuelle Version</button>
+                    <button class="btn-play" disabled>Vorherige Version</button>
                 </div>
             </div>
 
-            <!-- Version 1.1.0 -->
+            <!-- Version 1.1.1 -->
             <div class="game-card">
                 <div class="game-card-header">
                     <div class="game-icon">🎨</div>
                     <span class="game-badge">Vorherige Version</span>
                 </div>
                 <div class="game-card-body">
-                    <h3 class="game-title">Version 1.1.0 – 31.12.2025</h3>
+                    <h3 class="game-title">Version 1.1.1 – 31.12.2025</h3>
                     <p class="game-description">Umfassende Desktop-Optimierung und Anonymisierung für start.html, index.html und game.html.</p>
                     <div class="game-features">
                         <span class="feature-tag">Desktop-Layout optimiert</span>
@@ -1332,11 +1373,11 @@
                 </div>
             </div>
 
-            <!-- Version 1.0.0 -->
+            <!-- Version 1.0.0 (Erste Veröffentlichung) -->
             <div class="game-card">
                 <div class="game-card-header">
                     <div class="game-icon">📦</div>
-                    <span class="game-badge">Vorherige Version</span>
+                    <span class="game-badge">Erste Veröffentlichung</span>
                 </div>
                 <div class="game-card-body">
                     <h3 class="game-title">Version 1.0.0 – 26.12.2025</h3>
@@ -1351,7 +1392,7 @@
                     </div>
                 </div>
                 <div class="game-card-footer">
-                    <button class="btn-play" disabled>Vorherige Version</button>
+                    <button class="btn-play" disabled>Erste Veröffentlichung</button>
                 </div>
             </div>
 
@@ -1362,7 +1403,7 @@
                     <span class="game-badge coming-soon-badge">Geplant</span>
                 </div>
                 <div class="game-card-body">
-                    <h3 class="game-title">Version 1.3.0</h3>
+                    <h3 class="game-title">Version 1.1.4</h3>
                     <p class="game-description">Desktop-Optimierung für alle verbleibenden Webseiten.</p>
                     <div class="game-features">
                         <span class="feature-tag">notenrechner.html optimieren</span>
@@ -1433,6 +1474,90 @@
                     <span class="footer-icon">🎮</span>
             </div>
         </footer>
+                <!-- Feedback Modal -->
+                        <script>
+                        // Toggle für Changelog-Details
+                        function toggleChangelogDetails(btn) {
+                            const details = btn.nextElementSibling;
+                            if (!details) return;
+                            if (details.style.display === "none" || details.style.display === "") {
+                                details.style.display = "block";
+                                btn.textContent = "Weniger anzeigen";
+                            } else {
+                                details.style.display = "none";
+                                btn.textContent = "Mehr erfahren über den Changelog";
+                            }
+                        }
+                        </script>
+                <div id="feedbackModal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="login-animation-container">
+                                <img src="../icons/logo-simple.svg" alt="Logo" style="width:48px;height:48px;filter:drop-shadow(0 0 12px #9d4edd);">
+                            </div>
+                            <h3 class="epic-login-title">Feedback geben</h3>
+                            <button class="modal-close-btn" id="closeFeedbackBtn" aria-label="Schließen">✖</button>
+                        </div>
+                        <form id="feedbackForm" class="auth-form" autocomplete="off">
+                            <div class="form-group">
+                                <label for="feedbackTarget">Bezug:</label>
+                                <select id="feedbackTarget" class="epic-input" required>
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="Webseite">🌐 Webseite allgemein</option>
+                                    <option value="Jeopardy Quiz">🎯 Jeopardy Quiz</option>
+                                    <option value="Stadt Land Fluss">🌍 Stadt Land Fluss</option>
+                                    <option value="Timer">⏰ Timer</option>
+                                    <option value="Zufalls-Generator">🎲 Zufalls-Generator</option>
+                                    <option value="Noten-Rechner">📊 Noten-Rechner</option>
+                                    <option value="Aufgaben-Roulette">🎡 Aufgaben-Roulette</option>
+                                    <option value="Sonstiges">✨ Sonstiges</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackType">Art des Feedbacks:</label>
+                                <select id="feedbackType" class="epic-input" required>
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="Fehler">🐞 Fehler/Bug</option>
+                                    <option value="Vorschlag">💡 Vorschlag/Feature</option>
+                                    <option value="Lob">🌟 Lob</option>
+                                    <option value="Kritik">📝 Kritik</option>
+                                    <option value="Frage">❓ Frage</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackSeverity">Wie stark betrifft der Fehler die Nutzung?:</label>
+                                <select id="feedbackSeverity" class="epic-input">
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="niedrig">🟢 Niedrig</option>
+                                    <option value="mittel">🟡 Mittel</option>
+                                    <option value="hoch">🟠 Hoch</option>
+                                    <option value="kritisch">🔴 Kritisch</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackName">Name (optional):</label>
+                                <input type="text" id="feedbackName" class="epic-input" maxlength="50" placeholder="Dein Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackEmail">E-Mail (optional):</label>
+                                <input type="email" id="feedbackEmail" class="epic-input" maxlength="100" placeholder="E-Mail-Adresse">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackReason">Grund / Nachricht:</label>
+                                <textarea id="feedbackReason" class="epic-input" rows="2" maxlength="300" required placeholder="Was möchtest du mitteilen?"></textarea>
+                            </div>
+                            <div class="form-group" id="feedbackErrorDescGroup" style="display:none;">
+                                <label for="feedbackErrorDesc">Fehlerbeschreibung (wie/wo/wann?):</label>
+                                <textarea id="feedbackErrorDesc" class="epic-input" rows="2" maxlength="400" placeholder="Wie ist der Fehler entstanden? Wo und wann?"></textarea>
+                            </div>
+                            <div id="feedbackMsg" class="auth-info" style="display:none;"></div>
+                            <div class="modal-footer">
+                                <button type="submit" class="modal-btn btn-primary">Absenden</button>
+                                <button type="button" class="modal-btn-secondary" id="cancelFeedbackBtn">Abbrechen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
         <!-- Login Modal -->
         <div id="loginModal" class="modal hidden">
             <div class="modal-content">
@@ -1510,5 +1635,90 @@
     <script src="../javascript/responsive.js"></script>
     <script src="../javascript/main.js"></script>
     <script src="../javascript/password-reset-ui.js"></script>
+</main>
+<script>
+// Feedback Modal Logik
+const openFeedbackBtn = document.getElementById('openFeedbackBtn');
+const feedbackModal = document.getElementById('feedbackModal');
+const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
+const cancelFeedbackBtn = document.getElementById('cancelFeedbackBtn');
+const feedbackForm = document.getElementById('feedbackForm');
+const feedbackType = document.getElementById('feedbackType');
+const feedbackErrorDescGroup = document.getElementById('feedbackErrorDescGroup');
+const feedbackSeverityGroup = document.getElementById('feedbackSeverity').closest('.form-group');
+const feedbackMsg = document.getElementById('feedbackMsg');
+
+openFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.remove('hidden');
+});
+closeFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.add('hidden');
+    feedbackForm.reset();
+    feedbackMsg.style.display = 'none';
+    feedbackErrorDescGroup.style.display = 'none';
+    feedbackSeverityGroup.style.display = 'none';
+});
+cancelFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.add('hidden');
+    feedbackForm.reset();
+    feedbackMsg.style.display = 'none';
+    feedbackErrorDescGroup.style.display = 'none';
+    feedbackSeverityGroup.style.display = 'none';
+});
+// Zeige Schweregrad und Fehlerbeschreibung nur bei Fehler
+feedbackType.addEventListener('change', function() {
+    if (this.value === 'Fehler') {
+        feedbackSeverityGroup.style.display = '';
+        feedbackErrorDescGroup.style.display = '';
+    } else {
+        feedbackSeverityGroup.style.display = 'none';
+        feedbackErrorDescGroup.style.display = 'none';
+        document.getElementById('feedbackSeverity').value = '';
+        document.getElementById('feedbackErrorDesc').value = '';
+    }
+});
+// Initial ausblenden
+feedbackSeverityGroup.style.display = 'none';
+feedbackForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    feedbackMsg.style.display = 'block';
+    feedbackMsg.textContent = 'Feedback wird gesendet...';
+    feedbackMsg.className = 'auth-info';
+
+    const formData = new FormData();
+    formData.append('target', document.getElementById('feedbackTarget').value);
+    formData.append('type', document.getElementById('feedbackType').value);
+    formData.append('severity', document.getElementById('feedbackSeverity').value);
+    formData.append('name', document.getElementById('feedbackName').value);
+    formData.append('email', document.getElementById('feedbackEmail').value);
+    formData.append('reason', document.getElementById('feedbackReason').value);
+    formData.append('errorDesc', document.getElementById('feedbackErrorDesc').value);
+
+    fetch('../php/feedback.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            feedbackMsg.textContent = data.msg || 'Vielen Dank für dein Feedback!';
+            feedbackMsg.className = 'auth-success';
+            feedbackForm.reset();
+            feedbackErrorDescGroup.style.display = 'none';
+            setTimeout(() => {
+                feedbackModal.classList.add('hidden');
+                feedbackMsg.style.display = 'none';
+            }, 1800);
+        } else {
+            feedbackMsg.textContent = data.msg || 'Fehler beim Senden.';
+            feedbackMsg.className = 'auth-error';
+        }
+    })
+    .catch(() => {
+        feedbackMsg.textContent = 'Netzwerkfehler. Bitte später erneut versuchen.';
+        feedbackMsg.className = 'auth-error';
+    });
+});
+</script>
 </body>
 </html>
