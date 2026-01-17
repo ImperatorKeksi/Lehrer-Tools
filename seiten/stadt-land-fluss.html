@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Stadt-Land-Fluss-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Stadt Land Fluss - Lehrer Tool">
+    <meta name="keywords" content="Stadt Land Fluss, Digital, Timer, Lehrer Tool">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           🎯 CSS VARIABLEN - RESPONSIVE OPTIMIERT
+           ═══════════════════════════════════════════════════════════════ */
+        :root {
+            /* Colors */
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #e0aaff;
+            --text-secondary: #c77dff;
+            --accent: #9d4edd;
+            --border: rgba(199, 125, 255, 0.3);
+            --glass-bg: rgba(26, 26, 26, 0.8);
+            
+            /* Responsive Spacing */
+            --spacing-xs: clamp(4px, 1vw, 8px);
+            --spacing-sm: clamp(8px, 2vw, 16px);
+            --spacing-md: clamp(12px, 3vw, 24px);
+            --spacing-lg: clamp(16px, 4vw, 32px);
+            --spacing-xl: clamp(24px, 5vw, 40px);
+            
+            /* Responsive Fonts */
+            --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2.5vw, 1rem);
+            --font-md: max(16px, clamp(1rem, 3vw, 1.125rem));
+            --font-lg: clamp(1.125rem, 3.5vw, 1.5rem);
+            --font-xl: clamp(1.25rem, 4vw, 1.8rem);
+            --font-xxl: clamp(1.5rem, 5vw, 2.5rem);
+            --font-xxxl: clamp(2rem, 6vw, 3em);
+            --font-mega: clamp(3rem, 10vw, 8em);
+            
+            /* Touch Targets */
+            --min-touch: clamp(44px, 10vw, 48px);
+            
+            /* Border Radius */
+            --radius-sm: clamp(6px, 1.5vw, 8px);
+            --radius-md: clamp(8px, 2vw, 12px);
+            --radius-lg: clamp(12px, 3vw, 18px);
+            --radius-xl: clamp(15px, 4vw, 20px);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📐 BASE STYLES
+           ═══════════════════════════════════════════════════════════════ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📱 HEADER - RESPONSIVE
+           ═══════════════════════════════════════════════════════════════ */
+        .game-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: var(--spacing-sm) var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-title .emoji-icon {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .user-display {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            color: var(--text-primary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🔘 BUTTONS - TOUCH OPTIMIERT
+           ═══════════════════════════════════════════════════════════════ */
+        .btn {
+            min-height: var(--min-touch);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            box-shadow: 0 5px 20px rgba(56, 239, 125, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            box-shadow: 0 5px 20px rgba(255, 106, 0, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📦 CONTAINER & LAYOUT
+           ═══════════════════════════════════════════════════════════════ */
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            flex: 1;
+        }
+
+        .game-setup {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .panel-title {
+            text-align: center;
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+            font-weight: 700;
+        }
+
+        .settings-section {
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-md);
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            font-weight: 600;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 40vw, 250px), 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📝 FORM ELEMENTS
+           ═══════════════════════════════════════════════════════════════ */
+        .input-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            min-height: var(--min-touch);
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: var(--font-md);
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(157, 77, 221, 0.1);
+            box-shadow: 0 0 0 3px rgba(157, 77, 221, 0.1);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🎮 GAME ELEMENTS
+           ═══════════════════════════════════════════════════════════════ */
+        .letter-display {
+            font-size: var(--font-mega);
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            animation: pulse 1s ease-in-out infinite;
+            padding: var(--spacing-xl);
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: var(--radius-xl);
+            margin: var(--spacing-md) 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timer-display {
+            font-size: var(--font-xxxl);
+            font-weight: bold;
+            text-align: center;
+            color: #38ef7d;
+            margin: var(--spacing-md) 0;
+        }
+
+        .timer-display.warning {
+            color: #ff6b6b;
+            animation: blink 0.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📊 TABLE - RESPONSIVE
+           ═══════════════════════════════════════════════════════════════ */
+        .game-table {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            margin-bottom: var(--spacing-md);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: rgba(102, 126, 234, 0.3);
+            padding: var(--spacing-sm);
+            color: #e0e0e0;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: var(--font-sm);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: var(--spacing-xs);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td input {
+            width: 100%;
+            min-height: var(--min-touch);
+            padding: var(--spacing-xs);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            color: #e0e0e0;
+            font-size: var(--font-sm);
+        }
+
+        td input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        td input.duplicate {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        td input.unique {
+            border-color: #38ef7d;
+            background: rgba(56, 239, 125, 0.1);
+        }
+
+        .points-cell {
+            text-align: center;
+            font-weight: bold;
+            font-size: var(--font-lg);
+            color: #38ef7d;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🏷️ CHIPS & LISTS
+           ═══════════════════════════════════════════════════════════════ */
+        .categories-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(120px, 30vw, 150px), 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .category-chip {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 77, 221, 0.2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: var(--font-xs);
+            color: var(--text-primary);
+            min-height: var(--min-touch);
+        }
+
+        .category-chip button {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: var(--font-lg);
+            padding: 0;
+            margin-left: var(--spacing-xs);
+            min-width: 30px;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🏆 SCOREBOARD
+           ═══════════════════════════════════════════════════════════════ */
+        .scoreboard {
+            background: rgba(255, 255, 255, 0.05);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scoreboard h2 {
+            color: #667eea;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            font-size: var(--font-xl);
+        }
+
+        .score-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 30vw, 200px), 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .score-item {
+            padding: var(--spacing-md);
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: var(--radius-md);
+            border-left: 4px solid #667eea;
+        }
+
+        .score-item.winner {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: var(--font-md);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .player-score {
+            font-size: var(--font-xxl);
+            color: #38ef7d;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🎨 UTILITIES
+           ═══════════════════════════════════════════════════════════════ */
+        .button-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: var(--spacing-md) 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .developer-badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           🦶 FOOTER
+           ═══════════════════════════════════════════════════════════════ */
+        .game-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .developer-credit {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📱 MOBILE (< 768px)
+           ═══════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .game-header {
+                padding: var(--spacing-sm);
+            }
+            
+            .header-title h1 {
+                font-size: clamp(1rem, 4vw, 1.4rem);
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .setup-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+            }
+            
+            .letter-display {
+                font-size: clamp(3rem, 15vw, 5rem);
+                padding: var(--spacing-md);
+            }
+            
+            .timer-display {
+                font-size: var(--font-xxl);
+            }
+            
+            table {
+                min-width: 500px;
+                font-size: var(--font-xs);
+            }
+            
+            th, td {
+                padding: var(--spacing-xs);
+            }
+            
+            .score-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📱 SMALL MOBILE (< 480px)
+           ═══════════════════════════════════════════════════════════════ */
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-sm);
+            }
+            
+            .game-setup {
+                padding: var(--spacing-md);
+            }
+            
+            .categories-list {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                min-width: 400px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           📱 LANDSCAPE MODE
+           ═══════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .letter-display {
+                font-size: clamp(2rem, 10vh, 4rem);
+                padding: var(--spacing-sm);
+            }
+            
+            .game-setup {
+                padding: var(--spacing-sm);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ♿ ACCESSIBILITY
+           ═══════════════════════════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════
+           ⚡ TOUCH OPTIMIZATIONS
+           ═══════════════════════════════════════════════════════════════ */
+        @media (hover: none) {
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <iframe 
+        src="background-bubbles-boxes.html" 
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+        aria-hidden="true" 
+        tabindex="-1">
+    </iframe>
+
+    <!-- Header -->
+    <header class="game-header">
+        <div class="header-title">
+            <span class="emoji-icon">🌍</span>
+            <h1>Stadt Land Fluss</h1>
+        </div>
+        <div class="header-actions">
+            <a href="start.html" class="btn">← Zurück</a>
+            <span id="userDisplaySLF" class="user-display" style="display: none;">👤 Gast</span>
+            <button id="loginBtnSLF" class="btn">🔐 <span>Anmelden</span></button>
+            <button id="logoutBtnSLF" class="btn" style="display: none;">🚪 <span>Abmelden</span></button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Developer Badge -->
+        <div style="text-align: center; margin-bottom: var(--spacing-md);">
+            <span class="developer-badge">👨‍💻 Entwickelt von Nico</span>
+        </div>
+        
+        <!-- Setup Phase -->
+        <div id="setupPhase" class="game-setup">
+            <h2 class="panel-title">⚙️ Spiel einrichten</h2>
+            
+            <div class="settings-section">
+                <h3 class="section-label">👥 Spieler & ⏱️ Zeit</h3>
+                <div class="setup-grid">
+                    <div class="input-group">
+                        <label>Spieler hinzufügen:</label>
+                        <input type="text" id="playerInput" placeholder="Spielername eingeben">
+                        <button class="btn btn-primary" onclick="game.addPlayer()" style="margin-top: 10px; width: 100%;">
+                            👤 Spieler hinzufügen
+                        </button>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Rundendauer:</label>
+                        <select id="timerDuration">
+                            <option value="30">30 Sekunden</option>
+                            <option value="60" selected>1 Minute</option>
+                            <option value="90">1,5 Minuten</option>
+                            <option value="120">2 Minuten</option>
+                            <option value="180">3 Minuten</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="playersList" style="margin-top: var(--spacing-md);"></div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="section-label">📋 Kategorien</h3>
+                <div class="input-group">
+                    <label>Kategorien hinzufügen:</label>
+                    <input type="text" id="categoryInput" placeholder="z.B. Stadt, Land, Fluss">
+                    <button class="btn btn-primary" onclick="game.addCategory()" style="margin-top: 10px; width: 100%;">
+                        ➕ Kategorie hinzufügen
+                    </button>
+                </div>
+                
+                <div id="categoriesList" class="categories-list"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-success" onclick="game.startGame()">
+                    🎮 Spiel starten
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Phase -->
+        <div id="gamePhase" class="hidden">
+            <div class="game-setup">
+                <div class="letter-display" id="letterDisplay">?</div>
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="game.newRound()">
+                        🔄 Neue Runde
+                    </button>
+                    <button class="btn btn-success" onclick="game.startTimer()">
+                        ▶️ Timer starten
+                    </button>
+                    <button class="btn btn-danger" onclick="game.stopTimer()">
+                        ⏸️ Stopp
+                    </button>
+                    <button class="btn btn-primary" onclick="game.calculatePoints()">
+                        📊 Punkte berechnen
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-table">
+                <table id="gameTable"></table>
+            </div>
+
+            <div class="scoreboard">
+                <h2>🏆 Punktestand</h2>
+                <div id="scoreList" class="score-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // 🎮 STADT LAND FLUSS - GAME LOGIC
+        // ═══════════════════════════════════════════════════════════════
+        const game = {
+            players: [],
+            categories: ['Stadt', 'Land', 'Fluss'],
+            currentLetter: '',
+            timerInterval: null,
+            timeRemaining: 0,
+            rounds: [],
+            
+            // Spieler hinzufügen
+            addPlayer() {
+                const input = document.getElementById('playerInput');
+                const name = input.value.trim();
+                
+                if (!name) {
+                    alert('Bitte gib einen Spielernamen ein!');
+                    return;
+                }
+                
+                if (this.players.includes(name)) {
+                    alert('Dieser Spieler wurde bereits hinzugefügt!');
+                    return;
+                }
+                
+                this.players.push(name);
+                input.value = '';
+                this.updatePlayersList();
+            },
+            
+            // Spielerliste aktualisieren
+            updatePlayersList() {
+                const list = document.getElementById('playersList');
+                if (this.players.length === 0) {
+                    list.innerHTML = '';
+                    return;
+                }
+                
+                const html = `
+                    <div class="categories-list">
+                        ${this.players.map(player => `
+                            <div class="category-chip">
+                                <span>${player}</span>
+                                <button onclick="game.removePlayer('${player}')">×</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                list.innerHTML = html;
+            },
+            
+            // Spieler entfernen
+            removePlayer(name) {
+                this.players = this.players.filter(p => p !== name);
+                this.updatePlayersList();
+            },
+            
+            // Kategorie hinzufügen
+            addCategory() {
+                const input = document.getElementById('categoryInput');
+                const name = input.value.trim();
+                
+                if (!name) {
+                    alert('Bitte gib eine Kategorie ein!');
+                    return;
+                }
+                
+                if (this.categories.includes(name)) {
+                    alert('Diese Kategorie wurde bereits hinzugefügt!');
+                    return;
+                }
+                
+                this.categories.push(name);
+                input.value = '';
+                this.updateCategoriesList();
+            },
+            
+            // Kategorienliste aktualisieren
+            updateCategoriesList() {
+                const list = document.getElementById('categoriesList');
+                const html = this.categories.map(cat => `
+                    <div class="category-chip">
+                        <span>${cat}</span>
+                        <button onclick="game.removeCategory('${cat}')">×</button>
+                    </div>
+                `).join('');
+                list.innerHTML = html;
+            },
+            
+            // Kategorie entfernen
+            removeCategory(name) {
+                if (this.categories.length <= 1) {
+                    alert('Mindestens eine Kategorie muss vorhanden sein!');
+                    return;
+                }
+                this.categories = this.categories.filter(c => c !== name);
+                this.updateCategoriesList();
+            },
+            
+            // Spiel starten
+            startGame() {
+                if (this.players.length === 0) {
+                    alert('Bitte füge mindestens einen Spieler hinzu!');
+                    return;
+                }
+                
+                if (this.categories.length === 0) {
+                    alert('Bitte füge mindestens eine Kategorie hinzu!');
+                    return;
+                }
+                
+                document.getElementById('setupPhase').classList.add('hidden');
+                document.getElementById('gamePhase').classList.remove('hidden');
+                
+                this.rounds = [{
+                    letter: '',
+                    answers: {}
+                }];
+                
+                this.players.forEach(player => {
+                    this.rounds[0].answers[player] = {};
+                    this.categories.forEach(cat => {
+                        this.rounds[0].answers[player][cat] = '';
+                    });
+                });
+                
+                this.newRound();
+            },
+            
+            // Neue Runde
+            newRound() {
+                // Zufälligen Buchstaben wählen
+                const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').filter(l => !['Q', 'X', 'Y'].includes(l));
+                this.currentLetter = letters[Math.floor(Math.random() * letters.length)];
+                
+                document.getElementById('letterDisplay').textContent = this.currentLetter;
+                
+                // Timer zurücksetzen
+                this.stopTimer();
+                const duration = parseInt(document.getElementById('timerDuration').value);
+                this.timeRemaining = duration;
+                this.updateTimerDisplay();
+                
+                // Tabelle erstellen
+                this.createTable();
+            },
+            
+            // Tabelle erstellen
+            createTable() {
+                const table = document.getElementById('gameTable');
+                
+                let html = '<thead><tr><th>Spieler</th>';
+                this.categories.forEach(cat => {
+                    html += `<th>${cat}</th>`;
+                });
+                html += '<th>Punkte</th></tr></thead><tbody>';
+                
+                this.players.forEach(player => {
+                    html += `<tr><td><strong>${player}</strong></td>`;
+                    this.categories.forEach(cat => {
+                        const value = this.rounds[0].answers[player][cat] || '';
+                        html += `<td><input type="text" 
+                            value="${value}" 
+                            onchange="game.updateAnswer('${player}', '${cat}', this.value)"
+                            placeholder="${this.currentLetter}..."></td>`;
+                    });
+                    html += '<td class="points-cell" id="points-' + player + '">0</td></tr>';
+                });
+                
+                html += '</tbody>';
+                table.innerHTML = html;
+            },
+            
+            // Antwort aktualisieren
+            updateAnswer(player, category, value) {
+                this.rounds[0].answers[player][category] = value.trim();
+            },
+            
+            // Timer starten
+            startTimer() {
+                if (this.timerInterval) return;
+                
+                this.timerInterval = setInterval(() => {
+                    this.timeRemaining--;
+                    this.updateTimerDisplay();
+                    
+                    if (this.timeRemaining <= 10) {
+                        document.getElementById('timerDisplay').classList.add('warning');
+                    }
+                    
+                    if (this.timeRemaining <= 0) {
+                        this.stopTimer();
+                        alert('⏰ Zeit abgelaufen!');
+                    }
+                }, 1000);
+            },
+            
+            // Timer stoppen
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+                document.getElementById('timerDisplay').classList.remove('warning');
+            },
+            
+            // Timer-Anzeige aktualisieren
+            updateTimerDisplay() {
+                const minutes = Math.floor(this.timeRemaining / 60);
+                const seconds = this.timeRemaining % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            },
+            
+            // Punkte berechnen
+            calculatePoints() {
+                const allAnswers = {};
+                
+                // Alle Antworten sammeln
+                this.categories.forEach(cat => {
+                    allAnswers[cat] = {};
+                    this.players.forEach(player => {
+                        const answer = this.rounds[0].answers[player][cat].toLowerCase().trim();
+                        if (answer && answer.startsWith(this.currentLetter.toLowerCase())) {
+                            if (!allAnswers[cat][answer]) {
+                                allAnswers[cat][answer] = [];
+                            }
+                            allAnswers[cat][answer].push(player);
+                        }
+                    });
+                });
+                
+                // Punkte vergeben
+                const scores = {};
+                this.players.forEach(player => {
+                    scores[player] = 0;
+                    
+                    this.categories.forEach(cat => {
+                        const answer = this.rounds[0].answers[player][cat].toLowerCase().trim();
+                        
+                        // Keine Antwort: 0 Punkte
+                        if (!answer) {
+                            return;
+                        }
+                        
+                        // Falscher Buchstabe: 0 Punkte
+                        if (!answer.startsWith(this.currentLetter.toLowerCase())) {
+                            return;
+                        }
+                        
+                        if (allAnswers[cat][answer] && allAnswers[cat][answer].length === 1) {
+                            // Einzigartige Antwort: 20 Punkte
+                            scores[player] += 20;
+                            this.markInput(player, cat, 'unique');
+                        } else if (allAnswers[cat][answer] && allAnswers[cat][answer].length > 1) {
+                            // Doppelte Antwort: 10 Punkte
+                            scores[player] += 10;
+                            this.markInput(player, cat, 'duplicate');
+                        }
+                    });
+                });
+                
+                // Punkte anzeigen
+                this.displayScores(scores);
+            },
+            
+            // Input markieren
+            markInput(player, category, className) {
+                const table = document.getElementById('gameTable');
+                const rows = table.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    const playerCell = row.querySelector('td strong');
+                    if (playerCell && playerCell.textContent === player) {
+                        const inputs = row.querySelectorAll('input');
+                        const catIndex = this.categories.indexOf(category);
+                        if (inputs[catIndex]) {
+                            inputs[catIndex].classList.add(className);
+                        }
+                    }
+                });
+            },
+            
+            // Punkte anzeigen
+            displayScores(scores) {
+                // Tabelle aktualisieren
+                Object.keys(scores).forEach(player => {
+                    const cell = document.getElementById('points-' + player);
+                    if (cell) {
+                        cell.textContent = scores[player];
+                    }
+                });
+                
+                // Scoreboard aktualisieren
+                const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+                const html = sorted.map(([player, score], index) => `
+                    <div class="score-item ${index === 0 ? 'winner' : ''}">
+                        <div class="player-name">${index + 1}. ${player}</div>
+                        <div class="player-score">${score}</div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('scoreList').innerHTML = html;
+            }
+        };
+        
+        // Initial laden
+        document.addEventListener('DOMContentLoaded', () => {
+            game.updateCategoriesList();
+        });
+        
+        // Auth-Dummy für Standalone-Betrieb
+        if (typeof auth === 'undefined') {
+            window.auth = {
+                currentUser: null,
+                onAuthStateChanged: () => {}
+            };
+        }
+    </script>
+    
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+</body>
+</html>

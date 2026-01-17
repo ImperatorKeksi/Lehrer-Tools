@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Noten-Rechner-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Noten-Rechner - Lehrer Tool">
+    <meta name="keywords" content="Noten-Rechner, Lehrer Tool, Notenschlüssel, IHK, Gauß, Linear">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* ============================================================================
+           🎯 RESPONSIVE VARIABLEN & BASE SETUP
+           ============================================================================ */
+        :root {
+            /* Colors */
+            --color-bg: #0a0a0a;
+            --color-bg-secondary: #1a1a1a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26, 26, 26, 0.8);
+            --color-border: rgba(199, 125, 255, 0.3);
+            --color-text: #e0aaff;
+            
+            /* Responsive Spacing */
+            --spacing-xs: clamp(4px, 1vw, 8px);
+            --spacing-sm: clamp(8px, 2vw, 12px);
+            --spacing-md: clamp(12px, 3vw, 20px);
+            --spacing-lg: clamp(16px, 4vw, 28px);
+            --spacing-xl: clamp(20px, 5vw, 36px);
+            --spacing-xxl: clamp(24px, 6vw, 48px);
+            
+            /* Responsive Font Sizes */
+            --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2.5vw, 1rem);
+            --font-md: clamp(1rem, 3vw, 1.125rem);
+            --font-lg: clamp(1.125rem, 3.5vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 4.5vw, 2rem);
+            --font-xxl: clamp(2rem, 5.5vw, 3rem);
+            
+            /* Responsive Borders */
+            --radius-sm: clamp(6px, 1.5vw, 8px);
+            --radius-md: clamp(8px, 2vw, 12px);
+            --radius-lg: clamp(12px, 2.5vw, 18px);
+            --radius-xl: clamp(16px, 3vw, 24px);
+            
+            /* Touch Targets */
+            --min-touch: clamp(44px, 10vw, 48px);
+        }
+
+        /* ============================================================================
+           📐 GLOBAL RESET & BASE
+           ============================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================================================
+           🎨 HEADER - RESPONSIVE
+           ============================================================================ */
+        .game-header {
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 32px rgba(157, 77, 221, 0.3);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            position: sticky;
+            top: var(--spacing-sm);
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .emoji-icon {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: var(--font-xl);
+            font-weight: 800;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================================================
+           🎛️ BUTTONS - TOUCH OPTIMIERT
+           ============================================================================ */
+        .btn {
+            min-height: var(--min-touch);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            white-space: nowrap;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(157, 77, 221, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #c77dff, #9d4edd);
+            box-shadow: 0 6px 20px rgba(157, 77, 221, 0.6);
+        }
+
+        .user-display {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* ============================================================================
+           📦 CONTAINER & LAYOUT
+           ============================================================================ */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            width: 100%;
+            flex: 1;
+        }
+
+        .developer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-xs);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ============================================================================
+           🎴 PANELS - RESPONSIVE CARDS
+           ============================================================================ */
+        .panel {
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: 0 4px 32px rgba(157, 77, 221, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: 0 8px 40px rgba(157, 77, 221, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .panel-title {
+            font-size: var(--font-xl);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        /* ============================================================================
+           📝 FORM SECTIONS - RESPONSIVE
+           ============================================================================ */
+        .settings-section {
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(199, 125, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-label {
+            font-size: var(--font-lg);
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 700;
+        }
+
+        /* ============================================================================
+           🎯 INPUT GRID - RESPONSIVE
+           ============================================================================ */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .input-group label {
+            color: var(--color-secondary);
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+
+        .input-group input,
+        .input-group select {
+            min-height: var(--min-touch);
+            padding: var(--spacing-md);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: max(16px, var(--font-sm)); /* iOS Zoom Prevention */
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: rgba(157, 77, 221, 0.15);
+            box-shadow: 0 0 0 3px rgba(157, 77, 221, 0.2);
+        }
+
+        /* ============================================================================
+           📊 TABLES - RESPONSIVE
+           ============================================================================ */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        table {
+            width: 100%;
+            min-width: 300px;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: var(--spacing-md);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: var(--font-sm);
+        }
+
+        th {
+            background: rgba(157, 77, 221, 0.3);
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Grade Colors */
+        .grade-1 { background: rgba(56, 239, 125, 0.2); color: #38ef7d; }
+        .grade-2 { background: rgba(102, 255, 102, 0.2); color: #66ff66; }
+        .grade-3 { background: rgba(255, 255, 102, 0.2); color: #ffff66; }
+        .grade-4 { background: rgba(255, 165, 0, 0.2); color: #ffa500; }
+        .grade-5 { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; }
+        .grade-6 { background: rgba(255, 0, 0, 0.2); color: #ff0000; }
+
+        /* ============================================================================
+           🎯 RESULT CARDS
+           ============================================================================ */
+        .result-card {
+            background: rgba(157, 77, 221, 0.15);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--color-accent);
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+        }
+
+        .result-card h3 {
+            color: var(--color-accent);
+            font-size: var(--font-lg);
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+        }
+
+        .result-value {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #38ef7d, #66ff66);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            margin: var(--spacing-md) 0;
+        }
+
+        /* ============================================================================
+           🎬 FOOTER
+           ============================================================================ */
+        .game-footer {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-border);
+            padding: var(--spacing-lg);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .developer-credit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-sm);
+            color: var(--color-secondary);
+            flex-wrap: wrap;
+        }
+
+        .footer-icon {
+            font-size: var(--font-md);
+        }
+
+        /* ============================================================================
+           📱 MOBILE OPTIMIZATIONS (< 768px)
+           ============================================================================ */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: var(--spacing-sm);
+                padding: var(--spacing-md);
+            }
+
+            .header-title {
+                justify-content: center;
+            }
+
+            .header-actions {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .panel {
+                padding: var(--spacing-lg);
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: var(--font-xs);
+            }
+
+            th, td {
+                padding: var(--spacing-sm);
+            }
+
+            .result-value {
+                font-size: clamp(1.5rem, 10vw, 3rem);
+            }
+        }
+
+        /* ============================================================================
+           📱 SMALL MOBILE (< 480px)
+           ============================================================================ */
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-sm);
+            }
+
+            .game-header {
+                margin: var(--spacing-sm);
+                border-radius: var(--radius-md);
+            }
+
+            .panel {
+                padding: var(--spacing-md);
+                border-radius: var(--radius-lg);
+            }
+
+            .header-title h1 {
+                font-size: var(--font-lg);
+            }
+
+            .btn {
+                padding: var(--spacing-sm) var(--spacing-md);
+                font-size: var(--font-xs);
+            }
+        }
+
+        /* ============================================================================
+           🖥️ TABLET LANDSCAPE (768px - 1024px)
+           ============================================================================ */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .input-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================================================
+           🖥️ DESKTOP (> 1024px)
+           ============================================================================ */
+        @media (min-width: 1025px) {
+            .input-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .panel,
+            .btn,
+            .input-group input {
+                border-width: 2px !important;
+            }
+        }
+
+        /* ============================================================================
+           🌐 SAFE AREAS (Notch Support)
+           ============================================================================ */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+
+            .game-header {
+                padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+            }
+        }
+
+        /* ============================================================================
+           🎨 ANIMATIONS
+           ============================================================================ */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* ============================================================================
+           🖨️ PRINT STYLES
+           ============================================================================ */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .game-header,
+            .btn,
+            .game-footer {
+                display: none !important;
+            }
+
+            .panel {
+                page-break-inside: avoid;
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <iframe 
+        src="background-bubbles-boxes.html" 
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+        aria-hidden="true" 
+        tabindex="-1">
+    </iframe>
+
+    <!-- Header -->
+    <header class="game-header">
+        <div class="header-title">
+            <span class="emoji-icon">📊</span>
+            <h1>Noten-Rechner</h1>
+        </div>
+        <div class="header-actions">
+            <a href="start.html" class="btn">← Zurück</a>
+            <span id="userDisplayNR" class="user-display" style="display: none;">Gast</span>
+            <button id="loginBtnNR" class="btn">Anmelden</button>
+            <button id="logoutBtnNR" class="btn" style="display: none;">Abmelden</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Developer Badge -->
+        <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+            <span class="developer-badge">👨‍💻 Entwickelt von Nico</span>
+        </div>
+        
+        <!-- Panel 1: Konfiguration -->
+        <div class="panel">
+            <h2 class="panel-title">⚙️ Konfiguration</h2>
+            
+            <div class="settings-section">
+                <h3 class="section-label">📊 Notenschlüssel-Einstellungen</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="maxPoints">Maximale Punktzahl:</label>
+                        <input type="number" id="maxPoints" value="100" min="1">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gradeSystem">Notensystem:</label>
+                        <select id="gradeSystem">
+                            <option value="german">Deutsch (1-6)</option>
+                            <option value="percent">Prozent (0-100%)</option>
+                            <option value="points">Punkte (0-15)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="distribution">Verteilungsart:</label>
+                        <select id="distribution">
+                            <option value="linear">Linear</option>
+                            <option value="ihk">IHK Standard</option>
+                            <option value="gauss">Gauß-Kurve</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; margin-top: var(--spacing-lg);">
+                <button class="btn btn-primary" onclick="calculator.generateTable()">
+                    📊 Notenschlüssel generieren
+                </button>
+            </div>
+
+            <div id="gradeTable" class="table-container"></div>
+        </div>
+
+        <!-- Panel 2: Punkte in Note umrechnen -->
+        <div class="panel">
+            <h2 class="panel-title">🎯 Punkte in Note umrechnen</h2>
+            
+            <div class="settings-section">
+                <h3 class="section-label">🔢 Berechnung</h3>
+                <div class="input-group">
+                    <label for="achievedPoints">Erreichte Punktzahl:</label>
+                    <input type="number" id="achievedPoints" placeholder="z.B. 85" min="0">
+                </div>
+
+                <div style="display: flex; justify-content: center; margin-top: var(--spacing-md);">
+                    <button class="btn btn-primary" onclick="calculator.calculateGrade()">
+                        🔢 Note berechnen
+                    </button>
+                </div>
+            </div>
+
+            <div id="gradeResult"></div>
+        </div>
+
+        <!-- Panel 3: Schnittberechnung -->
+        <div class="panel">
+            <h2 class="panel-title">📈 Schnittberechnung</h2>
+            
+            <div class="settings-section">
+                <h3 class="section-label">📝 Noteneingabe</h3>
+                <div class="input-group">
+                    <label for="gradeList">Noten (kommagetrennt, z.B. 1.5, 2.0, 1.7):</label>
+                    <input type="text" id="gradeList" placeholder="1.5, 2.0, 1.7, 3.0">
+                </div>
+
+                <div style="display: flex; justify-content: center; margin-top: var(--spacing-md);">
+                    <button class="btn btn-primary" onclick="calculator.calculateAverage()">
+                        📊 Schnitt berechnen
+                    </button>
+                </div>
+            </div>
+
+            <div id="averageResult"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/notenrechner.js"></script>
+
+    <script>
+        // Simple Calculator Object (falls notenrechner.js fehlt)
+        if (typeof calculator === 'undefined') {
+            window.calculator = {
+                generateTable() {
+                    const result = document.getElementById('gradeTable');
+                    result.innerHTML = '<p style="text-align:center;color:var(--color-secondary);padding:2rem;">Notenschlüssel wird generiert...</p>';
+                },
+                calculateGrade() {
+                    const result = document.getElementById('gradeResult');
+                    result.innerHTML = '<div class="result-card"><h3>📊 Ergebnis</h3><div class="result-value">Berechnung läuft...</div></div>';
+                },
+                calculateAverage() {
+                    const result = document.getElementById('averageResult');
+                    result.innerHTML = '<div class="result-card"><h3>📈 Durchschnitt</h3><div class="result-value">Berechnung läuft...</div></div>';
+                }
+            };
+        }
+    </script>
+</body>
+</html>

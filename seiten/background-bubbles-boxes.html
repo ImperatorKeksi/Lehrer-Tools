@@ -1,0 +1,93 @@
+<!-- Kombinierter Bubble- und Würfel-Hintergrund für alle Seiten -->
+<style>
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    background: rgba(157, 77, 221, 0.13);
+    border-radius: 50%;
+    animation: rise 15s infinite ease-in;
+}
+.bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
+.bubble:nth-child(2) { width: 60px; height: 60px; left: 30%; animation-duration: 14s; animation-delay: 2s; }
+.bubble:nth-child(3) { width: 100px; height: 100px; left: 50%; animation-duration: 16s; animation-delay: 4s; }
+.bubble:nth-child(4) { width: 70px; height: 70px; left: 70%; animation-duration: 13s; animation-delay: 1s; }
+.bubble:nth-child(5) { width: 90px; height: 90px; left: 85%; animation-duration: 15s; animation-delay: 3s; }
+@keyframes rise {
+    0% { bottom: -100px; transform: translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { bottom: 110vh; transform: translateX(100px) rotate(360deg); opacity: 0; }
+}
+.flying-boxes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+.flying-box {
+    position: absolute;
+    background: linear-gradient(135deg, #9d4edd 40%, #e0aaff 100%);
+    opacity: 0.18;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px #9d4edd44;
+    animation: flyBox 16s linear infinite;
+}
+.flying-box:nth-child(1) { width: 60px; height: 60px; left: 8vw; top: 80vh; animation-duration: 14s; animation-delay: 0s; }
+.flying-box:nth-child(2) { width: 40px; height: 40px; left: 22vw; top: 90vh; animation-duration: 16s; animation-delay: 2s; }
+.flying-box:nth-child(3) { width: 80px; height: 80px; left: 38vw; top: 85vh; animation-duration: 18s; animation-delay: 4s; }
+.flying-box:nth-child(4) { width: 50px; height: 50px; left: 55vw; top: 95vh; animation-duration: 15s; animation-delay: 1s; }
+.flying-box:nth-child(5) { width: 70px; height: 70px; left: 70vw; top: 88vh; animation-duration: 17s; animation-delay: 3s; }
+.flying-box:nth-child(6) { width: 30px; height: 30px; left: 80vw; top: 92vh; animation-duration: 13s; animation-delay: 5s; }
+.flying-box:nth-child(7) { width: 90px; height: 90px; left: 90vw; top: 86vh; animation-duration: 19s; animation-delay: 6s; }
+.flying-box:nth-child(8) { width: 45px; height: 45px; left: 15vw; top: 93vh; animation-duration: 15s; animation-delay: 2.5s; }
+@keyframes flyBox {
+    0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.18; }
+    10% { opacity: 0.32; }
+    50% { transform: translateY(-60vh) scale(1.1) rotate(180deg); opacity: 0.22; }
+    90% { opacity: 0.32; }
+    100% { transform: translateY(-110vh) scale(0.95) rotate(360deg); opacity: 0.10; }
+}
+</style>
+<div class="background-animation">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+</div>
+<div class="flying-boxes">
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+    <div class="flying-box"></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const boxes = document.querySelectorAll('.flying-box');
+    boxes.forEach((box, i) => {
+        const delay = Math.random() * 8;
+        const duration = 12 + Math.random() * 8;
+        box.style.animationDelay = delay + 's';
+        box.style.animationDuration = duration + 's';
+        box.style.transform = `rotate(${Math.random()*360}deg) scale(${0.8 + Math.random()*0.6})`;
+    });
+});
+</script>

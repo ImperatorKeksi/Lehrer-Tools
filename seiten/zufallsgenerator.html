@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Zufalls-Generator-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Zufalls-Generator - Lehrer Tool">
+    <meta name="keywords" content="Zufalls-Generator, Schülerauswahl, Teams, Würfel, Lehrer Tool">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════════
+           🎯 CSS VARIABLEN - DESKTOP OPTIMIERT
+           ═══════════════════════════════════════════════════════════════════════════ */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #e0aaff;
+            --text-secondary: #c77dff;
+            --accent: #9d4edd;
+            --border: rgba(199, 125, 255, 0.3);
+            --glass-bg: rgba(26, 26, 26, 0.8);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.875rem;
+            --spacing-md: 1.25rem;
+            --spacing-lg: 1.75rem;
+            --spacing-xl: 2.5rem;
+            --font-xs: 0.8125rem;
+            --font-sm: 0.9375rem;
+            --font-md: 1rem;
+            --font-lg: 1.25rem;
+            --font-xl: 1.5rem;
+            --font-xxl: 2rem;
+            --font-xxxl: 2.5rem;
+            --min-touch: 44px;
+            --radius-sm: 0.5rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        .game-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-title span {
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .user-display {
+            padding: 0.625rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            color: var(--text-primary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn {
+            min-height: var(--min-touch);
+            padding: 0.625rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            white-space: nowrap;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            border: none;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(45deg, #c77dff, #9d4edd);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.625rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 0.25rem;
+        }
+
+        .tab {
+            min-height: var(--min-touch);
+            padding: 0.625rem 1.125rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: var(--font-sm);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            background: rgba(157, 77, 221, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            border-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .panel-title {
+            text-align: center;
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .settings-section {
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: var(--font-md);
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: var(--font-sm);
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            min-height: var(--min-touch);
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: var(--font-md);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            min-height: 140px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(157, 77, 221, 0.1);
+            box-shadow: 0 0 0 3px rgba(157, 77, 221, 0.1);
+        }
+
+        .input-group input[type="checkbox"] {
+            width: auto;
+            min-height: 20px;
+            cursor: pointer;
+        }
+
+        .result-display {
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-text {
+            font-size: var(--font-xxxl);
+            font-weight: bold;
+            text-align: center;
+            color: #667eea;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+            animation: fadeIn 0.5s ease-in;
+            word-break: break-word;
+        }
+
+        .dice-container {
+            perspective: 1000px;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .dice {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: rollDice 1s ease-in-out;
+        }
+
+        @keyframes rollDice {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(270deg); }
+        }
+
+        .coin {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: flipCoin 1s ease-in-out;
+        }
+
+        @keyframes flipCoin {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(1800deg); }
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            margin: 0 auto;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 35px solid #ff6b6b;
+            z-index: 10;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .student-chip {
+            padding: 0.625rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: 500;
+            font-size: var(--font-sm);
+            word-break: break-word;
+        }
+
+        .student-chip.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .team-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .team-card {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .team-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: var(--font-lg);
+        }
+
+        .team-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .team-card li {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-sm);
+        }
+
+        .developer-badge {
+            display: inline-block;
+            padding: 0.5rem 1.125rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+
+        .game-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .developer-credit {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: var(--font-sm);
+            color: var(--text-secondary);
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1000px;
+                padding: 2rem;
+            }
+            
+            .panel {
+                padding: 2rem;
+            }
+            
+            .wheel-container {
+                width: 380px;
+                height: 380px;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .container {
+                max-width: 750px;
+            }
+            
+            .tabs {
+                gap: 0.5rem;
+            }
+            
+            .student-list {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .wheel-container {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --spacing-sm: 0.75rem;
+                --spacing-md: 1rem;
+                --spacing-lg: 1.5rem;
+                --font-xs: 0.75rem;
+                --font-sm: 0.875rem;
+                --font-md: 1rem;
+                --font-lg: 1.125rem;
+                --font-xl: 1.25rem;
+                --font-xxl: 1.5rem;
+                --font-xxxl: 2rem;
+            }
+            
+            .game-header {
+                padding: 0.875rem;
+            }
+            
+            .header-title h1 {
+                font-size: 1.125rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .tabs {
+                gap: 0.5rem;
+                padding: 0;
+            }
+            
+            .tab {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8125rem;
+            }
+            
+            .panel {
+                padding: 1.25rem;
+            }
+            
+            .panel-title {
+                font-size: 1.125rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group .btn {
+                width: 100%;
+            }
+            
+            .team-display {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-display {
+                min-height: 150px;
+                padding: 1rem;
+            }
+            
+            .result-text {
+                font-size: 1.75rem;
+            }
+            
+            .dice {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+            
+            .coin {
+                width: 100px;
+                height: 100px;
+                font-size: 2rem;
+            }
+            
+            .wheel-container {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .student-list {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 0.5rem;
+            }
+            
+            .dice-container {
+                gap: 0.75rem;
+            }
+            
+            .wheel-container {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .dice {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .result-display {
+                min-height: 120px;
+            }
+            
+            .panel {
+                padding: 1rem;
+            }
+            
+            .wheel-container {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (hover: none) {
+            .btn:hover,
+            .tab:hover {
+                transform: none;
+            }
+            
+            .btn:active,
+            .tab:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <canvas id="bgCanvas" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></canvas>
+    
+    <script>
+        // Simple animated background
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const particles = [];
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 60 + 20,
+                opacity: Math.random() * 0.3 + 0.1
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                
+                ctx.fillStyle = `rgba(157, 78, 221, ${p.opacity})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        animate();
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+    <header class="game-header">
+        <div class="header-title">
+            <span>🎲</span>
+            <h1>Zufalls-Generator</h1>
+        </div>
+        <div class="header-actions">
+            <a href="start.html" class="btn">← Zurück</a>
+            <span id="userDisplayZG" class="user-display" style="display: none;">Gast</span>
+            <button id="loginBtnZG" class="btn">Anmelden</button>
+            <button id="logoutBtnZG" class="btn" style="display: none;">Abmelden</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="tabs">
+            <div class="tab active" onclick="randomGen.switchTab('students')">👤 Schüler</div>
+            <div class="tab" onclick="randomGen.switchTab('teams')">👥 Teams</div>
+            <div class="tab" onclick="randomGen.switchTab('dice')">🎲 Würfel</div>
+            <div class="tab" onclick="randomGen.switchTab('coin')">🪙 Münze</div>
+            <div class="tab" onclick="randomGen.switchTab('wheel')">🎡 Glücksrad</div>
+        </div>
+
+        <div id="tab-students" class="tab-content active">
+            <div class="panel">
+                <h2 class="panel-title">👤 Zufälliger Schüler</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">📝 Schülerauswahl</h3>
+                    <div class="input-group">
+                        <label>Schülerliste (ein Name pro Zeile):</label>
+                        <textarea id="studentInput" placeholder="Max Mustermann&#10;Anna Schmidt&#10;Tom Weber"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="withReplacement"> 
+                            Mit Zurücklegen (gleicher Schüler kann mehrfach ausgewählt werden)
+                        </label>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="randomGen.loadStudents()">📥 Liste laden</button>
+                        <button class="btn btn-success" onclick="randomGen.pickRandomStudent()">🎯 Schüler auswählen</button>
+                        <button class="btn btn-primary" onclick="randomGen.resetStudents()">🔄 Zurücksetzen</button>
+                    </div>
+                </div>
+
+                <div class="result-display" id="studentResult">
+                    <p style="color: #888;">Lade zuerst eine Schülerliste</p>
+                </div>
+
+                <div id="studentListDisplay"></div>
+            </div>
+        </div>
+
+        <div id="tab-teams" class="tab-content">
+            <div class="panel">
+                <h2 class="panel-title">👥 Zufällige Teams</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">⚙️ Team-Generator</h3>
+                    <div class="input-group">
+                        <label>Schülerliste (ein Name pro Zeile):</label>
+                        <textarea id="teamStudentInput" placeholder="Max Mustermann&#10;Anna Schmidt&#10;Tom Weber&#10;Lisa Müller"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Anzahl Teams:</label>
+                        <input type="number" id="teamCount" value="2" min="2" max="10">
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="randomGen.generateTeams()">🎲 Teams bilden</button>
+                    </div>
+                </div>
+
+                <div id="teamsDisplay" class="team-display"></div>
+            </div>
+        </div>
+
+        <div id="tab-dice" class="tab-content">
+            <div class="panel">
+                <h2 class="panel-title">🎲 Würfel</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">⚙️ Würfel-Konfiguration</h3>
+                    <div class="input-group">
+                        <label>Anzahl Würfel:</label>
+                        <select id="diceCount">
+                            <option value="1" selected>1 Würfel</option>
+                            <option value="2">2 Würfel</option>
+                            <option value="3">3 Würfel</option>
+                            <option value="4">4 Würfel</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="randomGen.rollDice()">🎲 Würfeln</button>
+                    </div>
+                </div>
+
+                <div class="result-display" id="diceResult">
+                    <p style="color: #888;">Klicke auf "Würfeln"</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-coin" class="tab-content">
+            <div class="panel">
+                <h2 class="panel-title">🪙 Münzwurf</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">🎯 Aktion</h3>
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="randomGen.flipCoin()">🪙 Münze werfen</button>
+                    </div>
+                </div>
+
+                <div class="result-display" id="coinResult">
+                    <p style="color: #888;">Klicke auf "Münze werfen"</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-wheel" class="tab-content">
+            <div class="panel">
+                <h2 class="panel-title">🎡 Glücksrad</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">📝 Glücksrad-Optionen</h3>
+                    <div class="input-group">
+                        <label>Optionen (eine pro Zeile):</label>
+                        <textarea id="wheelOptions" placeholder="Option 1&#10;Option 2&#10;Option 3&#10;Option 4"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-success" onclick="randomGen.spinWheel()">🎡 Rad drehen</button>
+                    </div>
+                </div>
+
+                <div class="result-display" id="wheelResult">
+                    <p style="color: #888;">Gib Optionen ein und drehe das Rad</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                <span class="footer-icon">⚡</span>
+                <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const randomGen = {
+            students: [],
+            availableStudents: [],
+            
+            switchTab(tabName) {
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                event.target.classList.add('active');
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+            },
+            
+            loadStudents() {
+                const input = document.getElementById('studentInput').value.trim();
+                if (!input) {
+                    alert('Bitte gib mindestens einen Schülernamen ein!');
+                    return;
+                }
+                
+                this.students = input.split('\n').filter(name => name.trim() !== '');
+                this.availableStudents = [...this.students];
+                
+                this.displayStudentList();
+                
+                document.getElementById('studentResult').innerHTML = 
+                    `<p style="color: #38ef7d;">✅ ${this.students.length} Schüler geladen!</p>`;
+            },
+            
+            displayStudentList() {
+                const display = document.getElementById('studentListDisplay');
+                if (this.students.length === 0) {
+                    display.innerHTML = '';
+                    return;
+                }
+                
+                const html = `
+                    <div class="settings-section">
+                        <h3 class="section-label">📋 Geladene Schüler (${this.availableStudents.length}/${this.students.length})</h3>
+                        <div class="student-list">
+                            ${this.students.map((student, index) => {
+                                const isAvailable = this.availableStudents.includes(student);
+                                return `<div class="student-chip ${isAvailable ? '' : 'selected'}">${student}</div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+                display.innerHTML = html;
+            },
+            
+            pickRandomStudent() {
+                if (this.students.length === 0) {
+                    alert('Bitte lade zuerst eine Schülerliste!');
+                    return;
+                }
+                
+                const withReplacement = document.getElementById('withReplacement').checked;
+                const pool = withReplacement ? this.students : this.availableStudents;
+                
+                if (pool.length === 0) {
+                    alert('Alle Schüler wurden bereits ausgewählt! Setze die Liste zurück.');
+                    return;
+                }
+                
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                const selectedStudent = pool[randomIndex];
+                
+                if (!withReplacement) {
+                    this.availableStudents = this.availableStudents.filter(s => s !== selectedStudent);
+                }
+                
+                document.getElementById('studentResult').innerHTML = 
+                    `<div class="result-text">${selectedStudent}</div>`;
+                
+                this.displayStudentList();
+            },
+            
+            resetStudents() {
+                this.availableStudents = [...this.students];
+                this.displayStudentList();
+                document.getElementById('studentResult').innerHTML = 
+                    '<p style="color: #888;">Bereit für neue Auswahl</p>';
+            },
+            
+            generateTeams() {
+                const input = document.getElementById('teamStudentInput').value.trim();
+                const teamCount = parseInt(document.getElementById('teamCount').value);
+                
+                if (!input) {
+                    alert('Bitte gib Schülernamen ein!');
+                    return;
+                }
+                
+                const students = input.split('\n').filter(name => name.trim() !== '');
+                
+                if (students.length < teamCount) {
+                    alert('Zu wenige Schüler für die gewünschte Anzahl an Teams!');
+                    return;
+                }
+                
+                const shuffled = students.sort(() => Math.random() - 0.5);
+                
+                const teams = Array.from({ length: teamCount }, () => []);
+                shuffled.forEach((student, index) => {
+                    teams[index % teamCount].push(student);
+                });
+                
+                const html = teams.map((team, index) => `
+                    <div class="team-card">
+                        <h3>Team ${index + 1} (${team.length} Mitglieder)</h3>
+                        <ul>
+                            ${team.map(student => `<li>${student}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+                
+                document.getElementById('teamsDisplay').innerHTML = html;
+            },
+            
+            rollDice() {
+                const count = parseInt(document.getElementById('diceCount').value);
+                const results = [];
+                
+                for (let i = 0; i < count; i++) {
+                    results.push(Math.floor(Math.random() * 6) + 1);
+                }
+                
+                const diceHTML = results.map(num => 
+                    `<div class="dice">${num}</div>`
+                ).join('');
+                
+                const sum = results.reduce((a, b) => a + b, 0);
+                
+                document.getElementById('diceResult').innerHTML = `
+                    <div style="width: 100%;">
+                        <div class="dice-container">${diceHTML}</div>
+                        ${count > 1 ? `<p style="margin-top: 20px; font-size: 1.5em; text-align: center;">Summe: ${sum}</p>` : ''}
+                    </div>
+                `;
+            },
+            
+            flipCoin() {
+                const result = Math.random() < 0.5 ? 'Kopf' : 'Zahl';
+                const emoji = result === 'Kopf' ? '🗣' : '💰';
+                
+                document.getElementById('coinResult').innerHTML = `
+                    <div style="text-align: center;">
+                        <div class="coin">${emoji}</div>
+                        <p style="margin-top: 20px; font-size: 2em;">${result}</p>
+                    </div>
+                `;
+            },
+            
+            spinWheel() {
+                const input = document.getElementById('wheelOptions').value.trim();
+                
+                if (!input) {
+                    alert('Bitte gib mindestens eine Option ein!');
+                    return;
+                }
+                
+                const options = input.split('\n').filter(opt => opt.trim() !== '');
+                
+                if (options.length === 0) {
+                    alert('Bitte gib mindestens eine Option ein!');
+                    return;
+                }
+                
+                const selectedIndex = Math.floor(Math.random() * options.length);
+                const selectedOption = options[selectedIndex];
+                
+                const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#ff6b6b', '#feca57'];
+                const segmentAngle = 360 / options.length;
+                
+                let wheelHTML = '<svg viewBox="0 0 200 200" style="width: 100%; height: 100%;">';
+                
+                // Segmente mit Text zeichnen
+                options.forEach((option, index) => {
+                    const startAngle = index * segmentAngle - 90;
+                    const endAngle = (index + 1) * segmentAngle - 90;
+                    const midAngle = (startAngle + endAngle) / 2;
+                    
+                    const x1 = 100 + 100 * Math.cos(startAngle * Math.PI / 180);
+                    const y1 = 100 + 100 * Math.sin(startAngle * Math.PI / 180);
+                    const x2 = 100 + 100 * Math.cos(endAngle * Math.PI / 180);
+                    const y2 = 100 + 100 * Math.sin(endAngle * Math.PI / 180);
+                    
+                    const largeArc = segmentAngle > 180 ? 1 : 0;
+                    
+                    // Segment zeichnen
+                    wheelHTML += `
+                        <path d="M 100 100 L ${x1} ${y1} A 100 100 0 ${largeArc} 1 ${x2} ${y2} Z" 
+                              fill="${colors[index % colors.length]}" 
+                              stroke="#fff" 
+                              stroke-width="2"/>
+                    `;
+                    
+                    // Text Position berechnen (70% vom Radius)
+                    const textRadius = 70;
+                    const textX = 100 + textRadius * Math.cos(midAngle * Math.PI / 180);
+                    const textY = 100 + textRadius * Math.sin(midAngle * Math.PI / 180);
+                    
+                    // Text-Rotation für bessere Lesbarkeit
+                    const textRotation = midAngle + 90;
+                    
+                    // Schriftgröße basierend auf Anzahl der Optionen
+                    const fontSize = options.length <= 4 ? 12 : options.length <= 8 ? 10 : 8;
+                    
+                    // Text kürzen wenn zu lang
+                    const displayText = option.length > 15 ? option.substring(0, 12) + '...' : option;
+                    
+                    // Text hinzufügen
+                    wheelHTML += `
+                        <text x="${textX}" y="${textY}" 
+                              font-size="${fontSize}" 
+                              fill="white" 
+                              font-weight="bold"
+                              text-anchor="middle" 
+                              dominant-baseline="middle"
+                              transform="rotate(${textRotation}, ${textX}, ${textY})"
+                              style="pointer-events: none; text-shadow: 0 0 3px rgba(0,0,0,0.5);">
+                            ${displayText}
+                        </text>
+                    `;
+                });
+                
+                wheelHTML += '</svg>';
+                
+                // Rad ohne Ergebnis anzeigen
+                document.getElementById('wheelResult').innerHTML = `
+                    <div style="width: 100%;">
+                        <div class="wheel-container">
+                            <div class="wheel-pointer"></div>
+                            <div class="wheel" id="spinningWheel" style="transform: rotate(0deg);">
+                                ${wheelHTML}
+                            </div>
+                        </div>
+                        <p id="wheelResultText" style="margin-top: 30px; font-size: 2em; text-align: center; color: #667eea; font-weight: bold; opacity: 0;">
+                        </p>
+                    </div>
+                `;
+                
+                // Animation starten
+                setTimeout(() => {
+                    const rotations = 5 + Math.random() * 3;
+                    const finalAngle = rotations * 360 + (selectedIndex * segmentAngle);
+                    const wheelElement = document.getElementById('spinningWheel');
+                    
+                    if (wheelElement) {
+                        wheelElement.style.transform = `rotate(${finalAngle}deg)`;
+                    }
+                    
+                    // Ergebnis nach Animation anzeigen
+                    setTimeout(() => {
+                        const resultText = document.getElementById('wheelResultText');
+                        if (resultText) {
+                            resultText.textContent = selectedOption;
+                            resultText.style.opacity = '1';
+                            resultText.style.transition = 'opacity 0.5s ease-in';
+                        }
+                    }, 4000);
+                }, 50);
+            }
+        };
+        
+        if (typeof auth === 'undefined') {
+            window.auth = {
+                currentUser: null,
+                onAuthStateChanged: () => {}
+            };
+        }
+    </script>
+</body>
+</html>

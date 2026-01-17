@@ -1,0 +1,1403 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Jeopardy Quiz-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Jeopardy Quiz - Lehrer Tool">
+    <meta name="keywords" content="Jeopardy Quiz, Lehrer Tool, Quiz, Spiel, Fragen">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+    /* Fallback für ältere Browser */
+    @supports not (container-type: inline-size) {
+        .header-title, .game-title, .game-section-title {
+            font-size: clamp(2.5em, 6vw, 5em);
+        }
+        .game-card, .game-section {
+            font-size: clamp(1em, 3vw, 2em);
+        }
+    }
+    
+    .header-title, .game-title, .game-section-title {
+        font-weight: 800;
+        text-shadow: 0 2px 8px #222, 0 0 1px #fff;
+    }
+    
+    .game-card, .game-section {
+        font-weight: 500;
+    }
+    
+    :root {
+        --color-bg: #0a0a0a;
+        --color-accent: #9d4edd;
+        --color-primary: #e0aaff;
+        --color-secondary: #c77dff;
+        --color-card-bg: rgba(26,26,26,0.8);
+        
+        /* Responsive Variablen */
+        --spacing-xs: clamp(4px, 1vw, 8px);
+        --spacing-sm: clamp(8px, 2vw, 16px);
+        --spacing-md: clamp(12px, 3vw, 24px);
+        --spacing-lg: clamp(16px, 4vw, 32px);
+        --spacing-xl: clamp(20px, 5vw, 40px);
+        --spacing-xxl: clamp(24px, 6vw, 48px);
+        
+        --font-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+        --font-sm: clamp(0.875rem, 2vw, 1rem);
+        --font-md: clamp(1rem, 2.5vw, 1.125rem);
+        --font-lg: clamp(1.125rem, 3vw, 1.5rem);
+        --font-xl: clamp(1.5rem, 4vw, 2rem);
+        --font-xxl: clamp(2rem, 5vw, 3rem);
+        --font-xxxl: clamp(2.5rem, 6vw, 4rem);
+        
+        --min-touch-target: clamp(44px, 10vw, 48px);
+        --header-height: clamp(60px, 15vw, 80px);
+    }
+    
+    body {
+        background: var(--color-bg);
+        color: var(--color-primary);
+        font-size: var(--font-md);
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .btn-primary {
+        background: var(--color-accent);
+        color: #fff;
+    }
+    
+    .header-title, .game-card, .game-section {
+        will-change: transform;
+    }
+    
+    /* Container Query Optimierungen */
+    .game-header, .game-main, .game-section {
+        container-type: inline-size;
+        container-name: mainblock;
+    }
+    
+    .header-title, .game-title, .game-section-title {
+        font-size: clamp(2.5em, 6cqw, 5em);
+    }
+    
+    .game-card, .game-section {
+        font-size: clamp(1em, 3cqw, 2em);
+    }
+    
+    .game-card {
+        padding: min(2.5em, 5cqw);
+    }
+    
+    /* Responsive Grid-Anpassungen */
+    .game-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+        gap: clamp(1rem, 3vw, 2.5rem);
+        padding: var(--spacing-md);
+    }
+    
+    /* Jeopardy Board Responsive */
+    .jeopardy-board {
+        width: 100%;
+        max-width: 100%;
+        padding: var(--spacing-sm);
+        margin: 0 auto;
+        overflow-x: auto;
+    }
+    
+    .categories-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100px, 20vw), 1fr));
+        gap: var(--spacing-xs);
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .category {
+        padding: var(--spacing-sm);
+        min-height: clamp(60px, 10vh, 80px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .category-title {
+        font-size: clamp(0.75rem, 2.5vw, 1rem);
+        font-weight: 700;
+        text-align: center;
+        word-break: break-word;
+        line-height: 1.2;
+    }
+    
+    .questions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(80px, 15vw), 1fr));
+        gap: var(--spacing-xs);
+    }
+    
+    .question-card {
+        padding: var(--spacing-sm);
+        min-height: clamp(50px, 8vh, 70px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
+    }
+    
+    .question-points {
+        font-size: clamp(1rem, 4vw, 1.5rem);
+        font-weight: 900;
+    }
+    
+    /* Modal Responsive Anpassungen */
+    .modal-content {
+        max-width: min(95vw, 800px);
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md);
+    }
+    
+    .modal-header {
+        padding-bottom: var(--spacing-sm);
+        gap: var(--spacing-sm);
+        flex-wrap: wrap;
+    }
+    
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    
+    .modal-footer {
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+    }
+    
+    /* Editor Responsive */
+    .editor-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    @media (min-width: 768px) {
+        .editor-content {
+            grid-template-columns: 300px 1fr;
+        }
+    }
+    
+    .categories-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    /* Spieler Container Responsive */
+    .players-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-sm);
+        justify-content: center;
+        padding: var(--spacing-sm);
+    }
+    
+    .player-card {
+        min-width: clamp(140px, 25vw, 200px);
+        max-width: 100%;
+    }
+    
+    /* Setup Screen Responsive */
+    .setup-container {
+        padding: var(--spacing-md);
+        max-width: min(95vw, 1200px);
+        margin: 0 auto;
+    }
+    
+    .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+        gap: var(--spacing-md);
+    }
+    
+    /* Touch-freundliche Buttons */
+    .btn, .modal-btn, button:not([class*="toggle"]) {
+        min-height: var(--min-touch-target);
+        min-width: var(--min-touch-target);
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-md);
+        border-radius: clamp(8px, 2vw, 12px);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Footer Responsive */
+    .game-footer {
+        padding: var(--spacing-md);
+        text-align: center;
+    }
+    
+    /* Performance Optimierungen für Mobile */
+    @media (hover: none) and (pointer: coarse) {
+        .question-card:hover,
+        .btn:hover,
+        .category:hover {
+            transform: none;
+        }
+        
+        .question-card:active,
+        .btn:active,
+        .category:active {
+            transform: scale(0.95);
+        }
+    }
+    
+    /* Safe Area für Notch-Geräte */
+    @supports (padding: max(0px)) {
+        body, .modal, .setup-container {
+            padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+            padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+        }
+        
+        .game-header {
+            padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+        }
+    }
+    
+    /* High Contrast Mode */
+    @media (prefers-contrast: high) {
+        .btn, .modal-content, .game-card {
+            border: 2px solid currentColor;
+        }
+    }
+    
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+    <!-- Styles -->
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/animations.css">
+    <link rel="stylesheet" href="../stylesheets/responsive-optimized.css">
+    <!-- Responsive Master als letztes für höhere Priorität -->
+    <link rel="stylesheet" href="../stylesheets/responsive-master.css">
+</head>
+<body>
+                <iframe src="background-bubbles-boxes.html" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" aria-hidden="true" tabindex="-1"></iframe>
+    <!-- Game Header (wie bei anderen Tools) -->
+    <header class="game-header">
+        <div class="header-title">
+            <span class="emoji-icon" style="font-size: 2rem; display: inline-block; vertical-align: middle; margin-right: 0.5rem;">🎮</span>
+            <h1>Jeopardy Quiz</h1>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <a href="start.html" class="btn">← Zurück</a>
+            <span id="userDisplayGame" class="user-display" style="display: none;">👤 Gast</span>
+            <button id="loginBtnGame" class="btn">🔐 Anmelden</button>
+            <button id="logoutBtnGame" class="btn" style="display: none;">🚪 Abmelden</button>
+        </div>
+    </header>
+
+    <!-- Setup Screen (direkt sichtbar, kein Modus-Auswahl mehr) -->
+    <div id="setupScreen" class="setup-screen">
+        <div class="setup-container">
+            <div class="setup-subtitle">
+                <span class="developer-badge">👨‍💻 Entwickelt von Nico</span>
+            </div>
+            
+            <!-- Theme and Settings Panel -->
+            <div class="settings-panel">
+                <h3 class="panel-title">⚙️ Einstellungen</h3>
+                
+                <!-- Visuelle Einstellungen -->
+                <div class="settings-section">
+                    <h4 class="section-label">🎨 Visuelles</h4>
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label for="themeSelect">Design-Theme:</label>
+                            <select id="themeSelect" class="theme-select">
+                                <option value="purple-blue">Lila-Blau (Standard)</option>
+                                <option value="ocean-blue">Ozean-Blau</option>
+                                <option value="green-silver">Grün-Silber</option>
+                                <option value="dark-mode">Dark Mode</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label for="animationToggle">Animationen:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="animationToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spiel Einstellungen -->
+                <div class="settings-section">
+                    <h4 class="section-label">🎮 Spielmechanik</h4>
+                    <div class="settings-grid">
+                        <div class="setting-group">
+                            <label for="soundToggle">Sound-Effekte:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="soundToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-group">
+                            <label for="dailyDoublesToggle">Daily Doubles:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="dailyDoublesToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-group">
+                            <label for="timerToggle">Timer aktivieren:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="timerToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Timer Konfiguration -->
+                    <div class="setting-group timer-config" id="timerConfig" style="display: none;">
+                        <label for="timerDuration">⏱️ Zeit pro Frage:</label>
+                        <div class="timer-controls">
+                            <input type="range" id="timerDuration" min="15" max="120" value="60" step="5" class="timer-slider">
+                            <span id="timerDisplay" class="timer-display">60 Sekunden</span>
+                        </div>
+                        <div class="timer-presets">
+                            <button type="button" class="preset-btn" data-time="30">30s</button>
+                            <button type="button" class="preset-btn" data-time="60">60s</button>
+                            <button type="button" class="preset-btn active" data-time="90">90s</button>
+                            <button type="button" class="preset-btn" data-time="120">120s</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="settings-actions">
+                    <button id="showRulesBtn" class="settings-action-btn">📋 Spielregeln</button>
+                    <button id="openEditorBtn" class="settings-action-btn" style="display: none;">✏️ Fragen bearbeiten</button>
+                    <button id="openStatsBtn" class="settings-action-btn" style="display: none;">📊 Statistiken</button>
+                </div>
+            </div>
+
+            <div class="setup-content">
+                <div class="game-mode-selection">
+                    <h2>Spielmodus wählen</h2>
+                    <div class="mode-buttons">
+                        <button class="mode-btn" data-mode="single">Einzelspieler</button>
+                        <button class="mode-btn" data-mode="group">Gruppenspieler</button>
+                    </div>
+                </div>
+
+                <div id="playerSetup" class="player-setup hidden">
+                    <h3 id="setupTitle">Spieler hinzufügen</h3>
+                    <div id="singlePlayerSetup" class="setup-section hidden">
+                        <label for="playerCount">Anzahl Spieler (2-6):</label>
+                        <input type="number" id="playerCount" min="2" max="6" value="2">
+                        <div id="playerNames">
+                            <input type="text" class="player-name" placeholder="Spieler 1 Name" value="Spieler 1">
+                            <input type="text" class="player-name" placeholder="Spieler 2 Name" value="Spieler 2">
+                        </div>
+                    </div>
+
+                    <div id="groupPlayerSetup" class="setup-section hidden">
+                        <label for="groupCount">Anzahl Gruppen (2-4):</label>
+                        <input type="number" id="groupCount" min="2" max="4" value="2">
+                        <label for="membersPerGroup">Mitglieder pro Gruppe (1-5):</label>
+                        <input type="number" id="membersPerGroup" min="1" max="5" value="2">
+                        <div id="groupNames">
+                            <input type="text" class="group-name" placeholder="Gruppe 1 Name" value="Team Alpha">
+                            <input type="text" class="group-name" placeholder="Gruppe 2 Name" value="Team Beta">
+                        </div>
+                    </div>
+
+                    <div class="setup-buttons">
+                        <button id="startGame" class="start-btn">Spiel starten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Editor Screen -->
+    <div id="editorScreen" class="editor-screen hidden">
+        <div class="editor-container">
+            <div class="editor-header">
+                <h1>📝 Fragen-Editor für Lehrer</h1>
+                <p class="editor-subtitle">Erstelle und bearbeite deine eigenen Jeopardy-Kategorien und Fragen</p>
+                <div class="editor-search-bar">
+                    <input type="text" id="editorSearchInput" placeholder="🔍 Fragen durchsuchen..." class="editor-search-input">
+                    <span id="searchResultCount" class="search-result-count"></span>
+                </div>
+                <div class="editor-actions">
+                    <button id="saveQuestionsToDBBtn" class="btn-save">💾 Fragen speichern</button>
+                    <button id="resetQuestionsBtn" class="btn-reset">🔄 Zurücksetzen</button>
+                    <button id="loadQuestionsFromDBBtn" class="btn-template">📂 Fragen laden</button>
+                    <button id="closeEditorBtn" class="btn-close">✖️ Schließen</button>
+                </div>
+            </div>
+
+            <div class="editor-content">
+                <!-- Categories Overview -->
+                <div class="categories-section">
+                    <div class="section-header">
+                        <h2>Kategorien</h2>
+                        <button id="addCategoryBtn" class="btn-add">+ Neue Kategorie</button>
+                    </div>
+                    <div id="categoriesList" class="categories-list">
+                    </div>
+                </div>
+
+                <!-- Questions Editor -->
+                <div class="questions-section">
+                    <div class="section-header">
+                        <h2 id="currentCategoryTitle">Fragen</h2>
+                        <span id="questionCounter" class="question-counter">0 / 20 Fragen</span>
+                    </div>
+                    <div id="questionsEditor" class="questions-editor">
+                        <div class="editor-placeholder">
+                            <p>👈 Wähle eine Kategorie aus, um Fragen zu bearbeiten</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal hidden">
+        <div class="modal-content login-modal-content">
+            <div class="modal-header">
+                <h3>🔐 Anmelden</h3>
+                <button class="modal-close-btn" id="closeLoginBtn">✖️</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Anmelden</button>
+                    <button class="auth-tab" data-tab="register">Registrieren</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginUsername">Benutzername:</label>
+                        <input type="text" id="loginUsername" placeholder="Dein Benutzername" required autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Passwort:</label>
+                        <input type="password" id="loginPassword" placeholder="Dein Passwort" required autocomplete="current-password">
+                    </div>
+
+                    <div class="auth-info">
+                    </div>
+
+                    <div id="loginError" class="auth-error" style="display: none;"></div>
+                    <div id="loginSuccess" class="auth-success" style="display: none;"></div>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerUsername">Benutzername:</label>
+                        <input type="text" id="registerUsername" placeholder="Min. 3 Zeichen" required autocomplete="username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Passwort:</label>
+                        <input type="password" id="registerPassword" placeholder="Min. 6 Zeichen" required autocomplete="new-password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPasswordConfirm">Passwort bestätigen:</label>
+                        <input type="password" id="registerPasswordConfirm" placeholder="Passwort wiederholen" required autocomplete="new-password">
+                    </div>
+
+                    <div class="auth-info">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                            ℹ️ Neue Accounts haben standardmäßig <strong>Gast-Rechte</strong>.<br>
+                            Für Lehrer/Admin-Rechte kontaktiere einen Administrator.
+                        </p>
+                    </div>
+
+                    <div id="registerError" class="auth-error" style="display: none;"></div>
+                    <div id="registerSuccess" class="auth-success" style="display: none;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitLoginBtn" class="modal-btn btn-primary">🔓 Anmelden</button>
+                <button type="button" id="submitRegisterBtn" class="modal-btn btn-primary" style="display: none;">✅ Registrieren</button>
+                <button type="button" id="cancelLoginBtn" class="modal-btn-secondary">Abbrechen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div id="statsModal" class="modal hidden">
+        <div class="modal-content stats-modal-content">
+            <div class="modal-header">
+                <h3>📊 Statistiken & Analytics</h3>
+                <button class="modal-close-btn" id="closeStatsBtn">✖️</button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-tabs">
+                    <button class="stats-tab active" data-tab="questions">❓ Fragen</button>
+                    <button class="stats-tab" data-tab="categories">📂 Kategorien</button>
+                    <button class="stats-tab" data-tab="overall">📈 Gesamt</button>
+                </div>
+
+                <!-- Questions Tab -->
+                <div class="stats-content active" id="questionsTab">
+                    <div class="stats-section">
+                        <h4>🔥 Schwierigste Fragen (Top 10)</h4>
+                        <div id="difficultQuestionsTable" class="stats-table">
+                            <p class="stats-empty">Noch keine Daten verfügbar. Spiele zuerst einige Runden!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Tab -->
+                <div class="stats-content" id="categoriesTab">
+                    <div class="stats-section">
+                        <h4>📂 Performance nach Kategorie</h4>
+                        <div id="categoryPerformanceChart" class="stats-chart">
+                            <p class="stats-empty">Noch keine Daten verfügbar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall Tab -->
+                <div class="stats-content" id="overallTab">
+                    <div class="stats-section">
+                        <h4>📊 Gesamtstatistik</h4>
+                        <div id="overallStatsGrid" class="stats-grid">
+                            <p class="stats-empty">Noch keine Daten verfügbar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="exportStatsBtn" class="modal-btn btn-primary">📤 Exportieren (JSON)</button>
+                <button type="button" id="clearStatsBtn" class="modal-btn-danger">🗑️ Statistiken löschen</button>
+                <button type="button" id="closeStatsModalBtn" class="modal-btn-secondary">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="game-screen hidden">
+        <!-- Header with Players/Groups -->
+        <div class="game-header">
+            <div class="players-container" id="playersContainer"></div>
+            <div class="game-info">
+                <div class="current-player">
+                    Aktueller Spieler: <span id="currentPlayerName">Spieler 1</span>
+                </div>
+                <div class="game-stats">
+                    <span class="stat-item">Fragen: <span id="questionsAnswered">0</span>/25</span>
+                    <span class="stat-item">Streak: <span id="currentStreak">0</span></span>
+                </div>
+                <div class="quick-actions">
+                    <button id="pauseGameBtn" class="quick-action-btn" title="Spiel pausieren">⏸️</button>
+                    <button id="fullscreenBtn" class="quick-action-btn" title="Vollbild">🔳</button>
+                    <button id="helpBtn" class="quick-action-btn" title="Hilfe & Shortcuts">❓</button>
+                </div>
+                <button id="nextRoundBtn" class="next-round-btn hidden">Nächste Runde</button>
+                <button id="endGameBtn" class="end-game-btn">Spiel beenden</button>
+                <button id="showStatsBtn" class="stats-btn">📊 Statistiken</button>
+            </div>
+        </div>
+
+        <!-- Jeopardy Board -->
+        <div class="jeopardy-board">
+            <div class="categories-row">
+                <div class="category" data-category="0">
+                    <span class="category-title">Kategorie 1</span>
+                </div>
+                <div class="category" data-category="1">
+                    <span class="category-title">Kategorie 2</span>
+                </div>
+                <div class="category" data-category="2">
+                    <span class="category-title">Kategorie 3</span>
+                </div>
+                <div class="category" data-category="3">
+                    <span class="category-title">Kategorie 4</span>
+                </div>
+                <div class="category" data-category="4">
+                    <span class="category-title">Kategorie 5</span>
+                </div>
+            </div>
+
+            <div class="questions-grid" id="questionsGrid">
+                <!-- Questions will be generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div id="questionModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalCategory">Kategorie</h3>
+                <div class="modal-points-container">
+                    <span id="modalPoints" class="modal-points">100</span>
+                    <div id="timerRing" class="timer-ring hidden">
+                        <svg class="timer-svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="timer-circle-bg"></circle>
+                            <circle cx="50" cy="50" r="45" class="timer-circle-progress" id="timerCircle"></circle>
+                        </svg>
+                        <div class="timer-text" id="timerText">60</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modalQuestion">Frage wird hier angezeigt...</p>
+                <div class="modal-answer hidden">
+                    <p><strong>Antwort:</strong> <span id="modalAnswerText">Antwort wird hier angezeigt...</span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="showAnswerBtn" class="modal-btn show-answer-btn">Antwort zeigen</button>
+                <div id="answerButtons" class="answer-buttons hidden">
+                    <button id="correctBtn" class="modal-btn correct-btn">Richtig (+Punkte)</button>
+                    <button id="wrongBtn" class="modal-btn wrong-btn">Falsch (-Punkte)</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div id="winnerModal" class="modal hidden">
+        <div class="modal-content winner-content">
+            <div class="modal-header">
+                <h2>🏆 Spiel beendet! 🏆</h2>
+            </div>
+            <div class="modal-body">
+                <div id="confetti-container" class="confetti-container"></div>
+                <div id="finalResults" class="final-results"></div>
+                <div id="winnerAnnouncement" class="winner-announcement"></div>
+                <div id="gameStatsSummary" class="game-stats-summary"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="newGameBtn" class="modal-btn new-game-btn">Neues Spiel</button>
+                <button id="backToSetupBtn" class="modal-btn back-setup-btn">Zurück zum Setup</button>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Daily Double Modal -->
+    <div id="dailyDoubleModal" class="modal hidden">
+        <div class="modal-content daily-double-content">
+            <div class="modal-header daily-double-header">
+                <h2>🎯 DAILY DOUBLE! 🎯</h2>
+            </div>
+            <div class="modal-body">
+                <p class="daily-double-text">Du hast ein Daily Double gefunden!</p>
+                <p class="daily-double-info">Kategorie: <span id="ddCategory">Geschichte</span></p>
+                <p class="daily-double-info">Aktueller Punktestand: <span id="ddCurrentScore">500</span></p>
+                
+                <div class="wager-section">
+                    <label for="wagerAmount">💰 Dein Einsatz:</label>
+                    <div class="wager-controls">
+                        <input type="number" id="wagerAmount" class="wager-input" min="100" max="1000" value="500" step="100">
+                        <div class="wager-buttons">
+                            <button class="wager-btn" data-amount="100">100</button>
+                            <button class="wager-btn" data-amount="500">500</button>
+                            <button class="wager-btn" data-amount="1000">1000</button>
+                            <button class="wager-btn" id="allInBtn">Alles!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmWagerBtn" class="modal-btn confirm-wager-btn">Einsatz bestätigen</button>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Audio Elements -->
+    <div id="audioElements" class="hidden">
+        <audio id="themeSound" preload="auto">
+            <source src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADAAA" type="audio/mpeg">
+        </audio>
+        <audio id="clickSound" preload="auto"></audio>
+        <audio id="correctSound" preload="auto"></audio>
+        <audio id="wrongSound" preload="auto"></audio>
+        <audio id="winnerSound" preload="auto"></audio>
+        <audio id="dailyDoubleSound" preload="auto"></audio>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div id="statisticsModal" class="modal hidden">
+        <div class="modal-content stats-content">
+            <div class="modal-header">
+                <h2>📊 Spieler-Statistiken</h2>
+            </div>
+            <div class="modal-body">
+                <div id="playerStatsContainer" class="player-stats-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeStatsBtn" class="modal-btn close-stats-btn">Schließen</button>
+                <button id="resetStatsBtn" class="modal-btn reset-stats-btn">Statistiken zurücksetzen</button>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Point Animation Container -->
+    <div id="pointAnimationContainer" class="point-animation-container"></div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal hidden">
+        <div class="modal-content help-content">
+            <div class="modal-header">
+                <h2>🎮 Hilfe & Tastatur-Shortcuts</h2>
+                <button class="modal-close-btn" id="closeHelpBtn">✖️</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>🎯 Spielregeln</h3>
+                    <ul>
+                        <li><strong>Punkte:</strong> Richtige Antworten = +Punkte, Falsche = -Punkte</li>
+                        <li><strong>Daily Doubles:</strong> Setze deinen eigenen Einsatz (💰-Symbol)</li>
+                        <li><strong>Spielerwechsel:</strong> Bei falschen Antworten wechselt der Spieler</li>
+                        <li><strong>Gewinner:</strong> Höchste Punktzahl am Ende gewinnt</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>⌨️ Keyboard-Shortcuts</h3>
+                    <div class="shortcuts-grid">
+                        <div class="shortcut-item"><kbd>Space</kbd> Antwort zeigen</div>
+                        <div class="shortcut-item"><kbd>R</kbd> Richtig</div>
+                        <div class="shortcut-item"><kbd>F</kbd> Falsch</div>
+                        <div class="shortcut-item"><kbd>Esc</kbd> Modal schließen</div>
+                        <div class="shortcut-item"><kbd>S</kbd> Statistiken</div>
+                        <div class="shortcut-item"><kbd>F11</kbd> Vollbild</div>
+                    </div>
+                </div>
+                <div class="help-section">
+                    <h3>📱 Touch-Gesten</h3>
+                    <ul>
+                        <li><strong>Wisch nach oben:</strong> Statistiken öffnen</li>
+                        <li><strong>Wisch nach unten:</strong> Modal schließen</li>
+                        <li><strong>Doppeltipp:</strong> Schnell-Aktionen</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeHelpBtn2" class="modal-btn-secondary">Verstanden! 👍</button>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div id="pauseOverlay" class="pause-overlay hidden">
+        <div class="pause-content">
+            <h2>⏸️ Spiel pausiert</h2>
+            <p>Drücke einen beliebigen Button um fortzufahren</p>
+            <button id="resumeGameBtn" class="modal-btn resume-btn">Fortsetzen</button>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div id="rulesModal" class="modal hidden">
+        <div class="modal-content rules-modal-content">
+            <div class="modal-header">
+                <h2>📋 Jeopardy Spielregeln</h2>
+                <button class="modal-close-btn" id="closeRulesBtn">✖️</button>
+            </div>
+            <div class="modal-body rules-body">
+                <div class="rules-section">
+                    <h3>🎯 Spielziel</h3>
+                    <p>Beantworte Fragen richtig und sammle die meisten Punkte! Der Spieler oder die Gruppe mit den meisten Punkten gewinnt.</p>
+                </div>
+
+                <div class="rules-section">
+                    <h3>🎮 Spielablauf</h3>
+                    <ol>
+                        <li><strong>Kategorien wählen:</strong> Es gibt 5 IT-Kategorien mit je 5 Fragen</li>
+                        <li><strong>Punkte-System:</strong> Fragen sind 100, 200, 300, 400 und 500 Punkte wert</li>
+                        <li><strong>Fragen wählen:</strong> Der aktuelle Spieler wählt eine Kategorie und Punktzahl</li>
+                        <li><strong>Antworten:</strong> Die Frage wird vorgelesen - jeder kann antworten</li>
+                        <li><strong>Bewertung:</strong> Richtige Antwort = Punkte dazu, falsche Antwort = Punkte weg</li>
+                        <li><strong>Spielerwechsel:</strong> Bei falscher Antwort ist der nächste Spieler dran</li>
+                    </ol>
+                </div>
+
+                <div class="rules-section">
+                    <h3>⏰ Timer-Regeln</h3>
+                    <ul>
+                        <li>Jede Frage hat ein <strong>Zeitlimit</strong> (standardmäßig 90 Sekunden)</li>
+                        <li>Zeit läuft ab dem Vorlesen der Frage</li>
+                        <li>Bei Zeitüberschreitung gilt die Antwort als <strong>falsch</strong></li>
+                        <li>Timer kann in den Einstellungen angepasst oder deaktiviert werden</li>
+                    </ul>
+                </div>
+
+                <div class="rules-section">
+                    <h3>💰 Punkte-System</h3>
+                    <ul>
+                        <li><strong>Richtige Antwort:</strong> Volle Punktzahl zur Gesamtpunktzahl dazu</li>
+                        <li><strong>Falsche Antwort:</strong> Volle Punktzahl von Gesamtpunktzahl abgezogen</li>
+                        <li><strong>Negative Punkte sind möglich!</strong> Pass auf bei schweren Fragen</li>
+                        <li>Am Ende gewinnt der Spieler/die Gruppe mit den <strong>meisten Punkten</strong></li>
+                    </ul>
+                </div>
+
+                <div class="rules-section">
+                    <h3>🎲 Daily Double (Spezial)</h3>
+                    <p>Falls aktiviert: Bei manchen Fragen kannst du deinen <strong>Einsatz verdoppeln</strong>!</p>
+                    <ul>
+                        <li>Du kannst einen beliebigen Betrag setzen (bis zu deiner aktuellen Punktzahl)</li>
+                        <li>Bei richtiger Antwort: <strong>Doppelte Punkte!</strong></li>
+                        <li>Bei falscher Antwort: <strong>Doppelter Verlust!</strong></li>
+                    </ul>
+                </div>
+
+                <div class="rules-section">
+                    <h3>👥 Spielmodi</h3>
+                    <div class="game-modes">
+                        <div class="mode-info">
+                            <h4>🧑 Einzelspieler</h4>
+                            <p>2-6 einzelne Spieler treten gegeneinander an</p>
+                        </div>
+                        <div class="mode-info">
+                            <h4>👫 Gruppenspieler</h4>
+                            <p>2-4 Teams mit mehreren Mitgliedern pro Gruppe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rules-section">
+                    <h3>🏆 Gewinnbedingungen</h3>
+                    <p>Das Spiel endet wenn <strong>alle 25 Fragen</strong> (5 Kategorien × 5 Fragen) beantwortet wurden.</p>
+                    <p>Der Spieler oder die Gruppe mit den <strong>meisten Punkten gewinnt!</strong></p>
+                </div>
+
+                <div class="rules-section tips-section">
+                    <h3>💡 Taktik-Tipps</h3>
+                    <ul>
+                        <li><strong>Beginne mit niedrigen Punktzahlen</strong> um dich warmzuspielen</li>
+                        <li><strong>Kenne deine Stärken:</strong> Wähle Kategorien die du gut kannst</li>
+                        <li><strong>Vorsicht bei hohen Punktzahlen:</strong> Großer Gewinn, aber auch großes Risiko</li>
+                        <li><strong>Beobachte die Konkurrenz:</strong> Wer liegt vorne? Wer ist schwach?</li>
+                        <li><strong>Nutze Daily Doubles klug:</strong> Nur setzen wenn du sicher bist!</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeRulesBtn2" class="modal-btn">Alles klar - lass uns spielen! 🚀</button>
+            </div>
+        </div>
+        <div class="modal-backdrop"></div>
+    </div>
+<!-- ==================== QUESTION SETS MANAGEMENT MODALS ==================== -->
+
+<!-- Save Set Modal -->
+<div id="saveSetModal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>💾 Fragen-Set speichern</h3>
+            <button class="modal-close-btn" id="closeSaveSetBtn">✖️</button>
+        </div>
+        <div class="modal-body">
+            <form id="saveSetForm" class="save-set-form">
+                <div class="form-group">
+                    <label for="setName">Set-Name: *</label>
+                    <input 
+                        type="text" 
+                        id="setName" 
+                        placeholder="z.B. 'IT-Basics für Klasse 10'" 
+                        maxlength="100"
+                        required
+                    >
+                    <span class="char-counter" id="setNameCounter">0 / 100</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="setDescription">Beschreibung (optional):</label>
+                    <textarea 
+                        id="setDescription" 
+                        placeholder="Kurze Beschreibung deines Fragen-Sets..."
+                        rows="3"
+                        maxlength="500"
+                    ></textarea>
+                    <span class="char-counter" id="setDescCounter">0 / 500</span>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="setPublic">
+                        <span>🌐 Öffentlich machen (andere Lehrer können es nutzen)</span>
+                    </label>
+                </div>
+                
+                <div class="set-info">
+                    <p>ℹ️ <strong>Was wird gespeichert?</strong></p>
+                    <ul>
+                        <li>✅ Alle 5 Kategorien mit ihren Titeln</li>
+                        <li>✅ Alle 25 Fragen mit Antworten</li>
+                        <li>✅ Punktewerte (100-500)</li>
+                    </ul>
+                </div>
+                
+                <div id="saveSetError" class="auth-error" style="display: none;"></div>
+                <div id="saveSetSuccess" class="auth-success" style="display: none;"></div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="submitSaveSetBtn" class="modal-btn btn-primary">💾 Speichern</button>
+            <button type="button" id="cancelSaveSetBtn" class="modal-btn-secondary">Abbrechen</button>
+        </div>
+    </div>
+</div>
+
+<!-- Load Sets Modal -->
+<div id="loadSetsModal" class="modal hidden">
+    <div class="modal-content load-sets-content">
+        <div class="modal-header">
+            <h3>📂 Fragen-Sets laden</h3>
+            <button class="modal-close-btn" id="closeLoadSetsBtn">✖️</button>
+        </div>
+        <div class="modal-body">
+            <div class="sets-tabs">
+                <button class="sets-tab active" data-tab="my-sets">Meine Sets</button>
+                <button class="sets-tab" data-tab="public-sets">Öffentliche Sets</button>
+            </div>
+            
+            <!-- Meine Sets Tab -->
+            <div class="sets-content active" id="mySetsTab">
+                <div class="sets-stats">
+                    <span class="stat-badge">📊 <span id="mySetsBadge">0</span> Sets</span>
+                    <span class="stat-badge">👁️ <span id="totalPlaysBadge">0</span> Plays</span>
+                </div>
+                
+                <div id="mySetsContainer" class="sets-container">
+                    <div class="sets-loading">
+                        <p>⏳ Lade deine Sets...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Öffentliche Sets Tab -->
+            <div class="sets-content" id="publicSetsTab">
+                <div class="sets-search">
+                    <input 
+                        type="text" 
+                        id="publicSetsSearch" 
+                        placeholder="🔍 Sets durchsuchen..."
+                        class="sets-search-input"
+                    >
+                </div>
+                
+                <div id="publicSetsContainer" class="sets-container">
+                    <div class="sets-loading">
+                        <p>⏳ Lade öffentliche Sets...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" id="refreshSetsBtn" class="modal-btn">🔄 Aktualisieren</button>
+            <button type="button" id="closeLoadSetsBtn2" class="modal-btn-secondary">Schließen</button>
+        </div>
+    </div>
+</div>
+
+<!-- CSS für Set-Management -->
+<style>
+.save-set-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.save-set-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.save-set-form input[type="text"],
+.save-set-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: 8px;
+    background: rgba(26, 26, 26, 0.6);
+    color: var(--color-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.save-set-form input[type="text"]:focus,
+.save-set-form textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.char-counter {
+    display: block;
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.set-info {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 4px solid #10b981;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.set-info ul {
+    margin: 0.5rem 0 0 1.5rem;
+    padding: 0;
+}
+
+.set-info li {
+    margin: 0.25rem 0;
+}
+
+/* Sets List Styles */
+.sets-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(157, 78, 221, 0.3);
+}
+
+.sets-tab {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.sets-tab:hover {
+    color: var(--color-primary);
+    background: rgba(157, 78, 221, 0.1);
+}
+
+.sets-tab.active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+}
+
+.sets-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.stat-badge {
+    padding: 0.5rem 1rem;
+    background: rgba(157, 78, 221, 0.2);
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.sets-content {
+    display: none;
+}
+
+.sets-content.active {
+    display: block;
+}
+
+.sets-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.sets-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.set-card {
+    background: rgba(26, 26, 26, 0.8);
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.set-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+}
+
+.set-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.75rem;
+}
+
+.set-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0 0 0.25rem 0;
+}
+
+.set-card-author {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.set-card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.set-action-btn {
+    padding: 0.4rem 0.6rem;
+    background: rgba(157, 78, 221, 0.2);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.set-action-btn:hover {
+    background: var(--color-accent);
+    transform: scale(1.1);
+}
+
+.set-card-description {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.set-card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.set-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.sets-search {
+    margin-bottom: 1rem;
+}
+
+.sets-search-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: 8px;
+    background: rgba(26, 26, 26, 0.6);
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.sets-search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+.sets-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+}
+
+.sets-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.load-sets-content {
+    max-width: 900px;
+    min-height: 600px;
+}
+</style>
+    <!-- Achievement Notifications -->
+    <div id="achievementContainer" class="achievement-container"></div>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+            <!-- FOOTER: Entwickler-Credit und Jahr -->
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    
+    <!-- ==================== JAVASCRIPT ==================== -->
+    
+    <!-- Core Modules -->
+    <script src="../javascript/modules.js"></script>
+    
+    <!-- Animations -->
+    <script src="../javascript/animations.js"></script>
+    
+    <!-- Sound System -->
+    <script src="../javascript/sounds.js"></script>
+    
+    <!-- Fragen-Datenbank werden dynamisch geladen basierend auf Modus -->
+    
+   <!-- Auth System -->
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+
+    <!-- Question Editor -->
+    <script src="../javascript/editor.js"></script>
+
+        <!-- Question Sets Management -->
+    <script src="../javascript/question_sets.js"></script>
+
+    <!-- Question Stats -->
+    <script src="../javascript/stats.js"></script>
+    
+    <!-- Hauptspiel-Logik (muss zuletzt geladen werden) -->
+    <script src="../javascript/script.js"></script>    <!-- ========================================= -->
+    <!-- MODE SELECTION LOGIC                     -->
+    <!-- ========================================= -->
+    <script>
+        // 🎯 Globale Variable für aktuellen Modus
+        let currentGameMode = null;
+        let questionsLoaded = false;
+        
+        // 🎮 Automatischer Start mit Standard-Modus
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎮 Jeopardy Quiz - Lade Standard-Modus...');
+            
+            // Direkt Standard-Modus laden (kein Modus-Auswahl mehr)
+            loadStandardMode();
+        });
+        
+        // 📦 Standard-Modus direkt laden
+        function loadStandardMode() {
+            currentGameMode = 'standard';
+            console.log('🎯 Standard-Modus wird geladen...');
+            
+            // Lade Standard-Fragen
+            const script = document.createElement('script');
+            script.src = '../fragenkataloge/questions_standard.js';
+            script.onload = () => {
+                console.log('✅ questions_standard.js geladen');
+                questionsLoaded = true;
+                
+                // Prüfe ob jeopardyData verfügbar ist
+                if (typeof jeopardyData !== 'undefined') {
+                    console.log('✅ jeopardyData verfügbar mit', jeopardyData.categories.length, 'Kategorien');
+                } else {
+                    console.error('❌ jeopardyData nicht gefunden!');
+                }
+            };
+            script.onerror = () => {
+                console.error('❌ Fehler beim Laden von questions_standard.js');
+                alert('Fehler: Fragen konnten nicht geladen werden!');
+            };
+            document.head.appendChild(script);
+        }
+    </script>
+    
+    <!-- ========================================= -->
+    <!-- INITIALISIERUNG & STARTUP               -->
+    <!-- ========================================= -->
+    <script>
+        // 🚀 Debug-Modus nach DOM-Laden initialisieren (nur Debug, kein Spielstart mehr hier!)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎮 Jeopardy Quiz - Initialisierung...');
+            
+            // Debug-Modus Hinweis in Console
+            if (typeof DEBUG_CONFIG !== 'undefined' && DEBUG_CONFIG.enabled) {
+                console.log('%c🔧 DEBUG-MODUS AKTIV 🔧', 'color: #ff6b6b; font-size: 16px; font-weight: bold;');
+                console.log('Verfügbare Debug-Befehle:');
+                console.log('• enableDebug() - Debug-Modus umschalten');
+                console.log('• debugStats() - Statistiken anzeigen'); 
+                console.log('• startPerformanceMonitoring() - Performance überwachen');
+            }
+            
+            // Performance-Monitor starten falls aktiviert
+            if (typeof DEBUG_CONFIG !== 'undefined' && DEBUG_CONFIG.performance && window.performanceMonitor) {
+                performanceMonitor.startMonitoring();
+            }
+        });
+        
+        // 📊 Unload-Event für Cleanup
+        window.addEventListener('beforeunload', function() {
+            if (window.performanceMonitor) {
+                performanceMonitor.stopMonitoring();
+            }
+            
+            if (window.debugLog) {
+                debugLog.showStats();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Aufgaben-Roulette-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Aufgaben-Roulette - Lehrer Tool">
+    <meta name="keywords" content="Aufgaben-Roulette, Lehrer Tool, Zufall, Hausaufgaben, Referate">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* ============================================================================
+           🎯 RESPONSIVE VARIABLEN & BASE SETUP
+           ============================================================================ */
+        :root {
+            /* Colors */
+            --color-bg: #0a0a0a;
+            --color-bg-secondary: #1a1a1a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26, 26, 26, 0.8);
+            --color-border: rgba(199, 125, 255, 0.3);
+            --color-text: #e0aaff;
+            --color-success: #38ef7d;
+            --color-danger: #ff6a00;
+            
+            /* Responsive Spacing */
+            --spacing-xs: clamp(4px, 1vw, 8px);
+            --spacing-sm: clamp(8px, 2vw, 12px);
+            --spacing-md: clamp(12px, 3vw, 20px);
+            --spacing-lg: clamp(16px, 4vw, 28px);
+            --spacing-xl: clamp(20px, 5vw, 36px);
+            --spacing-xxl: clamp(24px, 6vw, 48px);
+            
+            /* Responsive Font Sizes */
+            --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2.5vw, 1rem);
+            --font-md: clamp(1rem, 3vw, 1.125rem);
+            --font-lg: clamp(1.125rem, 3.5vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 4.5vw, 2rem);
+            --font-xxl: clamp(2rem, 5.5vw, 3rem);
+            --font-xxxl: clamp(2.5rem, 7vw, 4rem);
+            
+            /* Responsive Borders */
+            --radius-sm: clamp(6px, 1.5vw, 8px);
+            --radius-md: clamp(8px, 2vw, 12px);
+            --radius-lg: clamp(12px, 2.5vw, 18px);
+            --radius-xl: clamp(16px, 3vw, 24px);
+            
+            /* Touch Targets */
+            --min-touch: clamp(44px, 10vw, 48px);
+        }
+
+        /* ============================================================================
+           📐 GLOBAL RESET & BASE
+           ============================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ============================================================================
+           🎨 HEADER - RESPONSIVE
+           ============================================================================ */
+        .game-header {
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 32px rgba(157, 77, 221, 0.3);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            position: sticky;
+            top: var(--spacing-sm);
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            flex: 1;
+            min-width: 0;
+        }
+
+        .emoji-icon {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: var(--font-xl);
+            font-weight: 800;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================================================
+           🎛️ BUTTONS - TOUCH OPTIMIERT
+           ============================================================================ */
+        .btn {
+            min-height: var(--min-touch);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            white-space: nowrap;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn:hover {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(157, 77, 221, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #c77dff, #9d4edd);
+            box-shadow: 0 6px 20px rgba(157, 77, 221, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+            border: none;
+        }
+
+        .user-display {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-size: var(--font-sm);
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* ============================================================================
+           📦 CONTAINER & LAYOUT
+           ============================================================================ */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+            width: 100%;
+            flex: 1;
+        }
+
+        .developer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-xs);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ============================================================================
+           🎴 MAIN GRID - RESPONSIVE
+           ============================================================================ */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* ============================================================================
+           🎴 PANELS - RESPONSIVE CARDS
+           ============================================================================ */
+        .panel {
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: 0 4px 32px rgba(157, 77, 221, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: 0 8px 40px rgba(157, 77, 221, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .panel-title, .panel h2 {
+            font-size: var(--font-xl);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .panel h3 {
+            font-size: var(--font-lg);
+            color: var(--color-secondary);
+            margin-bottom: var(--spacing-md);
+            font-weight: 700;
+        }
+
+        /* ============================================================================
+           📝 FORM SECTIONS - RESPONSIVE
+           ============================================================================ */
+        .settings-section {
+            background: rgba(26, 26, 26, 0.5);
+            border: 1px solid rgba(199, 125, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-label {
+            font-size: var(--font-lg);
+            color: var(--color-text);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 700;
+        }
+
+        /* ============================================================================
+           🎯 INPUT GROUPS - RESPONSIVE
+           ============================================================================ */
+        .input-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--color-secondary);
+            font-weight: 600;
+            font-size: var(--font-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--color-bg-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-size: max(16px, var(--font-sm)); /* iOS Zoom Prevention */
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .input-group textarea {
+            min-height: clamp(120px, 20vh, 180px);
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            background: rgba(157, 77, 221, 0.1);
+            box-shadow: 0 0 0 3px rgba(157, 77, 221, 0.2);
+        }
+
+        /* Checkbox Input Group */
+        .input-group[style*="flex-direction: row"] {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .input-group input[type="checkbox"] {
+            width: clamp(20px, 5vw, 24px);
+            height: clamp(20px, 5vw, 24px);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .input-group input[type="checkbox"] + label {
+            margin: 0 !important;
+            cursor: pointer;
+        }
+
+        /* ============================================================================
+           🎲 ROULETTE DISPLAY - RESPONSIVE
+           ============================================================================ */
+        .roulette-display {
+            min-height: clamp(200px, 30vh, 350px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin: var(--spacing-lg) 0;
+            border: 2px dashed var(--color-border);
+        }
+
+        .roulette-display p {
+            color: #888;
+            font-size: var(--font-md);
+            text-align: center;
+        }
+
+        .result-text {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            text-align: center;
+            color: var(--color-accent);
+            text-shadow: 0 0 30px rgba(157, 77, 221, 0.5);
+            animation: fadeIn 0.8s ease-in;
+            line-height: 1.3;
+            padding: var(--spacing-md);
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.5) rotate(-10deg); 
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1) rotate(0deg); 
+            }
+        }
+
+        /* ============================================================================
+           📋 LISTS - RESPONSIVE
+           ============================================================================ */
+        .assignment-list,
+        .history-list {
+            max-height: clamp(250px, 40vh, 400px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: rgba(0, 0, 0, 0.2);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .assignment-list p,
+        .history-list p {
+            text-align: center;
+            color: #888;
+            padding: var(--spacing-lg);
+            font-size: var(--font-sm);
+        }
+
+        /* ============================================================================
+           🎯 ASSIGNMENT ITEMS
+           ============================================================================ */
+        .assignment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: var(--spacing-md);
+            background: rgba(157, 77, 221, 0.1);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-sm);
+            border-left: 4px solid var(--color-accent);
+            gap: var(--spacing-sm);
+            transition: all 0.3s ease;
+        }
+
+        .assignment-item:hover {
+            background: rgba(157, 77, 221, 0.15);
+            transform: translateX(4px);
+        }
+
+        .assignment-item.used {
+            opacity: 0.4;
+            border-left-color: #555;
+        }
+
+        .assignment-item .task {
+            color: #e0e0e0;
+            font-weight: 500;
+            flex: 1;
+            min-width: 0;
+            font-size: var(--font-sm);
+            word-break: break-word;
+        }
+
+        .assignment-item .person {
+            color: var(--color-success);
+            font-weight: 700;
+            padding: var(--spacing-xs) var(--spacing-md);
+            background: rgba(56, 239, 125, 0.2);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-xs);
+            white-space: nowrap;
+        }
+
+        /* ============================================================================
+           📜 HISTORY ITEMS
+           ============================================================================ */
+        .history-item {
+            padding: var(--spacing-sm);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            font-size: var(--font-xs);
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ============================================================================
+           🎬 FOOTER
+           ============================================================================ */
+        .game-footer {
+            background: var(--color-card-bg);
+            border-top: 1px solid var(--color-border);
+            padding: var(--spacing-lg);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .developer-credit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: var(--font-sm);
+            color: var(--color-secondary);
+            flex-wrap: wrap;
+        }
+
+        .footer-icon {
+            font-size: var(--font-md);
+        }
+
+        /* ============================================================================
+           🎨 ACTION BUTTONS CONTAINER
+           ============================================================================ */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* ============================================================================
+           📱 MOBILE OPTIMIZATIONS (< 768px)
+           ============================================================================ */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: var(--spacing-sm);
+                padding: var(--spacing-md);
+            }
+
+            .header-title {
+                justify-content: center;
+            }
+
+            .header-actions {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+                min-width: 0;
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: var(--spacing-lg);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+
+            .assignment-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .assignment-item .person {
+                align-self: flex-end;
+            }
+
+            .roulette-display {
+                min-height: clamp(150px, 25vh, 250px);
+                padding: var(--spacing-lg);
+            }
+
+            .result-text {
+                font-size: clamp(1.2rem, 6vw, 2rem);
+            }
+        }
+
+        /* ============================================================================
+           📱 SMALL MOBILE (< 480px)
+           ============================================================================ */
+        @media (max-width: 480px) {
+            .container {
+                padding: var(--spacing-sm);
+            }
+
+            .game-header {
+                margin: var(--spacing-sm);
+                border-radius: var(--radius-md);
+            }
+
+            .panel {
+                padding: var(--spacing-md);
+                border-radius: var(--radius-lg);
+            }
+
+            .header-title h1 {
+                font-size: var(--font-lg);
+            }
+
+            .btn {
+                padding: var(--spacing-sm);
+                font-size: var(--font-xs);
+            }
+
+            .input-group textarea {
+                min-height: 100px;
+            }
+
+            .assignment-list,
+            .history-list {
+                max-height: 200px;
+            }
+        }
+
+        /* ============================================================================
+           🖥️ TABLET (768px - 1024px)
+           ============================================================================ */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================================
+           🖥️ DESKTOP (> 1024px)
+           ============================================================================ */
+        @media (min-width: 1025px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .panel,
+            .btn,
+            .input-group input {
+                border-width: 2px !important;
+            }
+        }
+
+        /* ============================================================================
+           🌐 SAFE AREAS (Notch Support)
+           ============================================================================ */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+
+            .game-header {
+                padding-left: max(var(--spacing-lg), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-lg), env(safe-area-inset-right));
+            }
+        }
+
+        /* ============================================================================
+           🖨️ PRINT STYLES
+           ============================================================================ */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .game-header,
+            .btn,
+            .game-footer {
+                display: none !important;
+            }
+
+            .panel {
+                page-break-inside: avoid;
+                border: 1px solid #000 !important;
+            }
+
+            .assignment-item {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* ============================================================================
+           🎨 SCROLLBAR STYLING
+           ============================================================================ */
+        .assignment-list::-webkit-scrollbar,
+        .history-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .assignment-list::-webkit-scrollbar-track,
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .assignment-list::-webkit-scrollbar-thumb,
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 4px;
+        }
+
+        .assignment-list::-webkit-scrollbar-thumb:hover,
+        .history-list::-webkit-scrollbar-thumb:hover {
+            background: var(--color-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <iframe 
+        src="background-bubbles-boxes.html" 
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+        aria-hidden="true" 
+        tabindex="-1">
+    </iframe>
+
+    <!-- Header -->
+    <header class="game-header">
+        <div class="header-title">
+            <span class="emoji-icon">🎯</span>
+            <h1>Aufgaben-Roulette</h1>
+        </div>
+        <div class="header-actions">
+            <a href="start.html" class="btn">← Zurück</a>
+            <span id="userDisplayAR" class="user-display" style="display: none;">Gast</span>
+            <button id="loginBtnAR" class="btn">Anmelden</button>
+            <button id="logoutBtnAR" class="btn" style="display: none;">Abmelden</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Developer Badge -->
+        <div style="text-align: center; margin-bottom: var(--spacing-lg);">
+            <span class="developer-badge">👨‍💻 Entwickelt von Nico</span>
+        </div>
+        
+        <div class="main-grid">
+            <!-- Eingabe Panel -->
+            <div class="panel">
+                <h2 class="panel-title">⚙️ Konfiguration</h2>
+                
+                <div class="settings-section">
+                    <h3 class="section-label">📝 Eingabe</h3>
+                    
+                    <div class="input-group">
+                        <label for="peopleInput">Personen/Schüler (ein Name pro Zeile):</label>
+                        <textarea 
+                            id="peopleInput" 
+                            placeholder="Max Mustermann&#10;Anna Schmidt&#10;Tom Weber"
+                            aria-label="Personen eingeben">
+                        </textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="tasksInput">Aufgaben/Themen (eins pro Zeile):</label>
+                        <textarea 
+                            id="tasksInput" 
+                            placeholder="Referat über Klimawandel&#10;Präsentation HTML/CSS&#10;Vortrag Marketing"
+                            aria-label="Aufgaben eingeben">
+                        </textarea>
+                    </div>
+
+                    <div class="input-group" style="flex-direction: row; align-items: center; gap: var(--spacing-sm);">
+                        <input 
+                            type="checkbox" 
+                            id="fairDistribution" 
+                            checked 
+                            style="width: auto; margin: 0;"
+                            aria-label="Faire Verteilung aktivieren">
+                        <label for="fairDistribution" style="margin: 0;">
+                            Faire Verteilung (jede Person max. 1 Aufgabe)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="roulette.loadData()">
+                        📥 Daten laden
+                    </button>
+                    <button class="btn" onclick="roulette.assignTask()">
+                        🎲 Aufgabe ziehen
+                    </button>
+                    <button class="btn btn-danger" onclick="roulette.reset()">
+                        🔄 Zurücksetzen
+                    </button>
+                </div>
+
+                <div class="roulette-display" id="resultDisplay">
+                    <p>Lade Daten und ziehe eine Aufgabe</p>
+                </div>
+            </div>
+
+            <!-- Übersicht Panel -->
+            <div class="panel">
+                <h2>📊 Übersicht</h2>
+                
+                <h3>🎯 Zugewiesene Aufgaben:</h3>
+                <div class="assignment-list" id="assignmentsList">
+                    <p>Noch keine Aufgaben verteilt</p>
+                </div>
+
+                <h3>📜 Verlauf:</h3>
+                <div class="history-list" id="historyList">
+                    <p>Noch keine Historie</p>
+                </div>
+
+                <div style="margin-top: var(--spacing-lg); text-align: center;">
+                    <button class="btn" onclick="roulette.exportResults()">
+                        💾 Ergebnisse exportieren
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/aufgabenroulette.js"></script>
+
+    <script>
+        // Simple Roulette Object (falls aufgabenroulette.js fehlt)
+        if (typeof roulette === 'undefined') {
+            window.roulette = {
+                people: [],
+                tasks: [],
+                assignments: [],
+                history: [],
+                
+                loadData() {
+                    const peopleText = document.getElementById('peopleInput').value;
+                    const tasksText = document.getElementById('tasksInput').value;
+                    
+                    this.people = peopleText.split('\n').filter(p => p.trim());
+                    this.tasks = tasksText.split('\n').filter(t => t.trim());
+                    
+                    if (this.people.length === 0 || this.tasks.length === 0) {
+                        this.showResult('⚠️ Bitte fülle beide Felder aus!', '#ff6a00');
+                        return;
+                    }
+                    
+                    this.showResult(`✅ ${this.people.length} Personen und ${this.tasks.length} Aufgaben geladen!`, '#38ef7d');
+                },
+                
+                assignTask() {
+                    if (this.people.length === 0 || this.tasks.length === 0) {
+                        this.showResult('⚠️ Bitte lade zuerst die Daten!', '#ff6a00');
+                        return;
+                    }
+                    
+                    const fairMode = document.getElementById('fairDistribution').checked;
+                    
+                    // Filter verfügbare Personen
+                    let availablePeople = fairMode 
+                        ? this.people.filter(p => !this.assignments.find(a => a.person === p))
+                        : this.people;
+                    
+                    // Filter verfügbare Aufgaben
+                    let availableTasks = this.tasks.filter(t => !this.assignments.find(a => a.task === t));
+                    
+                    if (availablePeople.length === 0) {
+                        this.showResult('⚠️ Alle Personen haben bereits eine Aufgabe!', '#ff6a00');
+                        return;
+                    }
+                    
+                    if (availableTasks.length === 0) {
+                        this.showResult('⚠️ Alle Aufgaben wurden bereits verteilt!', '#ff6a00');
+                        return;
+                    }
+                    
+                    // Zufällige Auswahl
+                    const randomPerson = availablePeople[Math.floor(Math.random() * availablePeople.length)];
+                    const randomTask = availableTasks[Math.floor(Math.random() * availableTasks.length)];
+                    
+                    // Speichern
+                    const assignment = { person: randomPerson, task: randomTask, timestamp: new Date() };
+                    this.assignments.push(assignment);
+                    this.history.push(assignment);
+                    
+                    // Anzeigen
+                    this.showResult(`🎉 ${randomPerson}<br><small style="font-size: 0.6em;">erhält</small><br>${randomTask}`, '#9d4edd');
+                    this.updateLists();
+                },
+                
+                showResult(text, color = '#9d4edd') {
+                    const display = document.getElementById('resultDisplay');
+                    display.innerHTML = `<div class="result-text" style="color: ${color}">${text}</div>`;
+                },
+                
+                updateLists() {
+                    // Assignments List
+                    const assignmentsList = document.getElementById('assignmentsList');
+                    if (this.assignments.length === 0) {
+                        assignmentsList.innerHTML = '<p>Noch keine Aufgaben verteilt</p>';
+                    } else {
+                        assignmentsList.innerHTML = this.assignments.map(a => `
+                            <div class="assignment-item">
+                                <span class="task">${a.task}</span>
+                                <span class="person">${a.person}</span>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    // History List
+                    const historyList = document.getElementById('historyList');
+                    if (this.history.length === 0) {
+                        historyList.innerHTML = '<p>Noch keine Historie</p>';
+                    } else {
+                        historyList.innerHTML = this.history.slice().reverse().map((h, i) => `
+                            <div class="history-item">
+                                <span>${h.person} → ${h.task}</span>
+                                <span style="color: #888; font-size: 0.85em;">${new Date(h.timestamp).toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'})}</span>
+                            </div>
+                        `).join('');
+                    }
+                },
+                
+                reset() {
+                    if (confirm('Möchtest du wirklich alle Zuweisungen zurücksetzen?')) {
+                        this.assignments = [];
+                        this.history = [];
+                        this.showResult('🔄 Alle Zuweisungen wurden zurückgesetzt', '#ff6a00');
+                        this.updateLists();
+                    }
+                },
+                
+                exportResults() {
+                    if (this.assignments.length === 0) {
+                        alert('Keine Ergebnisse zum Exportieren!');
+                        return;
+                    }
+                    
+                    let text = '📊 AUFGABEN-ROULETTE ERGEBNISSE\n';
+                    text += '================================\n\n';
+                    text += `Erstellt am: ${new Date().toLocaleString('de-DE')}\n\n`;
+                    text += 'ZUWEISUNGEN:\n';
+                    text += '------------\n';
+                    this.assignments.forEach((a, i) => {
+                        text += `${i + 1}. ${a.person} → ${a.task}\n`;
+                    });
+                    
+                    // Download als Textdatei
+                    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `aufgaben-roulette-${Date.now()}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showResult('💾 Ergebnisse wurden exportiert!', '#38ef7d');
+                }
+            };
+        }
+    </script>

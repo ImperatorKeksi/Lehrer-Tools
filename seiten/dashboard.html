@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Dashboard-Lehrer Tool</title>
+    <!-- SEO -->
+    <meta name="description" content="Dashboard - Lehrer Tool">
+    <meta name="keywords" content="Dashboard, Lehrer Tool, Favoriten, Schnellzugriff, Übersicht">
+    <meta name="author" content="Nico">
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../stylesheets/responsive-master.css">
+    <link rel="stylesheet" href="../stylesheets/styles.css">
+    <link rel="stylesheet" href="../stylesheets/animations.css">
+    
+    <style>
+        :root {
+            /* Colors - Konsistentes Purple Theme */
+            --color-bg: #0a0a0a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26,26,26,0.8);
+            --color-border: rgba(199, 125, 255, 0.3);
+            --color-hover: rgba(157, 78, 221, 0.2);
+            
+            /* Spacing */
+            --gap-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --gap-sm: clamp(0.75rem, 2vw, 1rem);
+            --gap-md: clamp(1rem, 3vw, 1.5rem);
+            --gap-lg: clamp(1.5rem, 4vw, 2rem);
+            --gap-xl: clamp(2rem, 5vw, 3rem);
+            
+            /* Typography */
+            --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2vw, 1rem);
+            --font-md: clamp(1rem, 2.5vw, 1.125rem);
+            --font-lg: clamp(1.25rem, 3vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 4vw, 2rem);
+            
+            /* Safe Area */
+            --safe-area-top: env(safe-area-inset-top, 0);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0);
+            --safe-area-left: env(safe-area-inset-left, 0);
+            --safe-area-right: env(safe-area-inset-right, 0);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: max(16px, 1rem);
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-primary);
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Skip Link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-accent);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header */
+        .main-header {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--gap-sm) var(--gap-md);
+            padding-top: calc(var(--gap-sm) + var(--safe-area-top));
+            position: sticky;
+            top: var(--safe-area-top);
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--gap-md);
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm);
+        }
+
+        .logo {
+            width: clamp(32px, 8vw, 40px);
+            height: clamp(32px, 8vw, 40px);
+            border-radius: 8px;
+        }
+
+        .header-title {
+            font-size: var(--font-lg);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-sm);
+            flex-wrap: wrap;
+        }
+
+        .nav-link, .btn-login, .btn-logout {
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.8rem, 3vw, 1rem);
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: var(--font-sm);
+            transition: all 0.3s ease;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-logout {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.5);
+        }
+
+        .nav-link:hover, .btn-login:hover, .btn-logout:hover {
+            background: var(--color-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+        }
+
+        .user-display {
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.8rem, 3vw, 1rem);
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid var(--color-accent);
+            border-radius: 8px;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        /* Container */
+        .container {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: var(--gap-lg);
+            padding-left: calc(var(--gap-lg) + var(--safe-area-left));
+            padding-right: calc(var(--gap-lg) + var(--safe-area-right));
+            padding-bottom: calc(var(--gap-lg) + var(--safe-area-bottom));
+        }
+
+        /* Welcome Section */
+        .dashboard-welcome {
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(199, 125, 255, 0.05));
+            border: 2px solid var(--color-border);
+            border-radius: clamp(12px, 3vw, 20px);
+            padding: var(--gap-lg);
+            margin-bottom: var(--gap-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--gap-md);
+            flex-wrap: wrap;
+            box-shadow: 0 8px 32px rgba(157, 78, 221, 0.2);
+        }
+
+        .welcome-title {
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            margin-bottom: var(--gap-xs);
+        }
+
+        .welcome-subtitle {
+            color: var(--color-secondary);
+            font-size: var(--font-md);
+        }
+
+        .welcome-stats {
+            display: flex;
+            gap: var(--gap-md);
+            flex-wrap: wrap;
+        }
+
+        .welcome-stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-xs);
+            padding: var(--gap-sm) var(--gap-md);
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        .stat-icon {
+            font-size: var(--font-lg);
+        }
+
+        .stat-text {
+            font-size: var(--font-sm);
+            color: var(--color-primary);
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background: var(--color-card-bg);
+            border: 1px solid var(--color-border);
+            border-radius: clamp(12px, 3vw, 18px);
+            padding: var(--gap-lg);
+            margin-bottom: var(--gap-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--gap-md);
+            gap: var(--gap-md);
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            font-size: var(--font-lg);
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .btn, .btn-secondary {
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(0.8rem, 3vw, 1.2rem);
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            color: var(--color-primary);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            transition: all 0.3s ease;
+            min-height: 44px;
+            font-family: inherit;
+        }
+
+        .btn:hover, .btn-secondary:hover {
+            background: var(--color-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+        }
+
+        /* Grids */
+        .quick-access-grid,
+        .favorites-grid,
+        .configs-grid,
+        .stats-overview-grid,
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 40vw, 280px), 1fr));
+            gap: var(--gap-md);
+        }
+
+        /* Cards */
+        .tool-card,
+        .favorite-card,
+        .config-card,
+        .stat-card,
+        .widget-card {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--color-border);
+            border-radius: clamp(10px, 2vw, 12px);
+            padding: var(--gap-md);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: var(--gap-sm);
+        }
+
+        .tool-card:hover,
+        .favorite-card:hover {
+            background: var(--color-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(157, 78, 221, 0.3);
+            border-color: var(--color-accent);
+        }
+
+        .card-icon {
+            font-size: clamp(2rem, 6vw, 3rem);
+        }
+
+        .card-title {
+            font-size: var(--font-md);
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .card-subtitle {
+            font-size: var(--font-xs);
+            color: var(--color-secondary);
+        }
+
+        /* Favorite Card Remove Button */
+        .favorite-remove {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid var(--color-border);
+            border-radius: 50%;
+            color: var(--color-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .favorite-remove:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            transform: scale(1.1);
+        }
+
+        .favorite-card {
+            position: relative;
+        }
+
+        /* Recent Activity */
+        .recent-activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-sm);
+        }
+
+        .activity-item {
+            padding: var(--gap-md);
+            background: rgba(157, 78, 221, 0.05);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--gap-md);
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: var(--color-accent);
+        }
+
+        .activity-info {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: var(--font-xs);
+            color: var(--color-secondary);
+        }
+
+        /* Admin Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(26, 26, 26, 0.6);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: var(--gap-md);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            background: rgba(157, 78, 221, 0.15);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        td {
+            color: var(--color-secondary);
+        }
+
+        /* Form Elements - Konsistentes Purple Design */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-primary);
+            font-size: var(--font-sm);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            background: rgba(157, 78, 221, 0.15);
+            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--color-secondary);
+            opacity: 0.6;
+        }
+
+        /* Buttons in Table */
+        td button {
+            padding: 0.5rem 1rem;
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-primary);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        td button:hover {
+            background: var(--color-hover);
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .game-footer {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--color-border);
+            padding: var(--gap-md);
+            padding-bottom: calc(var(--gap-md) + var(--safe-area-bottom));
+            text-align: center;
+        }
+
+        .developer-credit {
+            color: var(--color-secondary);
+            font-size: var(--font-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--gap-xs);
+            flex-wrap: wrap;
+        }
+
+        .footer-icon {
+            font-size: var(--font-md);
+        }
+
+        /* Empty States */
+        .empty-state {
+            padding: var(--gap-xl);
+            text-align: center;
+            color: var(--color-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: clamp(3rem, 8vw, 4rem);
+            margin-bottom: var(--gap-md);
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: var(--font-md);
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .header-nav {
+                justify-content: center;
+            }
+            
+            .dashboard-welcome {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .welcome-stats {
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .quick-access-grid,
+            .favorites-grid,
+            .configs-grid,
+            .widgets-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: var(--font-xs);
+            }
+
+            th, td {
+                padding: var(--gap-sm);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-access-grid,
+            .favorites-grid,
+            .configs-grid,
+            .widgets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .activity-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+    <!-- Background -->
+    <iframe src="background-bubbles-boxes.html" 
+            style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+            aria-hidden="true" 
+            tabindex="-1"></iframe>
+
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
+    <!-- Header -->
+    <header class="header main-header">
+        <div class="header-content nav-container">
+            <div class="logo-container">
+                <img src="../icons/logo-simple.svg" alt="Lehrer-Tools Logo" class="logo" width="40" height="40">
+                <h1 class="header-title">Mein Dashboard</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="../seiten/start.html" class="nav-link">🏠 Startseite</a>
+                <div class="nav-auth">
+                    <span id="userDisplayDB" class="user-display" style="display:none;"></span>
+                    <button id="loginBtnDB" class="btn-login" style="display:none;">Anmelden</button>
+                    <button id="logoutBtnDB" class="btn-logout" style="display:none;">Abmelden</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container">
+        
+        <!-- Welcome Section -->
+        <section class="dashboard-welcome">
+            <div class="welcome-content">
+                <h2 class="welcome-title">👋 Willkommen zurück!</h2>
+                <p class="welcome-subtitle">Deine persönliche Tool-Übersicht</p>
+            </div>
+            <div class="welcome-stats">
+                <div class="welcome-stat-item">
+                    <span class="stat-icon">📅</span>
+                    <span class="stat-text" id="current-date">Lädt...</span>
+                </div>
+                <div class="welcome-stat-item">
+                    <span class="stat-icon">⏰</span>
+                    <span class="stat-text" id="current-time">Lädt...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Access -->
+        <section class="dashboard-section">
+            <h3 class="section-title">⚡ Schnellzugriff</h3>
+            <div class="quick-access-grid" id="quick-access">
+                <div class="tool-card">
+                    <span class="card-icon">🎮</span>
+                    <span class="card-title">IT-Quiz</span>
+                    <span class="card-subtitle">Jeopardy Spiel</span>
+                </div>
+                <div class="tool-card">
+                    <span class="card-icon">⏰</span>
+                    <span class="card-title">Timer</span>
+                    <span class="card-subtitle">Countdown & Uhr</span>
+                </div>
+                <div class="tool-card">
+                    <span class="card-icon">🎲</span>
+                    <span class="card-title">Zufallsgenerator</span>
+                    <span class="card-subtitle">Namen & Listen</span>
+                </div>
+                <div class="tool-card">
+                    <span class="card-icon">🏙️</span>
+                    <span class="card-title">Stadt-Land-Fluss</span>
+                    <span class="card-subtitle">Klassisches Spiel</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="dashboard-section">
+            <h3 class="section-title">🕐 Zuletzt verwendet</h3>
+            <div class="recent-activity-list" id="recent-activity">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🕐</div>
+                    <div class="empty-state-text">Statistiken werden geladen...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Overview -->
+        <section class="dashboard-section">
+            <h3 class="section-title">📊 Statistik-Übersicht</h3>
+            <div class="stats-overview-grid" id="stats-overview">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <div class="empty-state-text">Statistiken werden geladen...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Widgets -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h3 class="section-title">🎛️ Widgets</h3>
+                <button class="btn btn-secondary" onclick="alert('Feature kommt bald!')">
+                    Anpassen
+                </button>
+            </div>
+            <div class="widgets-grid" id="widgets">
+                <div class="widget-card">
+                    <span class="card-icon">🕐</span>
+                    <span class="card-title">Uhr Widget</span>
+                    <span class="card-subtitle">(Coming Soon)</span>
+                </div>
+                <div class="widget-card">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">Statistik Widget</span>
+                    <span class="card-subtitle">(Coming Soon)</span>
+                </div>
+                <div class="widget-card">
+                    <span class="card-icon">🎯</span>
+                    <span class="card-title">Aktivitäten Widget</span>
+                    <span class="card-subtitle">(Coming Soon)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Benutzerverwaltung -->
+        <section class="dashboard-section" id="admin-user-management" style="display:none;">
+            <div class="section-header">
+                <h3 class="section-title">👑 Benutzerverwaltung (Admin)</h3>
+            </div>
+            <div id="admin-users-list">
+                <div class="empty-state">
+                    <div class="empty-state-icon">👥</div>
+                    <div class="empty-state-text">Benutzerdaten werden geladen...</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/dashboard.js"></script>
+    
+    <script>
+        // Simple Dashboard Controller
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update Date & Time
+            function updateDateTime() {
+                const now = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('current-date').textContent = now.toLocaleDateString('de-DE', options);
+                document.getElementById('current-time').textContent = now.toLocaleTimeString('de-DE');
+            }
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            // Tool Cards Click Handlers
+            document.querySelectorAll('.tool-card').forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    const tools = ['game.html', 'timer.html', 'zufallsgenerator.html', 'stadt-land-fluss.html'];
+                    window.location.href = tools[index];
+                });
+            });
+
+            // Admin-Bereich erst nach Authentifizierung prüfen
+            function showAdminSectionIfAllowed() {
+                if (window.authManager && authManager.currentUser && authManager.currentUser.role === 'administrator') {
+                    document.getElementById('admin-user-management').style.display = '';
+                    loadAdminUsers();
+                }
+            }
+            
+            if (window.authManager && typeof authManager.checkSession === 'function') {
+                authManager.checkSession().then(showAdminSectionIfAllowed);
+            } else {
+                showAdminSectionIfAllowed();
+            }
+
+            // Benutzerliste laden
+            function loadAdminUsers() {
+                fetch('../php/user_admin_api.php?action=list')
+                    .then(res => res.json())
+                    .then(data => {
+                        const container = document.getElementById('admin-users-list');
+                        if (data.success && data.users.length) {
+                            container.innerHTML = '<table><thead><tr><th>ID</th><th>Benutzername</th><th>Email</th><th>Rolle</th><th>Aktionen</th></tr></thead><tbody>' +
+                                data.users.map(user => `
+                                    <tr>
+                                        <td>${user.id}</td>
+                                        <td><input type="text" value="${user.username}" data-id="${user.id}" class="admin-username"></td>
+                                        <td><input type="email" value="${user.email}" data-id="${user.id}" class="admin-email"></td>
+                                        <td><select data-id="${user.id}" class="admin-role">
+                                            <option value="administrator"${user.role==='administrator'?' selected':''}>Administrator</option>
+                                            <option value="lehrer"${user.role==='lehrer'?' selected':''}>Lehrer</option>
+                                            <option value="schueler"${user.role==='schueler'?' selected':''}>Schüler</option>
+                                        </select></td>
+                                        <td>
+                                            <input type="password" placeholder="Neues Passwort" data-id="${user.id}" class="admin-password">
+                                            <button onclick="updateUser(${user.id})">Speichern</button>
+                                        </td>
+                                    </tr>
+                                `).join('') + '</tbody></table>';
+                        } else {
+                            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><div class="empty-state-text">Keine Benutzer gefunden</div></div>';
+                        }
+                    });
+            }
+
+            // Benutzer aktualisieren
+            window.updateUser = function(id) {
+                const username = document.querySelector(`.admin-username[data-id='${id}']`).value;
+                const email = document.querySelector(`.admin-email[data-id='${id}']`).value;
+                const role = document.querySelector(`.admin-role[data-id='${id}']`).value;
+                const password = document.querySelector(`.admin-password[data-id='${id}']`).value;
+                const formData = new FormData();
+                formData.append('id', id);
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('role', role);
+                if (password) formData.append('password', password);
+                fetch('../php/user_admin_api.php?action=update', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Benutzer gespeichert!');
+                        loadAdminUsers();
+                    } else {
+                        alert('Fehler beim Speichern!');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

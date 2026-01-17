@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Lehrer Tools - Gute Tools für Lehrer">
+    <meta name="author" content="Nico">
+    <meta name="theme-color" content="#9d4edd">
+    <title>Lehrer Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <link rel="stylesheet" href="../stylesheets/main.css">
+    <link rel="stylesheet" href="../stylesheets/animations.css">
+    <link rel="stylesheet" href="../stylesheets/responsive.css">
+    
+    <style>
+        /* ============================================================================
+           🎯 RESPONSIVE MASTER STYLES
+           ============================================================================ */
+        
+        /* CSS Variablen für konsistente Responsiveness */
+        :root {
+            /* Spacing - Mobile First */
+            --spacing-xs: clamp(0.25rem, 1vw, 0.5rem);
+            --spacing-sm: clamp(0.5rem, 2vw, 1rem);
+            --spacing-md: clamp(1rem, 3vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 4vw, 2.5rem);
+            --spacing-xl: clamp(2rem, 5vw, 3.5rem);
+            --spacing-xxl: clamp(2.5rem, 6vw, 4rem);
+            
+            /* Font Sizes - Mobile First */
+            --font-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2vw, 1rem);
+            --font-md: clamp(1rem, 2.5vw, 1.125rem);
+            --font-lg: clamp(1.25rem, 3.5vw, 1.75rem);
+            --font-xl: clamp(1.75rem, 4.5vw, 2.5rem);
+            --font-xxl: clamp(2.5rem, 6vw, 4rem);
+            
+            /* Colors */
+            --color-bg: #0a0a0a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26, 26, 26, 0.95);
+            
+            /* Layout */
+            --max-width: 1400px;
+            --border-radius: clamp(0.75rem, 2vw, 1.5rem);
+            --header-height: clamp(60px, 10vh, 80px);
+        }
+
+        /* ============================================================================
+           🖥️ DESKTOP-OPTIMIERTE VARIABLEN
+           ============================================================================ */
+        @media (min-width: 1025px) {
+            :root {
+                --spacing-xs: 0.5rem;
+                --spacing-sm: 1rem;
+                --spacing-md: 1.5rem;
+                --spacing-lg: 2.5rem;
+                --spacing-xl: 3.5rem;
+                --spacing-xxl: 5rem;
+                
+                --font-xs: 0.875rem;
+                --font-sm: 1rem;
+                --font-md: 1.125rem;
+                --font-lg: 1.75rem;
+                --font-xl: 2.5rem;
+                --font-xxl: 4rem;
+                
+                --border-radius: 1.5rem;
+            }
+        }
+
+        /* Extra große Bildschirme */
+        @media (min-width: 1921px) {
+            :root {
+                --spacing-lg: 3rem;
+                --spacing-xl: 4rem;
+                --spacing-xxl: 6rem;
+                
+                --font-xl: 3rem;
+                --font-xxl: 5rem;
+                
+                --max-width: 1600px;
+            }
+        }
+
+        /* Base Reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Main Layout */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================================
+           📱 HEADER & NAVIGATION
+           ============================================================================ */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .navbar {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: clamp(32px, 6vw, 48px);
+            height: clamp(32px, 6vw, 48px);
+            filter: drop-shadow(0 0 8px rgba(157, 78, 221, 0.5));
+        }
+
+        .nav-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .nav-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-decoration: none;
+            color: var(--color-primary);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-size: var(--font-sm);
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(157, 78, 221, 0.2);
+            color: #fff;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .user-display {
+            font-size: var(--font-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .btn-login,
+        .btn-logout {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .btn-login:hover,
+        .btn-logout:hover {
+            background: #7209b7;
+            transform: translateY(-2px);
+        }
+
+        /* Desktop Navigation Optimierung */
+        @media (min-width: 1025px) {
+            .nav-container {
+                padding: 0 var(--spacing-lg);
+                gap: 3rem;
+            }
+            
+            .nav-logo {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .nav-title {
+                font-size: 1.75rem;
+            }
+            
+            .nav-menu {
+                gap: 2rem;
+            }
+            
+            .nav-link {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .btn-login,
+            .btn-logout {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================================================
+           🎭 HERO SECTION
+           ============================================================================ */
+        .hero-section {
+            padding: var(--spacing-xxl) var(--spacing-md);
+            text-align: center;
+            background: linear-gradient(180deg, rgba(157, 78, 221, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: var(--font-xxl);
+            font-weight: 800;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: var(--font-lg);
+            color: #c77dff;
+            margin-bottom: var(--spacing-xl);
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Desktop Hero Optimierung */
+        @media (min-width: 1025px) {
+            .hero-section {
+                padding: 8rem var(--spacing-md) 6rem;
+            }
+            
+            .hero-content {
+                max-width: 1000px;
+            }
+            
+            .hero-title {
+                font-size: 4rem;
+                line-height: 1.1;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.75rem;
+                margin-bottom: 3rem;
+            }
+            
+            .hero-buttons {
+                gap: 2rem;
+            }
+            
+            .hero-buttons .btn {
+                padding: 1.25rem 2.5rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        /* ============================================================================
+           🎮 SECTIONS (GAMES, TOOLS, ABOUT)
+           ============================================================================ */
+        .games-section,
+        .tools-section,
+        .about-section {
+            padding: var(--spacing-xxl) var(--spacing-md);
+        }
+
+        .section-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: var(--font-xl);
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: var(--font-md);
+            color: #c77dff;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Desktop Sections Optimierung */
+        @media (min-width: 1025px) {
+            .games-section,
+            .tools-section,
+            .about-section {
+                padding: 8rem var(--spacing-md);
+            }
+            
+            .section-container {
+                padding: 0 var(--spacing-lg);
+            }
+            
+            .section-title {
+                font-size: 3rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.375rem;
+                margin-bottom: 4rem;
+            }
+        }
+
+        /* ============================================================================
+           📦 GAME & TOOL CARDS
+           ============================================================================ */
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Tablet: 2 Spalten */
+        @media (min-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop: 3 Spalten */
+        @media (min-width: 1200px) {
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .game-card {
+            background: var(--color-card-bg);
+            border: 1.5px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .game-card:hover:not(.coming-soon) {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(157, 78, 221, 0.3);
+            border-color: rgba(199, 125, 255, 0.6);
+        }
+
+        .game-card.coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .game-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .game-icon {
+            font-size: clamp(2rem, 5vw, 3rem);
+            filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+        }
+
+        .game-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.3);
+            border-radius: 999px;
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+
+        .coming-soon-badge {
+            background: rgba(255, 165, 0, 0.3);
+        }
+
+        .game-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .game-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: linear-gradient(90deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .game-description {
+            font-size: var(--font-sm);
+            color: #c77dff;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin: var(--spacing-sm) 0;
+        }
+
+        .feature-tag {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.2);
+            border-radius: 999px;
+            font-size: var(--font-xs);
+            color: #e0aaff;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-xs);
+        }
+
+        .game-card-footer {
+            margin-top: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* Desktop Card Optimierung */
+        @media (min-width: 1025px) {
+            .game-card {
+                padding: 2.5rem;
+                min-height: 450px;
+            }
+            
+            .game-icon {
+                font-size: 3.5rem;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .game-description {
+                font-size: 1.125rem;
+                line-height: 1.7;
+            }
+            
+            .game-card:hover:not(.coming-soon) {
+                transform: translateY(-12px) scale(1.02);
+            }
+        }
+
+        /* ============================================================================
+           🔘 BUTTONS
+           ============================================================================ */
+        .btn,
+        .btn-play {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .btn-primary,
+        .btn-play {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover,
+        .btn-play:hover {
+            background: #7209b7;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        .btn-play {
+            width: 100%;
+        }
+
+        button:disabled,
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============================================================================
+           📋 ABOUT SECTION
+           ============================================================================ */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Tablet */
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .about-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .about-card.full-width {
+                grid-column: 1 / -1;
+                max-width: 100%;
+            }
+        }
+
+        .about-card {
+            background: var(--color-card-bg);
+            border: 1.5px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(157, 78, 221, 0.3);
+        }
+
+        .about-icon {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--spacing-md);
+            filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+        }
+
+        .about-card h3 {
+            font-size: var(--font-lg);
+            margin-bottom: var(--spacing-sm);
+            background: linear-gradient(90deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-card p {
+            font-size: var(--font-sm);
+            color: #c77dff;
+            line-height: 1.6;
+        }
+
+        .about-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ============================================================================
+           🦶 FOOTER
+           ============================================================================ */
+        .main-footer {
+            background: rgba(10, 10, 10, 0.95);
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+            padding: var(--spacing-xl) var(--spacing-md);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-section h4 {
+            font-size: var(--font-md);
+            margin-bottom: var(--spacing-sm);
+            color: #e0aaff;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .footer-links a {
+            color: #c77dff;
+            text-decoration: none;
+            font-size: var(--font-sm);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #e0aaff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+            font-size: var(--font-sm);
+            color: #c77dff;
+        }
+
+        /* Desktop Footer Optimierung */
+        @media (min-width: 1025px) {
+            .main-footer {
+                padding: 5rem var(--spacing-lg) 3rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 2fr 1fr;
+                gap: 6rem;
+                margin-bottom: 3rem;
+                align-items: start;
+            }
+            
+            .footer-section:first-child {
+                text-align: left;
+            }
+            
+            .footer-section:last-child {
+                text-align: left;
+            }
+            
+            .footer-section h4 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .footer-links {
+                gap: 0.75rem;
+            }
+            
+            .footer-links a {
+                font-size: 1.125rem;
+                padding: 0.5rem 0;
+                display: inline-block;
+            }
+            
+            .footer-bottom {
+                padding-top: 3rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================================================
+           💬 MODAL
+           ============================================================================ */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: var(--spacing-md);
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--color-card-bg);
+            border: 2px solid #c77dff;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: #e0aaff;
+            font-size: var(--font-xl);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .epic-login-title {
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: transparent;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            color: #c77dff;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-size: var(--font-sm);
+        }
+
+        .auth-tab.active {
+            background: rgba(157, 78, 221, 0.3);
+            color: #e0aaff;
+            border-color: #c77dff;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-sm);
+            color: #e0aaff;
+        }
+
+        .epic-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            color: #e0aaff;
+            font-size: max(16px, var(--font-sm));
+            min-height: 44px;
+        }
+
+        .epic-input:focus {
+            outline: none;
+            border-color: #c77dff;
+            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+        }
+
+        .epic-password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: var(--font-md);
+        }
+
+        .auth-info {
+            padding: var(--spacing-md);
+            background: rgba(157, 78, 221, 0.1);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-xs);
+        }
+
+        .auth-error,
+        .auth-success {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-sm);
+        }
+
+        .auth-error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6b6b;
+        }
+
+        .auth-success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            color: #51cf66;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .modal-btn.btn-primary {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            color: #c77dff;
+        }
+
+        /* Desktop Modal Optimierung */
+        @media (min-width: 1025px) {
+            .modal-content {
+                max-width: 600px;
+                padding: 3rem;
+            }
+            
+            .modal-header {
+                margin-bottom: 2rem;
+            }
+            
+            .epic-login-title {
+                font-size: 2.5rem;
+            }
+            
+            .epic-input {
+                padding: 1rem 1.25rem;
+                font-size: 1.125rem;
+            }
+            
+            .modal-btn {
+                padding: 1rem 2rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE BREAKPOINTS
+           ============================================================================ */
+        
+        /* Tablet (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        /* Mobile (< 768px) */
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .nav-title {
+                font-size: var(--font-md);
+            }
+            
+            .game-card-footer {
+                flex-direction: column;
+            }
+            
+            .game-card-footer .btn-play {
+                width: 100%;
+            }
+        }
+
+        /* Small Mobile (< 480px) */
+        @media (max-width: 480px) {
+            :root {
+                --spacing-md: clamp(0.75rem, 2.5vw, 1rem);
+                --spacing-lg: clamp(1rem, 3.5vw, 1.5rem);
+            }
+            
+            .nav-logo {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .hero-section {
+                padding: var(--spacing-lg) var(--spacing-sm);
+            }
+            
+            .modal-content {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Landscape Mode */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero-section {
+                padding: var(--spacing-md);
+            }
+            
+            .modal-content {
+                max-height: 85vh;
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .game-card,
+            .about-card,
+            .modal-content {
+                border-width: 3px;
+            }
+        }
+
+        /* ============================================================================
+           🎨 UTILITY CLASSES
+           ============================================================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Safe Area für Notch-Geräte */
+        @supports (padding: max(0px)) {
+            .nav-container,
+            .section-container,
+            .hero-content {
+                padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Bubble-Hintergrund -->
+    <iframe src="background-bubbles-boxes.html" 
+            style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+            aria-hidden="true" 
+            tabindex="-1"></iframe>
+    
+    <!-- Hauptinhalt -->
+    <main class="page-container">
+        <!-- Header & Navigation -->
+        <header class="main-header">
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <img src="../icons/logo-simple.svg" alt="Lehrer Tools Logo" class="nav-logo">
+                        <span class="nav-title">Lehrer Tools</span>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#home" class="nav-link active">Home</a></li>
+                        <li><a href="#games" class="nav-link">Spiele</a></li>
+                        <li><a href="#tools" class="nav-link">Tools</a></li>
+                        <li><a href="#changelog" class="nav-link">Changelog</a></li>
+                        <li><a href="#about" class="nav-link">Über uns</a></li>
+                    </ul>
+                    <div class="nav-auth">
+                        <span id="userDisplayNav" class="user-display" style="display: none;">Gast</span>
+                        <button id="loginBtnNav" class="btn-login">Anmelden</button>
+                        <button id="logoutBtnNav" class="btn-logout" style="display: none;">Abmelden</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Willkommen bei den Lehrer Tools</h1>
+                <p class="hero-subtitle">Gute Tools für Lehrer</p>
+                <div class="hero-buttons">
+                    <a href="#games" class="btn btn-primary">Zu den Spielen</a>
+                    <a href="#tools" class="btn btn-primary">Zu den Tools</a>
+                    <a href="#about" class="btn btn-secondary">Mehr erfahren</a>
+                    <button id="openFeedbackBtn" class="btn btn-secondary" type="button">Feedback geben</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spiele Section -->
+        <section id="games" class="games-section">
+            <div class="section-container">
+                <h2 class="section-title">Verfügbare Spiele</h2>
+                <p class="section-subtitle">Wähle ein Spiel und starte deine Lernreise!</p>
+                <div class="games-grid">
+                    <!-- Jeopardy Quiz -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎯</div>
+                            <span class="game-badge">Verfügbar</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Jeopardy Quiz</h3>
+                            <p class="game-description">Teste dein Wissen in diesem spannenden Quiz-Spiel! Verschiedene Modi verfügbar.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Mehrere Modi</span>
+                                <span class="feature-tag">25 Fragen</span>
+                                <span class="feature-tag">Multiplayer</span>
+                            </div>
+                            <div class="game-stats">
+                                <div class="stat"><span class="stat-icon">⏱️</span><span>10-20 Min</span></div>
+                                <div class="stat"><span class="stat-icon">👥</span><span>1-6 Spieler</span></div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="game.html" class="btn-play">Jetzt spielen</a>
+                        </div>
+                    </div>
+
+                    <!-- Stadt Land Fluss -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🌍</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Stadt Land Fluss</h3>
+                            <p class="game-description">Digitale Version mit Timer und automatischer Punkteberechnung.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Timer-Funktion</span>
+                                <span class="feature-tag">Duplikat-Erkennung</span>
+                            </div>
+                            <div class="game-stats">
+                                <div class="stat"><span class="stat-icon">👥</span><span>Multiplayer</span></div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="stadt-land-fluss.html" class="btn-play">Spiel starten</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="tools-section">
+            <div class="section-container">
+                <h2 class="section-title">Lehrer Tools</h2>
+                <p class="section-subtitle">Praktische Werkzeuge für den Unterricht!</p>
+                <div class="games-grid">
+                    <!-- Timer Tool -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">⏰</div>
+                            <span class="game-badge">Verfügbar</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Digitale Uhr & Timer</h3>
+                            <p class="game-description">Professionelle Uhr mit Timer-Funktion für den Unterricht.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Countdown</span>
+                                <span class="feature-tag">Alarm-Sounds</span>
+                                <span class="feature-tag">Vollbild</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="timer.html" class="btn-play">Timer öffnen</a>
+                        </div>
+                    </div>
+
+                    <!-- Zufalls-Generator -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎲</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Zufalls-Generator</h3>
+                            <p class="game-description">Schüler auswählen, Teams bilden, Würfeln & Glücksrad!</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Schülerauswahl</span>
+                                <span class="feature-tag">Teams</span>
+                                <span class="feature-tag">Glücksrad</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="zufallsgenerator.html" class="btn-play">Generator öffnen</a>
+                        </div>
+                    </div>
+
+                    <!-- Noten-Rechner -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">📊</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Noten-Rechner</h3>
+                            <p class="game-description">Notenschlüssel mit IHK, Linear oder Gauß-Verteilung generieren.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">IHK Standard</span>
+                                <span class="feature-tag">3 Verteilungen</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="notenrechner.html" class="btn-play">Rechner öffnen</a>
+                        </div>
+                    </div>
+
+                    <!-- Aufgaben-Roulette -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎯</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Aufgaben-Roulette</h3>
+                            <p class="game-description">Faire Zufallsverteilung von Hausaufgaben und Referaten!</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Fair</span>
+                                <span class="feature-tag">Export</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="aufgabenroulette.html" class="btn-play">Roulette öffnen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+<!-- Changelog Section -->
+<section id="changelog" class="tools-section">
+    <div class="section-container">
+        <h2 class="section-title">Changelog</h2>
+        <p class="section-subtitle">Alle Änderungen und Verbesserungen im Überblick</p>
+        <div class="changelog-beta-hint" style="background:rgba(60,30,90,0.85);color:#e0c3fc;padding:1.2rem 1.7rem;border-radius:14px;border:1.5px solid #a259ec;margin-bottom:2rem;box-shadow:0 2px 16px 0 rgba(130,80,220,0.10);font-size:1.13rem;line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;">
+            <span style="font-weight:700;color:#c77dff;letter-spacing:0.5px;">Beta-Hinweis:</span> Diese Anwendung befindet sich noch in der <b style="color:#fff;">Beta-Phase</b>.<br>
+            Es sind noch nicht alle Funktionen fertiggestellt und es können Fehler auftreten.<br>
+            Wenn Sie einen Fehler finden, melden Sie ihn gerne über 
+            <a href="#" onclick="document.getElementById('feedbackModal').classList.remove('hidden');document.body.classList.add('modal-open');return false;" style="color:#a259ec;text-decoration:underline;font-weight:600;">Feedback geben</a>.
+        </div>
+        <div class="games-grid">
+            
+            <!-- Version 1.1.3 (Aktuelle Version) -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">💬</div>
+                    <span class="game-badge">Aktuelle Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.3 – 02.01.2026</h3>
+                    <p class="game-description">Feedback-System und E-Mail-Integration für Kontakt und Bug-Reports.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Feedback-Button & Modal</span>
+                        <span class="feature-tag">Bezug-Auswahl mit Emojis</span>
+                        <span class="feature-tag">Feedback-Typen mit Emojis</span>
+                        <span class="feature-tag">Dringlichkeits-Auswahl bei Fehlern</span>
+                        <span class="feature-tag">Modernes, validiertes Formular</span>
+                        <span class="feature-tag">Feedback per E-Mail (PHPMailer)</span>
+                        <span class="feature-tag">Absenderadresse gefixt</span>
+                        <span class="feature-tag">Portfolio-Kontakt sendet E-Mail</span>
+                        <span class="feature-tag">Head-Bereich & Titel auf allen Seiten vereinheitlicht</span>
+                        <span class="feature-tag">Performance und Sicherheit verbessert und bearbeitet</span>
+
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat"><span class="stat-icon">💬</span><span>start.html</span></div>
+                        <div class="stat"><span class="stat-icon">📧</span><span>sendPortfolioEmail.php</span></div>
+                        <div class="stat"><span class="stat-icon">🐞</span><span>feedback.php</span></div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Aktuelle Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.1.2 -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">🖥️</div>
+                    <span class="game-badge">Vorherige Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.2 – 01.01.2026</h3>
+                    <p class="game-description">Umfassende Desktop-Optimierung für timer.html und zufallsgenerator.html mit Desktop-First-Ansatz.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">timer.html optimiert</span>
+                        <span class="feature-tag">zufallsgenerator.html optimiert</span>
+                        <span class="feature-tag">Desktop-First CSS</span>
+                        <span class="feature-tag">Glücksrad-Animation</span>
+                        <span class="feature-tag">Glücksrad mit Beschriftungen</span>
+                        <span class="feature-tag">"Laden..."-Bug behoben</span>
+                        <span class="feature-tag">Responsive Skalierung</span>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat"><span class="stat-icon">⏰</span><span>timer.html</span></div>
+                        <div class="stat"><span class="stat-icon">🎲</span><span>zufallsgenerator.html</span></div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Vorherige Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.1.1 -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">🎨</div>
+                    <span class="game-badge">Vorherige Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.1 – 31.12.2025</h3>
+                    <p class="game-description">Umfassende Desktop-Optimierung und Anonymisierung für start.html, index.html und game.html.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Desktop-Layout optimiert</span>
+                        <span class="feature-tag">Responsive Design</span>
+                        <span class="feature-tag">Anonymisierung</span>
+                        <span class="feature-tag">Footer vereinheitlicht</span>
+                        <span class="feature-tag">Footer-Inhalt verbessert</span>
+                        <span class="feature-tag">Links öffnen im gleichen Tab</span>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat"><span class="stat-icon">📱</span><span>start.html</span></div>
+                        <div class="stat"><span class="stat-icon">🏠</span><span>index.html</span></div>
+                        <div class="stat"><span class="stat-icon">🎮</span><span>game.html</span></div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Vorherige Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.0.0 (Erste Veröffentlichung) -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">📦</div>
+                    <span class="game-badge">Erste Veröffentlichung</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.0.0 – 26.12.2025</h3>
+                    <p class="game-description">Erste stabile Veröffentlichung der Lehrer Tools mit Performance-Optimierungen und bereinigtem Code.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">Performance-Optimierungen</span>
+                        <span class="feature-tag">Code bereinigt</span>
+                        <span class="feature-tag">Changelog hinzugefügt</span>
+                    </div>
+                    <div class="game-stats">
+                        <div class="stat"><span class="stat-icon">✨</span><span>Stabile Version</span></div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Erste Veröffentlichung</button>
+                </div>
+            </div>
+
+            <!-- Platzhalter für zukünftige Versionen -->
+            <div class="game-card coming-soon">
+                <div class="game-card-header">
+                    <div class="game-icon">🛠️</div>
+                    <span class="game-badge coming-soon-badge">Geplant</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.4</h3>
+                    <p class="game-description">Desktop-Optimierung für alle verbleibenden Webseiten.</p>
+                    <div class="game-features">
+                        <span class="feature-tag">notenrechner.html optimieren</span>
+                        <span class="feature-tag">aufgabenroulette.html optimieren</span>
+                        <span class="feature-tag">stadt-land-fluss.html optimieren</span>
+                        <span class="feature-tag">Weitere Verbesserungen</span>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>In Planung</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="section-container">
+                <h2 class="section-title">Über das Projekt</h2>
+                <div class="about-content">
+                    <div class="about-card">
+                        <div class="about-icon">🏫</div>
+                        <h3>Für Bildung</h3>
+                        <p>Entwickelt für moderne Bildungseinrichtungen mit innovativen digitalen Lernmethoden.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">🎯</div>
+                        <h3>Unser Ziel</h3>
+                        <p>Wissen spielerisch vermitteln und das Lernen unterhaltsam gestalten.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">🚀</div>
+                        <h3>Die Zukunft</h3>
+                        <p>Kontinuierliche Entwicklung neuer Spiele und Features.</p>
+                    </div>
+                    <div class="about-card full-width">
+                        <div class="about-icon">👤</div>
+                        <h3>Über mich</h3>
+                        <p>Erfahre mehr über den Entwickler und die Motivation hinter diesem Projekt.</p>
+                        <a href="../portfolio/Portfolio.html" class="btn btn-primary" style="margin-top:1.5rem;">Mehr über mich</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lehrer Tools</h4>
+                    <p style="color: #c77dff; line-height: 1.8; margin-top: 1rem;">Digitale Werkzeuge und Spiele für modernen Unterricht. Entwickelt mit Leidenschaft für Lehrerinnen und Lehrer.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#games">Spiele</a></li>
+                        <li><a href="#tools">Tools</a></li>
+                        <li><a href="#changelog">Changelog</a></li>
+                        <li><a href="#about">Über uns</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </footer>
+                <!-- Feedback Modal -->
+                        <script>
+                        // Toggle für Changelog-Details
+                        function toggleChangelogDetails(btn) {
+                            const details = btn.nextElementSibling;
+                            if (!details) return;
+                            if (details.style.display === "none" || details.style.display === "") {
+                                details.style.display = "block";
+                                btn.textContent = "Weniger anzeigen";
+                            } else {
+                                details.style.display = "none";
+                                btn.textContent = "Mehr erfahren über den Changelog";
+                            }
+                        }
+                        </script>
+                <div id="feedbackModal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="login-animation-container">
+                                <img src="../icons/logo-simple.svg" alt="Logo" style="width:48px;height:48px;filter:drop-shadow(0 0 12px #9d4edd);">
+                            </div>
+                            <h3 class="epic-login-title">Feedback geben</h3>
+                            <button class="modal-close-btn" id="closeFeedbackBtn" aria-label="Schließen">✖</button>
+                        </div>
+                        <form id="feedbackForm" class="auth-form" autocomplete="off">
+                            <div class="form-group">
+                                <label for="feedbackTarget">Bezug:</label>
+                                <select id="feedbackTarget" class="epic-input" required>
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="Webseite">🌐 Webseite allgemein</option>
+                                    <option value="Jeopardy Quiz">🎯 Jeopardy Quiz</option>
+                                    <option value="Stadt Land Fluss">🌍 Stadt Land Fluss</option>
+                                    <option value="Timer">⏰ Timer</option>
+                                    <option value="Zufalls-Generator">🎲 Zufalls-Generator</option>
+                                    <option value="Noten-Rechner">📊 Noten-Rechner</option>
+                                    <option value="Aufgaben-Roulette">🎡 Aufgaben-Roulette</option>
+                                    <option value="Sonstiges">✨ Sonstiges</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackType">Art des Feedbacks:</label>
+                                <select id="feedbackType" class="epic-input" required>
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="Fehler">🐞 Fehler/Bug</option>
+                                    <option value="Vorschlag">💡 Vorschlag/Feature</option>
+                                    <option value="Lob">🌟 Lob</option>
+                                    <option value="Kritik">📝 Kritik</option>
+                                    <option value="Frage">❓ Frage</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackSeverity">Wie stark betrifft der Fehler die Nutzung?:</label>
+                                <select id="feedbackSeverity" class="epic-input">
+                                    <option value="">Bitte wählen…</option>
+                                    <option value="niedrig">🟢 Niedrig</option>
+                                    <option value="mittel">🟡 Mittel</option>
+                                    <option value="hoch">🟠 Hoch</option>
+                                    <option value="kritisch">🔴 Kritisch</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackName">Name (optional):</label>
+                                <input type="text" id="feedbackName" class="epic-input" maxlength="50" placeholder="Dein Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackEmail">E-Mail (optional):</label>
+                                <input type="email" id="feedbackEmail" class="epic-input" maxlength="100" placeholder="E-Mail-Adresse">
+                            </div>
+                            <div class="form-group">
+                                <label for="feedbackReason">Grund / Nachricht:</label>
+                                <textarea id="feedbackReason" class="epic-input" rows="2" maxlength="300" required placeholder="Was möchtest du mitteilen?"></textarea>
+                            </div>
+                            <div class="form-group" id="feedbackErrorDescGroup" style="display:none;">
+                                <label for="feedbackErrorDesc">Fehlerbeschreibung (wie/wo/wann?):</label>
+                                <textarea id="feedbackErrorDesc" class="epic-input" rows="2" maxlength="400" placeholder="Wie ist der Fehler entstanden? Wo und wann?"></textarea>
+                            </div>
+                            <div id="feedbackMsg" class="auth-info" style="display:none;"></div>
+                            <div class="modal-footer">
+                                <button type="submit" class="modal-btn btn-primary">Absenden</button>
+                                <button type="button" class="modal-btn-secondary" id="cancelFeedbackBtn">Abbrechen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="login-animation-container">
+                        <img src="../icons/logo-simple.svg" alt="Logo" style="width:48px;height:48px;filter:drop-shadow(0 0 12px #9d4edd);">
+                    </div>
+                    <h3 class="epic-login-title">Anmelden</h3>
+                    <button class="modal-close-btn" id="closeLoginBtn" aria-label="Schließen">✖</button>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Anmelden</button>
+                        <button class="auth-tab" data-tab="register">Registrieren</button>
+                    </div>
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginUsername">Benutzername:</label>
+                            <input type="text" id="loginUsername" class="epic-input" placeholder="Benutzername" required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Passwort:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="loginPassword" class="epic-input" placeholder="Passwort" required autocomplete="current-password">
+                                <span class="toggle-password" id="toggleLoginPassword" title="Passwort anzeigen">👁️</span>
+                            </div>
+                            <div style="text-align: right; margin-top: 8px;">
+                                <a href="#" data-action="forgot-password" style="color: #c77dff; font-size: 0.875rem; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#e0aaff'" onmouseout="this.style.color='#c77dff'">
+                                    Passwort vergessen?
+                                </a>
+                            </div>
+                        </div>
+                        <div id="loginError" class="auth-error" style="display: none;"></div>
+                        <div id="loginSuccess" class="auth-success" style="display: none;"></div>
+                    </form>
+                    <form id="registerForm" class="auth-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="registerUsername">Benutzername:</label>
+                            <input type="text" id="registerUsername" class="epic-input" placeholder="Min. 3 Zeichen" required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">E-Mail:</label>
+                            <input type="email" id="registerEmail" class="epic-input" placeholder="E-Mail-Adresse" required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Passwort:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="registerPassword" class="epic-input" placeholder="Min. 6 Zeichen" required autocomplete="new-password">
+                                <span class="toggle-password" id="toggleRegisterPassword" title="Passwort anzeigen">👁️</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPasswordConfirm">Passwort bestätigen:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="registerPasswordConfirm" class="epic-input" placeholder="Wiederholen" required autocomplete="new-password">
+                                <span class="toggle-password" id="toggleRegisterPasswordConfirm" title="Passwort anzeigen">👁️</span>
+                            </div>
+                        </div>
+                        <div id="registerError" class="auth-error" style="display: none;"></div>
+                        <div id="registerSuccess" class="auth-success" style="display: none;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="submitLoginBtn" class="modal-btn btn-primary">Anmelden</button>
+                    <button type="button" id="submitRegisterBtn" class="modal-btn btn-primary" style="display: none;">Registrieren</button>
+                    <button type="button" id="cancelLoginBtn" class="modal-btn-secondary">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/responsive.js"></script>
+    <script src="../javascript/main.js"></script>
+    <script src="../javascript/password-reset-ui.js"></script>
+</main>
+<script>
+// Feedback Modal Logik
+const openFeedbackBtn = document.getElementById('openFeedbackBtn');
+const feedbackModal = document.getElementById('feedbackModal');
+const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
+const cancelFeedbackBtn = document.getElementById('cancelFeedbackBtn');
+const feedbackForm = document.getElementById('feedbackForm');
+const feedbackType = document.getElementById('feedbackType');
+const feedbackErrorDescGroup = document.getElementById('feedbackErrorDescGroup');
+const feedbackSeverityGroup = document.getElementById('feedbackSeverity').closest('.form-group');
+const feedbackMsg = document.getElementById('feedbackMsg');
+
+openFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.remove('hidden');
+});
+closeFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.add('hidden');
+    feedbackForm.reset();
+    feedbackMsg.style.display = 'none';
+    feedbackErrorDescGroup.style.display = 'none';
+    feedbackSeverityGroup.style.display = 'none';
+});
+cancelFeedbackBtn.addEventListener('click', () => {
+    feedbackModal.classList.add('hidden');
+    feedbackForm.reset();
+    feedbackMsg.style.display = 'none';
+    feedbackErrorDescGroup.style.display = 'none';
+    feedbackSeverityGroup.style.display = 'none';
+});
+// Zeige Schweregrad und Fehlerbeschreibung nur bei Fehler
+feedbackType.addEventListener('change', function() {
+    if (this.value === 'Fehler') {
+        feedbackSeverityGroup.style.display = '';
+        feedbackErrorDescGroup.style.display = '';
+    } else {
+        feedbackSeverityGroup.style.display = 'none';
+        feedbackErrorDescGroup.style.display = 'none';
+        document.getElementById('feedbackSeverity').value = '';
+        document.getElementById('feedbackErrorDesc').value = '';
+    }
+});
+// Initial ausblenden
+feedbackSeverityGroup.style.display = 'none';
+feedbackForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    feedbackMsg.style.display = 'block';
+    feedbackMsg.textContent = 'Feedback wird gesendet...';
+    feedbackMsg.className = 'auth-info';
+
+    const formData = new FormData();
+    formData.append('target', document.getElementById('feedbackTarget').value);
+    formData.append('type', document.getElementById('feedbackType').value);
+    formData.append('severity', document.getElementById('feedbackSeverity').value);
+    formData.append('name', document.getElementById('feedbackName').value);
+    formData.append('email', document.getElementById('feedbackEmail').value);
+    formData.append('reason', document.getElementById('feedbackReason').value);
+    formData.append('errorDesc', document.getElementById('feedbackErrorDesc').value);
+
+    fetch('../php/feedback.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            feedbackMsg.textContent = data.msg || 'Vielen Dank für dein Feedback!';
+            feedbackMsg.className = 'auth-success';
+            feedbackForm.reset();
+            feedbackErrorDescGroup.style.display = 'none';
+            setTimeout(() => {
+                feedbackModal.classList.add('hidden');
+                feedbackMsg.style.display = 'none';
+            }, 1800);
+        } else {
+            feedbackMsg.textContent = data.msg || 'Fehler beim Senden.';
+            feedbackMsg.className = 'auth-error';
+        }
+    })
+    .catch(() => {
+        feedbackMsg.textContent = 'Netzwerkfehler. Bitte später erneut versuchen.';
+        feedbackMsg.className = 'auth-error';
+    });
+});
+</script>
+</body>
+</html>

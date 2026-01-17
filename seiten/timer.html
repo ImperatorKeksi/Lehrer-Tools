@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Uhr-Timer-Lehrer Tool</title>
+    
+    <!-- SEO -->
+    <meta name="description" content="Uhr/Timer - Lehrer Tool">
+    <meta name="keywords" content="Digitale Uhr/Timer - Lehrer Tool">
+    <meta name="author" content="Nico">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="../pwa/manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* ============================================================================
+           🎯 CSS VARIABLEN
+           ============================================================================ */
+        :root {
+            /* Colors */
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #e0aaff;
+            --text-secondary: #c77dff;
+            --accent: #9d4edd;
+            --border: rgba(199, 125, 255, 0.3);
+            --glass-bg: rgba(26, 26, 26, 0.95);
+            
+            /* Desktop Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            
+            /* Desktop Font Sizes */
+            --font-xs: 0.875rem;
+            --font-sm: 1rem;
+            --font-md: 1.125rem;
+            --font-lg: 1.5rem;
+            --font-xl: 2rem;
+            --font-xxl: 3rem;
+            
+            /* Clock sizes - OPTIMIERT */
+            --clock-size-desktop: 5rem;
+            --clock-size-mobile: 4rem;
+            
+            /* Layout */
+            --border-radius: 1rem;
+        }
+
+        /* ============================================================================
+           📄 BASE SETUP
+           ============================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
+
+        /* ============================================================================
+           📱 HEADER
+           ============================================================================ */
+        .game-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .emoji-icon {
+            font-size: 1.75rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 44px;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #c77dff, #9d4edd);
+        }
+
+        .btn-secondary {
+            background: rgba(157, 77, 221, 0.2);
+            border-color: var(--accent);
+        }
+
+        .user-display {
+            padding: 0.625rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ============================================================================
+           ⏰ MAIN CONTAINER - OPTIMIERT
+           ============================================================================ */
+        .timer-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .developer-badge {
+            display: inline-block;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.75rem;
+            font-size: 0.9375rem;
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid rgba(199, 125, 255, 0.5);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ============================================================================
+           ⏰ CLOCK DISPLAY - OPTIMIERT
+           ============================================================================ */
+        .clock-display {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 0 10px 40px rgba(157, 77, 221, 0.3);
+        }
+
+        .clock-mode {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .time-display {
+            font-size: var(--clock-size-desktop);
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 30px rgba(224, 170, 255, 0.5);
+            margin: 0.75rem 0;
+            line-height: 1.2;
+        }
+
+        .date-display {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* ============================================================================
+           🎛️ TIMER CONTROLS - OPTIMIERT
+           ============================================================================ */
+        .timer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .time-input {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .time-input > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time-input input {
+            width: 75px;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            min-height: 44px;
+            font-weight: 600;
+        }
+
+        .time-input input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+        }
+
+        .time-input label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* ============================================================================
+           ⚙️ SETTINGS PANEL - OPTIMIERT
+           ============================================================================ */
+        .settings-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 1.75rem;
+            max-width: 750px;
+            width: 100%;
+        }
+
+        .settings-panel h3 {
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .setting-group label {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        .setting-group select {
+            padding: 0.625rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            cursor: pointer;
+            min-height: 44px;
+        }
+
+        .setting-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .setting-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .setting-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .setting-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* ============================================================================
+           📊 PROGRESS BAR
+           ============================================================================ */
+        .timer-progress {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #e0aaff, #c77dff, #9d4edd);
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        /* ============================================================================
+           💬 STATUS MESSAGE
+           ============================================================================ */
+        .status-message {
+            margin-top: 1rem;
+            padding: 0.875rem;
+            background: rgba(157, 77, 221, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .status-message.alarm {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ============================================================================
+           🖥️ FULLSCREEN MODE - OPTIMIERT
+           ============================================================================ */
+        .fullscreen-mode .clock-display {
+            max-width: 90vw;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .fullscreen-mode .time-display {
+            font-size: 8rem;
+        }
+
+        .fullscreen-mode .date-display {
+            font-size: 1.75rem;
+        }
+
+        /* ============================================================================
+           🦶 FOOTER
+           ============================================================================ */
+        .game-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            padding: 1.25rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .developer-credit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-icon {
+            font-size: 1.125rem;
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE - LARGE DESKTOP (> 1440px)
+           ============================================================================ */
+        @media (min-width: 1440px) {
+            .timer-container {
+                max-width: 1000px;
+                padding: 2.5rem 2rem;
+            }
+            
+            .clock-display {
+                max-width: 600px;
+                padding: 2.5rem;
+            }
+            
+            .settings-panel {
+                max-width: 800px;
+                padding: 2rem;
+            }
+            
+            .time-display {
+                font-size: 5.5rem;
+            }
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE - TABLET (< 1024px)
+           ============================================================================ */
+        @media (max-width: 1024px) {
+            .game-header {
+                padding: 1rem;
+            }
+            
+            .timer-container {
+                padding: 2rem 1rem;
+                max-width: 750px;
+            }
+            
+            .clock-display {
+                padding: 2rem;
+                max-width: 500px;
+            }
+            
+            .time-display {
+                font-size: 4.5rem;
+            }
+            
+            .settings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE - MOBILE (< 768px)
+           ============================================================================ */
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .header-title {
+                justify-content: center;
+            }
+            
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header-controls {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .header-controls .btn {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .timer-container {
+                padding: 1.5rem 1rem;
+                gap: 1.5rem;
+            }
+            
+            .clock-display {
+                padding: 1.5rem;
+                max-width: 95vw;
+            }
+            
+            .clock-mode {
+                font-size: 0.9rem;
+                letter-spacing: 1px;
+            }
+            
+            .time-display {
+                font-size: var(--clock-size-mobile);
+            }
+            
+            .date-display {
+                font-size: 1rem;
+            }
+            
+            .timer-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .timer-controls .btn {
+                width: 100%;
+            }
+            
+            .time-input {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .time-input input {
+                width: 70px;
+                font-size: 1.2rem;
+                padding: 0.75rem;
+            }
+            
+            .settings-panel {
+                padding: 1.5rem;
+            }
+            
+            .settings-panel h3 {
+                font-size: 1.2rem;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .developer-badge {
+                font-size: 0.9rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            .game-footer {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE - SMALL MOBILE (< 480px)
+           ============================================================================ */
+        @media (max-width: 480px) {
+            .header-title h1 {
+                font-size: 1.2rem;
+            }
+            
+            .emoji-icon {
+                font-size: 1.5rem;
+            }
+            
+            .clock-display {
+                padding: 1rem;
+            }
+            
+            .time-display {
+                font-size: 3rem;
+            }
+            
+            .date-display {
+                font-size: 0.9rem;
+            }
+            
+            .time-input input {
+                width: 60px;
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* ============================================================================
+           📱 LANDSCAPE MODE
+           ============================================================================ */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .timer-container {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .clock-display {
+                padding: 1rem;
+            }
+            
+            .time-display {
+                font-size: 3.5rem;
+            }
+            
+            .settings-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.95);
+            }
+        }
+
+        /* ============================================================================
+           🎨 UTILITY CLASSES
+           ============================================================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .no-scroll {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        /* Checkbox Styling */
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <iframe src="background-bubbles-boxes.html" 
+            style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;" 
+            aria-hidden="true" 
+            tabindex="-1"></iframe>
+
+    </header>
+
+    <!-- Main Container -->
+    <main class="timer-container">
+        
+        <!-- Clock Display -->
+        <div class="clock-display" id="clockDisplay">
+            <div class="clock-mode" id="clockMode">AKTUELLE UHRZEIT</div>
+            <div class="time-display" id="timeDisplay">00:00:00</div>
+            <div class="date-display" id="dateDisplay">Freitag, 8. November 2025</div>
+            
+            <div class="timer-progress" id="timerProgress" style="display: none;">
+                <div class="progress-bar" id="progressBar" style="width: 100%;"></div>
+            </div>
+            
+            <div class="status-message" id="statusMessage" style="display: none;"></div>
+        </div>
+
+        <!-- Timer Controls -->
+        <div class="timer-controls" id="timerControls">
+            <button class="btn btn-primary" id="modeBtn">⏱️ Timer-Modus</button>
+            
+            <div class="time-input" id="timerInputs" style="display: none;">
+                <div>
+                    <input type="number" id="hoursInput" min="0" max="23" value="0" placeholder="00">
+                    <label>Std</label>
+                </div>
+                <div>
+                    <input type="number" id="minutesInput" min="0" max="59" value="5" placeholder="00">
+                    <label>Min</label>
+                </div>
+                <div>
+                    <input type="number" id="secondsInput" min="0" max="59" value="0" placeholder="00">
+                    <label>Sek</label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" id="startBtn" style="display: none;">▶️ Start</button>
+            <button class="btn btn-secondary" id="pauseBtn" style="display: none;">⏸️ Pause</button>
+            <button class="btn btn-secondary" id="stopBtn" style="display: none;">⏹️ Stop</button>
+            <button class="btn" id="resetBtn">🔄 Zurücksetzen</button>
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel">
+            <h3>⚙️ Einstellungen</h3>
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <label for="themeSelect">🎨 Uhr-Design</label>
+                    <select id="themeSelect">
+                        <option value="default">Standard (Lila)</option>
+                        <option value="blue">Ozean-Blau</option>
+                        <option value="green">Natur-Grün</option>
+                        <option value="red">Feuer-Rot</option>
+                        <option value="gold">Gold-Luxus</option>
+                        <option value="dark">Pure Dark</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label for="alarmSelect">🔔 Alarm-Sound</label>
+                    <select id="alarmSelect">
+                        <option value="beep">Standard Beep</option>
+                        <option value="bell">Schulglocke</option>
+                        <option value="chime">Sanfter Chime</option>
+                        <option value="digital">Digital Alarm</option>
+                        <option value="classic">Klassischer Wecker</option>
+                        <option value="none">Kein Sound</option>
+                    </select>
+                </div>
+
+                <div class="setting-group">
+                    <label for="volumeSlider">🔊 Lautstärke</label>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="70">
+                    <span id="volumeLabel" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.3rem;">70%</span>
+                </div>
+
+                <div class="setting-group">
+                    <label>💡 Features</label>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="showSecondsCheck" checked>
+                            <span style="font-size: 0.9rem;">Sekunden</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="show24hCheck" checked>
+                            <span style="font-size: 0.9rem;">24h Format</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-secondary" id="testAlarmBtn">🔊 Alarm testen</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/timer.js"></script>
+</body>
+</html>

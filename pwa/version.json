@@ -1,0 +1,54 @@
+{
+  "version": "2.1.0",
+  "build": "2025-11-08",
+  "features": [
+    "Animations & Microinteractions",
+    "Responsive Design mit Hamburger-Menü",
+    "WCAG 2.1 AA Accessibility",
+    "Erweiterte PWA-Features",
+    "Dark/Light/Auto Theme Toggle",
+    "Statistiken & Tracking",
+    "Performance Optimization",
+    "Lehrer-Dashboard",
+    "Export & Share (PDF, QR, Web Share)",
+    "Haptic Feedback & Enhanced Sound"
+  ],
+  "changelog": {
+    "2.1.0": {
+      "date": "2025-11-08",
+      "changes": [
+        "✅ Performance Optimizer mit Lazy Loading & Resource Hints",
+        "✅ Lehrer-Dashboard mit Favoriten & Quick Access",
+        "✅ PDF Export für Notenrechner",
+        "✅ Web Share API Integration",
+        "✅ QR Code Generator",
+        "✅ Haptic Feedback für Mobile",
+        "✅ Enhanced Sound System mit Themes",
+        "✅ Alle 10 Features vollständig implementiert"
+      ]
+    },
+    "2.0.0": {
+      "date": "2025-01-15",
+      "changes": [
+        "Neue Animations-Bibliothek mit 15+ Animationen",
+        "Komplett responsive mit Mobile-First Design",
+        "Hamburger-Menü für mobile Navigation",
+        "WCAG 2.1 AA konform mit Accessibility-Features",
+        "PWA Install Prompt mit schönem UI",
+        "Push Notifications für Timer",
+        "Offline-Indicator und Update-Benachrichtigungen",
+        "Intelligente Caching-Strategien"
+      ]
+    },
+    "1.5.0": {
+      "date": "2024-12-20",
+      "changes": [
+        "Basis Service Worker",
+        "Einfaches Offline-Caching",
+        "PWA Manifest"
+      ]
+    }
+  },
+  "minVersion": "2.1.0",
+  "forceUpdate": false
+}

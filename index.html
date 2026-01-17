@@ -1,0 +1,796 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Digitale Werkzeuge für modernen Unterricht - Quiz, Timer, Stadt-Land-Fluss und mehr">
+    <title>🎓 Lehrer Tools - Start</title>
+    
+    <!-- PWA & Icons -->
+    <link rel="icon" type="image/svg+xml" href="icons/logo-simple.svg">
+    <link rel="manifest" href="pwa/manifest.json">
+    <meta name="theme-color" content="#9d4edd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="responsive-master.css">
+    <link rel="stylesheet" href="stylesheets/animations.css">
+    
+    <style>
+        /* ============================================================================
+           🎨 CSS VARIABLEN - RESPONSIVE
+           ============================================================================ */
+        :root {
+            /* Colors */
+            --color-bg: #0a0a0a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26, 26, 26, 0.8);
+            
+            /* Responsive Spacing */
+            --spacing-xs: clamp(0.5rem, 1vw, 0.75rem);
+            --spacing-sm: clamp(0.75rem, 2vw, 1rem);
+            --spacing-md: clamp(1rem, 2.5vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 3vw, 2rem);
+            --spacing-xl: clamp(2rem, 4vw, 3rem);
+            --spacing-xxl: clamp(3rem, 6vw, 4rem);
+            
+            /* Responsive Font Sizes */
+            --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2.5vw, 1rem);
+            --font-md: clamp(1rem, 3vw, 1.25rem);
+            --font-lg: clamp(1.25rem, 4vw, 1.75rem);
+            --font-xl: clamp(1.5rem, 5vw, 2.5rem);
+            --font-xxl: clamp(2rem, 6vw, 3.5rem);
+            
+            /* Logo Size */
+            --logo-size: clamp(80px, 20vw, 150px);
+            
+            /* Animation Duration */
+            --anim-fast: 0.3s;
+            --anim-normal: 0.6s;
+            --anim-slow: 1s;
+        }
+
+        /* ============================================================================
+           🎯 BASE STYLES
+           ============================================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--color-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            overflow-x: hidden;
+            padding: var(--spacing-md);
+        }
+
+        /* ============================================================================
+           ✨ ANIMIERTE FLIEGENDE BOXEN
+           ============================================================================ */
+        .flying-boxes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .flying-box {
+            position: absolute;
+            background: linear-gradient(135deg, #9d4edd 40%, #e0aaff 100%);
+            opacity: 0.15;
+            border-radius: clamp(12px, 3vw, 18px);
+            box-shadow: 0 4px 32px rgba(157, 77, 221, 0.3);
+            animation: flyBox 16s linear infinite;
+            will-change: transform, opacity;
+        }
+
+        /* Responsive Box Sizes */
+        .flying-box:nth-child(1) { 
+            width: clamp(40px, 8vw, 60px); 
+            height: clamp(40px, 8vw, 60px); 
+            left: 8vw; 
+            top: 80vh; 
+            animation-duration: 14s; 
+        }
+        .flying-box:nth-child(2) { 
+            width: clamp(30px, 6vw, 40px); 
+            height: clamp(30px, 6vw, 40px); 
+            left: 22vw; 
+            top: 90vh; 
+            animation-duration: 16s; 
+            animation-delay: 2s; 
+        }
+        .flying-box:nth-child(3) { 
+            width: clamp(50px, 10vw, 80px); 
+            height: clamp(50px, 10vw, 80px); 
+            left: 38vw; 
+            top: 85vh; 
+            animation-duration: 18s; 
+            animation-delay: 4s; 
+        }
+        .flying-box:nth-child(4) { 
+            width: clamp(35px, 7vw, 50px); 
+            height: clamp(35px, 7vw, 50px); 
+            left: 55vw; 
+            top: 95vh; 
+            animation-duration: 15s; 
+            animation-delay: 1s; 
+        }
+        .flying-box:nth-child(5) { 
+            width: clamp(45px, 9vw, 70px); 
+            height: clamp(45px, 9vw, 70px); 
+            left: 70vw; 
+            top: 88vh; 
+            animation-duration: 17s; 
+            animation-delay: 3s; 
+        }
+        .flying-box:nth-child(6) { 
+            width: clamp(25px, 5vw, 30px); 
+            height: clamp(25px, 5vw, 30px); 
+            left: 80vw; 
+            top: 92vh; 
+            animation-duration: 13s; 
+            animation-delay: 5s; 
+        }
+        .flying-box:nth-child(7) { 
+            width: clamp(60px, 12vw, 90px); 
+            height: clamp(60px, 12vw, 90px); 
+            left: 90vw; 
+            top: 86vh; 
+            animation-duration: 19s; 
+            animation-delay: 6s; 
+        }
+        .flying-box:nth-child(8) { 
+            width: clamp(32px, 6.5vw, 45px); 
+            height: clamp(32px, 6.5vw, 45px); 
+            left: 15vw; 
+            top: 93vh; 
+            animation-duration: 15s; 
+            animation-delay: 2.5s; 
+        }
+
+        @keyframes flyBox {
+            0% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 0.15;
+            }
+            10% {
+                opacity: 0.25;
+            }
+            50% {
+                transform: translateY(-60vh) scale(1.1) rotate(180deg);
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.25;
+            }
+            100% {
+                transform: translateY(-110vh) scale(0.95) rotate(360deg);
+                opacity: 0.08;
+            }
+        }
+
+        /* ============================================================================
+           📦 MAIN CONTAINER
+           ============================================================================ */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: var(--spacing-xl);
+            max-width: min(800px, 95vw);
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ============================================================================
+           🎨 LOGO
+           ============================================================================ */
+        .logo {
+            width: var(--logo-size);
+            height: var(--logo-size);
+            margin: 0 auto var(--spacing-xl);
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: clamp(20px, 4vw, 30px);
+            padding: var(--spacing-lg);
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(157, 77, 221, 0.4);
+            animation: float 3s ease-in-out infinite;
+            will-change: transform;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* ============================================================================
+           📝 TYPOGRAPHY
+           ============================================================================ */
+        h1 {
+            font-size: var(--font-xxl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown var(--anim-slow) ease-out;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: var(--font-lg);
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-secondary);
+            opacity: 0.95;
+            animation: fadeInUp var(--anim-slow) ease-out 0.2s both;
+            line-height: 1.4;
+        }
+
+        .description {
+            font-size: var(--font-sm);
+            margin-bottom: var(--spacing-xl);
+            color: var(--color-accent);
+            opacity: 0.9;
+            animation: fadeInUp var(--anim-slow) ease-out 0.4s both;
+            line-height: 1.6;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .description br {
+            display: block;
+            content: "";
+            margin-bottom: 0.5em;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================================
+           🚀 START BUTTON
+           ============================================================================ */
+        .start-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            color: #10002b;
+            font-size: var(--font-lg);
+            font-weight: 600;
+            padding: var(--spacing-lg) clamp(2rem, 8vw, 4rem);
+            border: 2px solid #9d4edd;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(157, 77, 221, 0.4);
+            transition: all var(--anim-fast) ease;
+            animation: fadeInUp var(--anim-slow) ease-out 0.6s both;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 48px;
+        }
+
+        .start-button:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(45deg, #c77dff, #9d4edd);
+            box-shadow: 0 15px 40px rgba(157, 77, 221, 0.6);
+        }
+
+        .start-button:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .start-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(157, 77, 221, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .start-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .start-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================================
+           🎯 FEATURES GRID
+           ============================================================================ */
+        .features {
+            margin-top: var(--spacing-xxl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30vw, 200px), 1fr));
+            gap: var(--spacing-md);
+            animation: fadeIn var(--anim-slow) ease-out 0.8s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feature {
+            background: var(--color-card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: clamp(10px, 2vw, 15px);
+            font-size: var(--font-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all var(--anim-fast) ease;
+            flex-direction: column;
+            text-align: center;
+            min-height: clamp(70px, 15vw, 90px);
+        }
+
+        .feature:hover {
+            background: rgba(26, 26, 26, 0.95);
+            border-color: rgba(199, 125, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(157, 77, 221, 0.5);
+        }
+
+        .feature-icon {
+            font-size: var(--font-lg);
+        }
+
+        /* ============================================================================
+           🦶 FOOTER
+           ============================================================================ */
+        .footer {
+            margin-top: var(--spacing-xxl);
+            padding: var(--spacing-lg) var(--spacing-md);
+            text-align: center;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(16, 16, 16, 0.98) 100%);
+            border-top: 2px solid rgba(157, 78, 221, 0.4);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            animation: fadeIn var(--anim-slow) ease-out 1s both;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .developer-credit {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-icon {
+            font-size: 1.25rem;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .footer-text {
+            font-size: var(--font-sm);
+            font-weight: 500;
+            color: var(--color-primary);
+        }
+
+        .footer-text strong {
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: scale(1.15);
+            }
+        }
+
+        /* ============================================================================
+           📱 MOBILE OPTIMIZATIONS (< 768px)
+           ============================================================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: var(--spacing-sm);
+            }
+
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .description br {
+                display: none;
+            }
+
+            .description {
+                max-width: 100%;
+            }
+
+            .features {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: var(--spacing-sm);
+            }
+
+            .feature {
+                padding: var(--spacing-sm);
+                font-size: var(--font-xs);
+                min-height: 60px;
+            }
+
+            .feature-icon {
+                font-size: var(--font-md);
+            }
+
+            .flying-box {
+                animation-duration: 20s !important;
+            }
+        }
+
+        /* ============================================================================
+           📱 SMALL MOBILE (< 480px)
+           ============================================================================ */
+        @media (max-width: 480px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .start-button {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            h1 {
+                font-size: clamp(1.8rem, 8vw, 2.5rem);
+            }
+        }
+
+        /* ============================================================================
+           🖥️ LARGE SCREENS (> 1200px)
+           ============================================================================ */
+        @media (min-width: 1201px) {
+            .features {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ============================================================================
+           📱 LANDSCAPE MODE
+           ============================================================================ */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .logo {
+                width: clamp(60px, 12vh, 100px);
+                height: clamp(60px, 12vh, 100px);
+                margin-bottom: var(--spacing-md);
+                padding: var(--spacing-md);
+            }
+
+            h1 {
+                font-size: clamp(1.5rem, 5vh, 2rem);
+                margin-bottom: var(--spacing-sm);
+            }
+
+            .subtitle {
+                font-size: clamp(1rem, 3vh, 1.25rem);
+            }
+
+            .description {
+                font-size: clamp(0.8rem, 2vh, 1rem);
+                margin-bottom: var(--spacing-md);
+            }
+
+            .start-button {
+                padding: var(--spacing-md) var(--spacing-xl);
+                font-size: clamp(1rem, 3vh, 1.25rem);
+            }
+
+            .features {
+                margin-top: var(--spacing-lg);
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: var(--spacing-sm);
+            }
+
+            .feature {
+                padding: var(--spacing-sm);
+                font-size: clamp(0.75rem, 2vh, 0.875rem);
+                min-height: 50px;
+            }
+
+            .footer {
+                margin-top: var(--spacing-lg);
+                font-size: clamp(0.7rem, 1.8vh, 0.85rem);
+            }
+
+            .flying-box:nth-child(n+5) {
+                display: none;
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .flying-box {
+                opacity: 0.05 !important;
+                animation: none !important;
+            }
+
+            .logo {
+                animation: none !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .feature,
+            .logo {
+                border-width: 2px;
+            }
+
+            .start-button {
+                border-width: 3px;
+            }
+        }
+
+        /* ============================================================================
+           🖨️ PRINT STYLES
+           ============================================================================ */
+        @media print {
+            .flying-boxes,
+            .start-button {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .feature,
+            .logo {
+                border-color: black;
+            }
+        }
+
+        /* ============================================================================
+           🔧 SAFE AREA FOR NOTCH DEVICES
+           ============================================================================ */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+                padding-top: max(var(--spacing-md), env(safe-area-inset-top));
+                padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+            }
+        }
+
+        /* ============================================================================
+           ⚡ PERFORMANCE OPTIMIZATIONS
+           ============================================================================ */
+        @media (hover: none) {
+            .start-button:hover,
+            .feature:hover {
+                transform: none;
+            }
+
+            .start-button:active {
+                transform: scale(0.95);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animierte fliegende Boxen als Hintergrund -->
+    <div class="flying-boxes" role="presentation" aria-hidden="true">
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+        <div class="flying-box"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Logo -->
+        <div class="logo" role="img" aria-label="Lehrer Tools Logo">
+            <img src="icons/logo.svg" alt="Lehrer Tools Logo" loading="eager">
+        </div>
+
+        <!-- Haupttitel -->
+        <h1>🎓 Lehrer Tools</h1>
+        <p class="subtitle">Digitale Werkzeuge für modernen Unterricht</p>
+        <p class="description">
+            Eine Sammlung interaktiver Tools für Lehrer und Ausbilder<br>
+            6 Tools: Quiz • Timer • Stadt-Land-Fluss • Zufallsgenerator • Notenrechner • Aufgabenroulette<br>
+            Entwickelt mit ❤️ für bessere Bildung
+        </p>
+
+        <!-- Start Button -->
+        <a href="seiten/start.html" class="start-button" role="button">
+            <span>🚀 Jetzt starten!</span>
+        </a>
+
+        <!-- Features -->
+        <div class="features" role="list">
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🎮</span>
+                <span>Jeopardy Quiz</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🕐</span>
+                <span>Timer & Uhr</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🌍</span>
+                <span>Stadt-Land-Fluss</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🎲</span>
+                <span>Zufallsgenerator</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">📊</span>
+                <span>Notenrechner</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🎯</span>
+                <span>Aufgabenroulette</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">📱</span>
+                <span>PWA-fähig</span>
+            </div>
+            <div class="feature" role="listitem">
+                <span class="feature-icon" aria-hidden="true">🎨</span>
+                <span>Modern & Intuitiv</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="developer-credit">
+                    <span class="footer-icon">⚡</span>
+                    <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                    <span class="footer-icon">🎮</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="javascript/production-config.js"></script>
+    <script src="javascript/error-handler.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+            window.addEventListener('load', async () => {
+                try {
+                    const response = await fetch('pwa/sw.js', { method: 'HEAD' });
+                    if (response.ok) {
+                        const registration = await navigator.serviceWorker.register('pwa/sw.js');
+                        console.log('✅ Service Worker registriert:', registration.scope);
+                    }
+                } catch (error) {
+                    if (window.location.hostname === 'localhost' || 
+                        window.location.hostname.includes('claudeusercontent')) {
+                        console.log('ℹ️ Service Worker übersprungen (Vorschau-Umgebung)');
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- UI/UX Systems -->
+    <script defer src="javascript/toast.js"></script>
+    <script defer src="javascript/loading-states.js"></script>
+    <script defer src="javascript/micro-animations.js"></script>
+    <script defer src="javascript/animations.js"></script>
+
+    <!-- Dynamic Animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.flying-box');
+            boxes.forEach((box, i) => {
+                const delay = Math.random() * 8;
+                const duration = 12 + Math.random() * 8;
+                box.style.animationDelay = `${delay}s`;
+                box.style.animationDuration = `${duration}s`;
+                box.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.8 + Math.random() * 0.6})`;
+            });
+
+            const startButton = document.querySelector('.start-button');
+            if (startButton) {
+                startButton.addEventListener('click', function(e) {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            }
+
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', () => {
+                const st = window.pageYOffset || document.documentElement.scrollTop;
+                lastScrollTop = st <= 0 ? 0 : st;
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
