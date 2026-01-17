@@ -387,6 +387,7 @@
             grid-template-columns: 1fr;
             gap: var(--spacing-lg);
             margin-top: var(--spacing-xl);
+            align-items: start; /* Karten wachsen unabhängig voneinander */
         }
 
         /* Tablet: 2 Spalten */
@@ -408,10 +409,17 @@
             border: 1.5px solid rgba(199, 125, 255, 0.3);
             border-radius: var(--border-radius);
             padding: var(--spacing-lg);
-            transition: all 0.3s ease;
+            transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            /* height: 100% entfernt, damit Kartenhöhe dynamisch */
+            position: relative;
+        }
+
+        .game-card.changelog-open {
+            z-index: 2;
+            box-shadow: 0 8px 40px 0 rgba(157,78,221,0.25);
+            transform: scale(1.02);
         }
 
         .game-card:hover:not(.coming-soon) {
@@ -1080,6 +1088,42 @@
                 padding-right: max(var(--spacing-md), env(safe-area-inset-right));
             }
         }
+
+        /* Moderner Changelog-Toggle-Button */
+.changelog-toggle-btn {
+    margin: 1.2rem auto 0.7rem auto;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    padding: 0.85em 1.7em;
+    font-size: 1.08rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 2em;
+    background: linear-gradient(90deg, #a259ec 0%, #c77dff 100%);
+    color: #fff;
+    box-shadow: 0 2px 12px 0 rgba(157,78,221,0.10);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    outline: none;
+    min-width: 160px;
+    justify-content: center;
+    letter-spacing: 0.02em;
+}
+.changelog-toggle-btn:hover, .changelog-toggle-btn:focus {
+    background: linear-gradient(90deg, #c77dff 0%, #a259ec 100%);
+    box-shadow: 0 4px 24px 0 rgba(157,78,221,0.18);
+    transform: translateY(-2px) scale(1.03);
+}
+.changelog-toggle-btn span {
+    font-size: 1.18em;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+.changelog-toggle-btn.open span {
+    transform: rotate(180deg);
+}
+/* Ende moderner Changelog-Toggle-Button */
     </style>
 </head>
 <body>
@@ -1284,36 +1328,104 @@
         </div>
         <div class="games-grid">
             
-            <!-- Version 1.1.3 (Aktuelle Version) -->
+            <!-- Version 1.1.5 (Aktuelle Version) -->
             <div class="game-card">
                 <div class="game-card-header">
-                    <div class="game-icon">💬</div>
+                    <div class="game-icon">✨</div>
                     <span class="game-badge">Aktuelle Version</span>
                 </div>
                 <div class="game-card-body">
-                    <h3 class="game-title">Version 1.1.3 – 02.01.2026</h3>
-                    <p class="game-description">Feedback-System und E-Mail-Integration für Kontakt und Bug-Reports.</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Feedback-Button & Modal</span>
-                        <span class="feature-tag">Bezug-Auswahl mit Emojis</span>
-                        <span class="feature-tag">Feedback-Typen mit Emojis</span>
-                        <span class="feature-tag">Dringlichkeits-Auswahl bei Fehlern</span>
-                        <span class="feature-tag">Modernes, validiertes Formular</span>
-                        <span class="feature-tag">Feedback per E-Mail (PHPMailer)</span>
-                        <span class="feature-tag">Absenderadresse gefixt</span>
-                        <span class="feature-tag">Portfolio-Kontakt sendet E-Mail</span>
-                        <span class="feature-tag">Head-Bereich & Titel auf allen Seiten vereinheitlicht</span>
-                        <span class="feature-tag">Performance und Sicherheit verbessert und bearbeitet</span>
-
-                    </div>
-                    <div class="game-stats">
-                        <div class="stat"><span class="stat-icon">💬</span><span>start.html</span></div>
-                        <div class="stat"><span class="stat-icon">📧</span><span>sendPortfolioEmail.php</span></div>
-                        <div class="stat"><span class="stat-icon">🐞</span><span>feedback.php</span></div>
+                    <h3 class="game-title">Version 1.1.5 – 17.01.2026</h3>
+                    <p class="game-description">Modernes UI/UX-Update für den Changelog-Bereich: Neue Karten, Animationen und einheitliche Buttons.</p>
+                    <button class="changelog-toggle-btn" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                    <div class="changelog-details" style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                        <div class="game-features">
+                            <span class="feature-tag">Changelog-Karten: Responsive Grid</span>
+                            <span class="feature-tag">Nur eine Karte gleichzeitig ausklappbar</span>
+                            <span class="feature-tag">Nur die geöffnete Karte wächst, alle anderen bleiben kompakt</span>
+                            <span class="feature-tag">Flüssige Animationen (requestAnimationFrame, max-height-Transition)</span>
+                            <span class="feature-tag">Modernes Button-Design</span>
+                            <span class="feature-tag">UI/UX-Verbesserungen</span>
+                            <span class="feature-tag">Bugfix: Keine Überlappung mehr</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">🖥️</span><span>start.html</span></div>
+                            <div class="stat"><span class="stat-icon">🎨</span><span>CSS/JS</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="game-card-footer">
                     <button class="btn-play" disabled>Aktuelle Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.1.4 -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">🔒</div>
+                    <span class="game-badge">Vorherige Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.4 – 17.01.2026</h3>
+                    <p class="game-description">Großes Sicherheits- und Performance-Update für alle PHP-Funktionen und die E-Mail-Verifizierung.</p>
+                    <button class="changelog-toggle-btn" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                    <div class="changelog-details" style="display:none;">
+                        <div class="game-features">
+                            <span class="feature-tag">Rate Limiting für Verifizierungsversuche</span>
+                            <span class="feature-tag">Verbessertes Logging (IP, User-Agent, Zeitstempel)</span>
+                            <span class="feature-tag">SQL-Injection-Schutz & Prepared Statements</span>
+                            <span class="feature-tag">Asynchroner E-Mail-Versand (Willkommensmail)</span>
+                            <span class="feature-tag">UI/UX: Animierte, responsive Verifizierungsseite</span>
+                            <span class="feature-tag">Performance-Optimierungen für Datenbankabfragen</span>
+                            <span class="feature-tag">.htaccess für Hetzner optimiert</span>
+                            <span class="feature-tag">PHP-Fehlerbehandlung & Namespace-Fixes</span>
+                            <span class="feature-tag">Sicherheits-Header & CSP verbessert</span>
+                            <span class="feature-tag">Bugfix: Keine Quellcode-Anzeige mehr bei PHP-Fehlern</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">📧</span><span>verify_email.php</span></div>
+                            <div class="stat"><span class="stat-icon">🔐</span><span>register.php</span></div>
+                            <div class="stat"><span class="stat-icon">⚙️</span><span>.htaccess</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Vorherige Version</button>
+                </div>
+            </div>
+
+            <!-- Version 1.1.3 -->
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-icon">💬</div>
+                    <span class="game-badge">Vorherige Version</span>
+                </div>
+                <div class="game-card-body">
+                    <h3 class="game-title">Version 1.1.3 – 02.01.2026</h3>
+                    <p class="game-description">Feedback-System und E-Mail-Integration für Kontakt und Bug-Reports.</p>
+                    <button class="changelog-toggle-btn" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                    <div class="changelog-details" style="display:none;">
+                        <div class="game-features">
+                            <span class="feature-tag">Feedback-Button & Modal</span>
+                            <span class="feature-tag">Bezug-Auswahl mit Emojis</span>
+                            <span class="feature-tag">Feedback-Typen mit Emojis</span>
+                            <span class="feature-tag">Dringlichkeits-Auswahl bei Fehlern</span>
+                            <span class="feature-tag">Modernes, validiertes Formular</span>
+                            <span class="feature-tag">Feedback per E-Mail (PHPMailer)</span>
+                            <span class="feature-tag">Absenderadresse gefixt</span>
+                            <span class="feature-tag">Portfolio-Kontakt sendet E-Mail</span>
+                            <span class="feature-tag">Head-Bereich & Titel auf allen Seiten vereinheitlicht</span>
+                            <span class="feature-tag">Performance und Sicherheit verbessert und bearbeitet</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">💬</span><span>start.html</span></div>
+                            <div class="stat"><span class="stat-icon">📧</span><span>sendPortfolioEmail.php</span></div>
+                            <div class="stat"><span class="stat-icon">🐞</span><span>feedback.php</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card-footer">
+                    <button class="btn-play" disabled>Vorherige Version</button>
                 </div>
             </div>
 
@@ -1326,18 +1438,21 @@
                 <div class="game-card-body">
                     <h3 class="game-title">Version 1.1.2 – 01.01.2026</h3>
                     <p class="game-description">Umfassende Desktop-Optimierung für timer.html und zufallsgenerator.html mit Desktop-First-Ansatz.</p>
-                    <div class="game-features">
-                        <span class="feature-tag">timer.html optimiert</span>
-                        <span class="feature-tag">zufallsgenerator.html optimiert</span>
-                        <span class="feature-tag">Desktop-First CSS</span>
-                        <span class="feature-tag">Glücksrad-Animation</span>
-                        <span class="feature-tag">Glücksrad mit Beschriftungen</span>
-                        <span class="feature-tag">"Laden..."-Bug behoben</span>
-                        <span class="feature-tag">Responsive Skalierung</span>
-                    </div>
-                    <div class="game-stats">
-                        <div class="stat"><span class="stat-icon">⏰</span><span>timer.html</span></div>
-                        <div class="stat"><span class="stat-icon">🎲</span><span>zufallsgenerator.html</span></div>
+                    <button class="changelog-toggle-btn" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                    <div class="changelog-details" style="display:none;">
+                        <div class="game-features">
+                            <span class="feature-tag">timer.html optimiert</span>
+                            <span class="feature-tag">zufallsgenerator.html optimiert</span>
+                            <span class="feature-tag">Desktop-First CSS</span>
+                            <span class="feature-tag">Glücksrad-Animation</span>
+                            <span class="feature-tag">Glücksrad mit Beschriftungen</span>
+                            <span class="feature-tag">"Laden..."-Bug behoben</span>
+                            <span class="feature-tag">Responsive Skalierung</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">⏰</span><span>timer.html</span></div>
+                            <div class="stat"><span class="stat-icon">🎲</span><span>zufallsgenerator.html</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="game-card-footer">
@@ -1354,18 +1469,21 @@
                 <div class="game-card-body">
                     <h3 class="game-title">Version 1.1.1 – 31.12.2025</h3>
                     <p class="game-description">Umfassende Desktop-Optimierung und Anonymisierung für start.html, index.html und game.html.</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Desktop-Layout optimiert</span>
-                        <span class="feature-tag">Responsive Design</span>
-                        <span class="feature-tag">Anonymisierung</span>
-                        <span class="feature-tag">Footer vereinheitlicht</span>
-                        <span class="feature-tag">Footer-Inhalt verbessert</span>
-                        <span class="feature-tag">Links öffnen im gleichen Tab</span>
-                    </div>
-                    <div class="game-stats">
-                        <div class="stat"><span class="stat-icon">📱</span><span>start.html</span></div>
-                        <div class="stat"><span class="stat-icon">🏠</span><span>index.html</span></div>
-                        <div class="stat"><span class="stat-icon">🎮</span><span>game.html</span></div>
+                    <button class="changelog-toggle-btn btn-secondary" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen</button>
+                    <div class="changelog-details" style="display:none;">
+                        <div class="game-features">
+                            <span class="feature-tag">Desktop-Layout optimiert</span>
+                            <span class="feature-tag">Responsive Design</span>
+                            <span class="feature-tag">Anonymisierung</span>
+                            <span class="feature-tag">Footer vereinheitlicht</span>
+                            <span class="feature-tag">Footer-Inhalt verbessert</span>
+                            <span class="feature-tag">Links öffnen im gleichen Tab</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">📱</span><span>start.html</span></div>
+                            <div class="stat"><span class="stat-icon">🏠</span><span>index.html</span></div>
+                            <div class="stat"><span class="stat-icon">🎮</span><span>game.html</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="game-card-footer">
@@ -1382,13 +1500,16 @@
                 <div class="game-card-body">
                     <h3 class="game-title">Version 1.0.0 – 26.12.2025</h3>
                     <p class="game-description">Erste stabile Veröffentlichung der Lehrer Tools mit Performance-Optimierungen und bereinigtem Code.</p>
-                    <div class="game-features">
-                        <span class="feature-tag">Performance-Optimierungen</span>
-                        <span class="feature-tag">Code bereinigt</span>
-                        <span class="feature-tag">Changelog hinzugefügt</span>
-                    </div>
-                    <div class="game-stats">
-                        <div class="stat"><span class="stat-icon">✨</span><span>Stabile Version</span></div>
+                    <button class="changelog-toggle-btn btn-secondary" type="button" onclick="toggleChangelogDetails(this)">Mehr anzeigen</button>
+                    <div class="changelog-details" style="display:none;">
+                        <div class="game-features">
+                            <span class="feature-tag">Performance-Optimierungen</span>
+                            <span class="feature-tag">Code bereinigt</span>
+                            <span class="feature-tag">Changelog hinzugefügt</span>
+                        </div>
+                        <div class="game-stats">
+                            <div class="stat"><span class="stat-icon">✨</span><span>Stabile Version</span></div>
+                        </div>
                     </div>
                 </div>
                 <div class="game-card-footer">
@@ -1397,25 +1518,6 @@
             </div>
 
             <!-- Platzhalter für zukünftige Versionen -->
-            <div class="game-card coming-soon">
-                <div class="game-card-header">
-                    <div class="game-icon">🛠️</div>
-                    <span class="game-badge coming-soon-badge">Geplant</span>
-                </div>
-                <div class="game-card-body">
-                    <h3 class="game-title">Version 1.1.4</h3>
-                    <p class="game-description">Desktop-Optimierung für alle verbleibenden Webseiten.</p>
-                    <div class="game-features">
-                        <span class="feature-tag">notenrechner.html optimieren</span>
-                        <span class="feature-tag">aufgabenroulette.html optimieren</span>
-                        <span class="feature-tag">stadt-land-fluss.html optimieren</span>
-                        <span class="feature-tag">Weitere Verbesserungen</span>
-                    </div>
-                </div>
-                <div class="game-card-footer">
-                    <button class="btn-play" disabled>In Planung</button>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -1476,16 +1578,48 @@
         </footer>
                 <!-- Feedback Modal -->
                         <script>
-                        // Toggle für Changelog-Details
+                        // Toggle für Changelog-Details (nur eine Karte wird lang, Animation optimiert)
                         function toggleChangelogDetails(btn) {
+                            // Alle Karten und Details zurücksetzen
+                            document.querySelectorAll('.game-card').forEach(function(card) {
+                                card.classList.remove('changelog-open');
+                            });
+                            document.querySelectorAll('.changelog-details').forEach(function(d) {
+                                if (d !== btn.nextElementSibling) {
+                                    d.style.overflow = 'hidden';
+                                    d.style.maxHeight = '0px';
+                                    setTimeout(() => { d.style.display = "none"; }, 350);
+                                    if (d.previousElementSibling && d.previousElementSibling.classList.contains('changelog-toggle-btn')) {
+                                        d.previousElementSibling.classList.remove('open');
+                                        d.previousElementSibling.innerHTML = 'Mehr anzeigen <span>▼</span>';
+                                    }
+                                    if (d.parentElement && d.parentElement.parentElement.classList.contains('game-card')) {
+                                        d.parentElement.parentElement.classList.remove('changelog-open');
+                                    }
+                                }
+                            });
                             const details = btn.nextElementSibling;
-                            if (!details) return;
-                            if (details.style.display === "none" || details.style.display === "") {
+                            const card = btn.closest('.game-card');
+                            if (!details || !card) return;
+                            const expanded = details.style.display === "block";
+                            if (!expanded) {
                                 details.style.display = "block";
-                                btn.textContent = "Weniger anzeigen";
+                                // Timeout für reflow, damit Animation greift
+                                setTimeout(() => {
+                                    details.style.overflow = 'hidden';
+                                    details.style.maxHeight = details.scrollHeight + 'px';
+                                }, 10);
+                                btn.classList.add('open');
+                                btn.innerHTML = 'Weniger anzeigen <span>▼</span>';
+                                card.classList.add('changelog-open');
                             } else {
-                                details.style.display = "none";
-                                btn.textContent = "Mehr erfahren über den Changelog";
+                                details.style.maxHeight = '0px';
+                                setTimeout(() => {
+                                    details.style.display = "none";
+                                    card.classList.remove('changelog-open');
+                                }, 350);
+                                btn.classList.remove('open');
+                                btn.innerHTML = 'Mehr anzeigen <span>▼</span>';
                             }
                         }
                         </script>
