@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON-RPC 2.0 API Tester</title>
+    <style>
+        :root {
+            --spacing-sm: clamp(8px, 1.5vw, 12px);
+            --spacing-md: clamp(12px, 2vw, 20px);
+            --spacing-lg: clamp(16px, 3vw, 32px);
+            --font-sm: clamp(0.7rem, 1.5vw, 0.85rem);
+            --font-md: clamp(0.85rem, 2vw, 1rem);
+            --font-lg: clamp(1.2rem, 3vw, 1.8rem);
+            --accent-color: #61dafb;
+            --min-touch-target: 44px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #e0e0e0;
+            padding: var(--spacing-md);
+            font-size: var(--font-md);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--accent-color);
+            font-size: var(--font-lg);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .panel {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: var(--spacing-md);
+        }
+
+        .panel h2 {
+            color: var(--accent-color);
+            margin-bottom: var(--spacing-sm);
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #a0a0a0;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            background: #1e1e1e;
+            border: 1px solid #444;
+            color: #e0e0e0;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: max(14px, var(--font-sm));
+            margin-bottom: 10px;
+            min-height: 40px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: #000;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            min-height: var(--min-touch-target);
+            font-size: var(--font-md);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #4dbcd9;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .success {
+            background: #4ec9b0;
+            color: #000;
+        }
+
+        .methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .method-button {
+            background: #3d3d3d;
+            color: #e0e0e0;
+            padding: 8px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            min-height: 36px;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .method-button:hover {
+            background: #4d4d4d;
+            border-color: var(--accent-color);
+        }
+
+        .output {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.8rem;
+            max-height: 600px;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            background: #3d3d3d;
+            border: none;
+            color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            font-size: var(--font-sm);
+            min-height: auto;
+            width: auto;
+            margin-top: 0;
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .methods {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📡 JSON-RPC 2.0 API Tester</h1>
+
+        <div class="grid">
+            <!-- Linke Seite: Request erstellen -->
+            <div class="panel">
+                <h2>Request Builder</h2>
+
+                <label>Methode:</label>
+                <select id="methodSelect">
+                    <option value="">-- Wähle eine Methode --</option>
+                    <optgroup label="Authentication">
+                        <option value="auth.login">auth.login - Login</option>
+                        <option value="auth.register">auth.register - Register</option>
+                        <option value="auth.logout">auth.logout - Logout</option>
+                        <option value="auth.check">auth.check - Check Auth</option>
+                    </optgroup>
+                    <optgroup label="User">
+                        <option value="user.profile">user.profile - Get Profile</option>
+                        <option value="user.update">user.update - Update Profile</option>
+                    </optgroup>
+                    <optgroup label="Questions">
+                        <option value="questions.list">questions.list - List Questions</option>
+                        <option value="questions.get">questions.get - Get Question</option>
+                    </optgroup>
+                    <optgroup label="Admin">
+                        <option value="admin.users.list">admin.users.list - List Users</option>
+                        <option value="admin.users.get">admin.users.get - Get User</option>
+                        <option value="admin.users.delete">admin.users.delete - Delete User</option>
+                    </optgroup>
+                    <optgroup label="System">
+                        <option value="rpc.methods">rpc.methods - List Methods</option>
+                        <option value="rpc.version">rpc.version - Get Version</option>
+                    </optgroup>
+                </select>
+
+                <label>Parameter (JSON):</label>
+                <textarea id="paramsInput" placeholder='{"username": "admin", "password": "test123"}'></textarea>
+
+                <label>Request ID:</label>
+                <input type="number" id="idInput" value="1">
+
+                <button onclick="sendRequest()" class="success">📤 Sende Request</button>
+
+                <h2 style="margin-top: 30px;">Schnellzugriff</h2>
+                <div class="methods">
+                    <button class="method-button" onclick="quickMethod('auth.login')">Login</button>
+                    <button class="method-button" onclick="quickMethod('auth.register')">Register</button>
+                    <button class="method-button" onclick="quickMethod('auth.check')">Check Auth</button>
+                    <button class="method-button" onclick="quickMethod('auth.logout')">Logout</button>
+                    <button class="method-button" onclick="quickMethod('user.profile')">My Profile</button>
+                    <button class="method-button" onclick="quickMethod('questions.list')">List Questions</button>
+                    <button class="method-button" onclick="quickMethod('admin.users.list')">List Users</button>
+                    <button class="method-button" onclick="quickMethod('rpc.methods')">Methods</button>
+                    <button class="method-button" onclick="quickMethod('rpc.version')">Version</button>
+                </div>
+
+                <button onclick="clearForm()" style="margin-top: 10px;">🗑️ Formular leeren</button>
+            </div>
+
+            <!-- Rechte Seite: Response anzeigen -->
+            <div class="panel">
+                <h2>Response</h2>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(event, 'response')">Response</button>
+                    <button class="tab" onclick="switchTab(event, 'raw')">Raw Request</button>
+                    <button class="tab" onclick="switchTab(event, 'info')">Info</button>
+                </div>
+
+                <div id="response" class="tab-content active">
+                    <div class="output" id="responseOutput">Warte auf Request...</div>
+                </div>
+
+                <div id="raw" class="tab-content">
+                    <div class="output" id="rawOutput">Hier wird der Raw-Request angezeigt</div>
+                </div>
+
+                <div id="info" class="tab-content">
+                    <div class="output" id="infoOutput">
+                        📡 JSON-RPC 2.0 API Tester
+
+                        Dieser Tester hilft dir, die JSON-RPC API zu testen.
+
+                        Benutzername für Tests: admin
+                        Passwort für Tests: (dein Passwort)
+
+                        Features:
+                        ✓ Single Requests
+                        ✓ Batch Requests (kommend)
+                        ✓ Alle Standard-Fehler-Codes
+                        ✓ Session-Management
+
+                        Dokumentation: /docs/JSON_RPC_2_0.md
+                        Endpoint: /php/jsonrpc.php
+                    </div>
+                </div>
+
+                <div id="status" class="status loading" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://nicolehrertools.de/php/jsonrpc.php';
+
+        let defaultParams = {
+            'auth.login': { username: 'admin', password: 'test123' },
+            'auth.register': { username: 'newuser', email: 'new@example.com', password: 'Test123!', password_confirm: 'Test123!' },
+            'auth.logout': {},
+            'auth.check': {},
+            'user.profile': {},
+            'user.update': { email: 'newemail@example.com' },
+            'questions.list': { limit: 10, offset: 0 },
+            'questions.get': { id: 1 },
+            'admin.users.list': {},
+            'admin.users.get': { id: 1 },
+            'admin.users.delete': { id: 1 },
+            'rpc.methods': {},
+            'rpc.version': {}
+        };
+
+        function quickMethod(method) {
+            document.getElementById('methodSelect').value = method;
+            document.getElementById('paramsInput').value = JSON.stringify(defaultParams[method] || {}, null, 2);
+        }
+
+        function sendRequest() {
+            const method = document.getElementById('methodSelect').value;
+            const paramsText = document.getElementById('paramsInput').value;
+            const id = parseInt(document.getElementById('idInput').value) || 1;
+
+            if (!method) {
+                alert('Bitte wähle eine Methode!');
+                return;
+            }
+
+            let params = {};
+            if (paramsText.trim()) {
+                try {
+                    params = JSON.parse(paramsText);
+                } catch (e) {
+                    alert('Ungültiges JSON in Parametern: ' + e.message);
+                    return;
+                }
+            }
+
+            const request = {
+                jsonrpc: '2.0',
+                method: method,
+                params: params,
+                id: id
+            };
+
+            // Zeige Raw Request
+            document.getElementById('rawOutput').textContent = JSON.stringify(request, null, 2);
+
+            // Status
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = '⏳ Request wird gesendet...';
+            statusEl.className = 'status loading';
+            statusEl.style.display = 'inline-block';
+
+            // Sende Request
+            fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(request)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
+
+                    if (data.error) {
+                        statusEl.textContent = `❌ Error: ${data.error.message}`;
+                        statusEl.className = 'status error';
+                    } else {
+                        statusEl.textContent = '✓ Success';
+                        statusEl.className = 'status success';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('responseOutput').textContent = `Fehler: ${error.message}`;
+                    statusEl.textContent = '❌ Network Error';
+                    statusEl.className = 'status error';
+                });
+        }
+
+        function clearForm() {
+            document.getElementById('methodSelect').value = '';
+            document.getElementById('paramsInput').value = '';
+            document.getElementById('idInput').value = '1';
+            document.getElementById('responseOutput').textContent = 'Warte auf Request...';
+            document.getElementById('status').style.display = 'none';
+        }
+
+        function switchTab(e, tabName) {
+            // Entferne active von allen Tabs
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            // Setze active auf geklickten Tab
+            e.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Enter-Taste zum Senden
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                sendRequest();
+            }
+        });
+    </script>
+</body>
+
+</html>

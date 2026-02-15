@@ -1,0 +1,37 @@
+{
+  "name": "keksi-webseite-spiel",
+  "version": "2.0.0",
+  "description": "Jeopardy Quiz - Interaktives Lernspiel für Azubis",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config vite.config.js",
+    "build": "node ../tools/build-static.mjs && npm run postbuild:js && npm run postbuild:css",
+    "preview": "vite preview --config vite.config.js",
+    "serve": "vite preview --config vite.config.js",
+    "postbuild:js": "node ./tools/minify-js.mjs",
+    "postbuild:css": "node ./tools/minify-css.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImperatorKeksi/Keksi-webseite-spiel.git"
+  },
+  "keywords": [
+    "jeopardy",
+    "quiz",
+    "game",
+    "education",
+    "oberlinhaus"
+  ],
+  "author": "Nico Kaschube",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ImperatorKeksi/Keksi-webseite-spiel/issues"
+  },
+  "homepage": "https://github.com/ImperatorKeksi/Keksi-webseite-spiel#readme",
+  "devDependencies": {
+    "vite": "^7.2.2",
+    "terser": "^5.36.0",
+    "glob": "^11.0.0",
+    "clean-css": "^5.3.3"
+  }
+}

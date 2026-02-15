@@ -1,0 +1,2448 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Lehrer Tools - Gute Tools für Lehrer">
+    <meta name="author" content="Nico">
+    <meta name="theme-color" content="#9d4edd">
+    <title>Lehrer Tools</title>
+    <link rel="icon" type="image/svg+xml" href="../icons/logo-simple.svg">
+    <link rel="stylesheet" href="../stylesheets/main.css">
+    <link rel="stylesheet" href="../stylesheets/animations.css">
+    <link rel="stylesheet" href="../stylesheets/responsive.css">
+
+    <style>
+        /* ============================================================================
+           🎯 RESPONSIVE MASTER STYLES
+           ============================================================================ */
+
+        /* CSS Variablen für konsistente Responsiveness */
+        :root {
+            /* Spacing - Mobile First */
+            --spacing-xs: clamp(0.25rem, 1vw, 0.5rem);
+            --spacing-sm: clamp(0.5rem, 2vw, 1rem);
+            --spacing-md: clamp(1rem, 3vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 4vw, 2.5rem);
+            --spacing-xl: clamp(2rem, 5vw, 3.5rem);
+            --spacing-xxl: clamp(2.5rem, 6vw, 4rem);
+
+            /* Font Sizes - Mobile First */
+            --font-xs: clamp(0.75rem, 1.5vw, 0.875rem);
+            --font-sm: clamp(0.875rem, 2vw, 1rem);
+            --font-md: clamp(1rem, 2.5vw, 1.125rem);
+            --font-lg: clamp(1.25rem, 3.5vw, 1.75rem);
+            --font-xl: clamp(1.75rem, 4.5vw, 2.5rem);
+            --font-xxl: clamp(2.5rem, 6vw, 4rem);
+
+            /* Colors */
+            --color-bg: #0a0a0a;
+            --color-accent: #9d4edd;
+            --color-primary: #e0aaff;
+            --color-secondary: #c77dff;
+            --color-card-bg: rgba(26, 26, 26, 0.95);
+
+            /* Layout */
+            --max-width: 1400px;
+            --border-radius: clamp(0.75rem, 2vw, 1.5rem);
+            --header-height: clamp(60px, 10vh, 80px);
+        }
+
+        /* ============================================================================
+           🖥️ DESKTOP-OPTIMIERTE VARIABLEN
+           ============================================================================ */
+        @media (min-width: 1025px) {
+            :root {
+                --spacing-xs: 0.5rem;
+                --spacing-sm: 1rem;
+                --spacing-md: 1.5rem;
+                --spacing-lg: 2.5rem;
+                --spacing-xl: 3.5rem;
+                --spacing-xxl: 5rem;
+
+                --font-xs: 0.875rem;
+                --font-sm: 1rem;
+                --font-md: 1.125rem;
+                --font-lg: 1.75rem;
+                --font-xl: 2.5rem;
+                --font-xxl: 4rem;
+
+                --border-radius: 1.5rem;
+            }
+        }
+
+        /* Extra große Bildschirme */
+        @media (min-width: 1921px) {
+            :root {
+                --spacing-lg: 3rem;
+                --spacing-xl: 4rem;
+                --spacing-xxl: 6rem;
+
+                --font-xl: 3rem;
+                --font-xxl: 5rem;
+
+                --max-width: 1600px;
+            }
+        }
+
+        /* Base Reset */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            overflow-x: hidden;
+            /* ✅ Verhindert das Springen der Seite wenn Scrollbars erscheinen */
+            scrollbar-gutter: stable;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Main Layout */
+        .page-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============================================================================
+           📱 HEADER & NAVIGATION
+           ============================================================================ */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        .navbar {
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+
+        .nav-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            text-decoration: none;
+        }
+
+        .nav-logo {
+            width: clamp(32px, 6vw, 48px);
+            height: clamp(32px, 6vw, 48px);
+            filter: drop-shadow(0 0 8px rgba(157, 78, 221, 0.5));
+        }
+
+        .nav-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .nav-link {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-decoration: none;
+            color: var(--color-primary);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-size: var(--font-sm);
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(157, 78, 221, 0.2);
+            color: #fff;
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .user-display {
+            font-size: var(--font-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.2);
+            border-radius: var(--border-radius);
+        }
+
+        .btn-login,
+        .btn-logout {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--color-accent);
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .btn-login:hover,
+        .btn-logout:hover {
+            background: #7209b7;
+            transform: translateY(-2px);
+        }
+
+        /* Desktop Navigation Optimierung */
+        @media (min-width: 1025px) {
+            .nav-container {
+                padding: 0 var(--spacing-lg);
+                gap: 3rem;
+            }
+
+            .nav-logo {
+                width: 48px;
+                height: 48px;
+            }
+
+            .nav-title {
+                font-size: 1.75rem;
+            }
+
+            .nav-menu {
+                gap: 2rem;
+            }
+
+            .nav-link {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .btn-login,
+            .btn-logout {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================================================
+           🎭 HERO SECTION
+           ============================================================================ */
+        .hero-section {
+            padding: var(--spacing-xxl) var(--spacing-md);
+            text-align: center;
+            background: linear-gradient(180deg, rgba(157, 78, 221, 0.1) 0%, transparent 100%);
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: var(--font-xxl);
+            font-weight: 800;
+            background: linear-gradient(45deg, #e0aaff, #c77dff, #9d4edd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: var(--font-lg);
+            color: #c77dff;
+            margin-bottom: var(--spacing-xl);
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Desktop Hero Optimierung */
+        @media (min-width: 1025px) {
+            .hero-section {
+                padding: 8rem var(--spacing-md) 6rem;
+            }
+
+            .hero-content {
+                max-width: 1000px;
+            }
+
+            .hero-title {
+                font-size: 4rem;
+                line-height: 1.1;
+                margin-bottom: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.75rem;
+                margin-bottom: 3rem;
+            }
+
+            .hero-buttons {
+                gap: 2rem;
+            }
+
+            .hero-buttons .btn {
+                padding: 1.25rem 2.5rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        /* ============================================================================
+           🎮 SECTIONS (GAMES, TOOLS, ABOUT)
+           ============================================================================ */
+        .games-section,
+        .tools-section,
+        .about-section {
+            padding: var(--spacing-xxl) var(--spacing-md);
+        }
+
+        .section-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: var(--font-xl);
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: var(--font-md);
+            color: #c77dff;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Desktop Sections Optimierung */
+        @media (min-width: 1025px) {
+
+            .games-section,
+            .tools-section,
+            .about-section {
+                padding: 8rem var(--spacing-md);
+            }
+
+            .section-container {
+                padding: 0 var(--spacing-lg);
+            }
+
+            .section-title {
+                font-size: 3rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-subtitle {
+                font-size: 1.375rem;
+                margin-bottom: 4rem;
+            }
+        }
+
+        /* ============================================================================
+           📦 GAME & TOOL CARDS
+           ============================================================================ */
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            align-items: start;
+            /* Karten wachsen unabhängig voneinander */
+        }
+
+        /* Tablet: 2 Spalten */
+        @media (min-width: 768px) {
+            .games-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop: 3 Spalten */
+        @media (min-width: 1200px) {
+            .games-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .game-card {
+            background: var(--color-card-bg);
+            border: 1.5px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            /* height: 100% entfernt, damit Kartenhöhe dynamisch */
+            position: relative;
+        }
+
+        .game-card.changelog-open {
+            z-index: 2;
+            box-shadow: 0 8px 40px 0 rgba(157, 78, 221, 0.25);
+            transform: scale(1.02);
+        }
+
+        .game-card:hover:not(.coming-soon) {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(157, 78, 221, 0.3);
+            border-color: rgba(199, 125, 255, 0.6);
+        }
+
+        .game-card.coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .game-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .game-icon {
+            font-size: clamp(2rem, 5vw, 3rem);
+            filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+        }
+
+        .game-badge {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.3);
+            border-radius: 999px;
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+
+        .coming-soon-badge {
+            background: rgba(255, 165, 0, 0.3);
+        }
+
+        .game-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .game-title {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            background: linear-gradient(90deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .game-description {
+            font-size: var(--font-sm);
+            color: #c77dff;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .game-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin: var(--spacing-sm) 0;
+        }
+
+        /* Spezifische Liste für Changelogs */
+        .changelog-card .game-features {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .feature-tag {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(157, 78, 221, 0.2);
+            border-radius: 999px;
+            font-size: var(--font-xs);
+            color: #e0aaff;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-xs);
+        }
+
+        .game-stats {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-sm);
+        }
+
+        .changelog-card .game-stats {
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: var(--font-xs);
+        }
+
+        .game-card-footer {
+            margin-top: var(--spacing-md);
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* Desktop Card Optimierung */
+        @media (min-width: 1025px) {
+            .game-card {
+                padding: 2.5rem;
+                min-height: 450px;
+            }
+
+            .game-icon {
+                font-size: 3.5rem;
+            }
+
+            .game-title {
+                font-size: 2rem;
+            }
+
+            .game-description {
+                font-size: 1.125rem;
+                line-height: 1.7;
+            }
+
+            .game-card:hover:not(.coming-soon) {
+                transform: translateY(-12px) scale(1.02);
+            }
+        }
+
+        /* ============================================================================
+           🔘 BUTTONS
+           ============================================================================ */
+        .btn,
+        .btn-play {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            min-width: 44px;
+            touch-action: manipulation;
+        }
+
+        .btn-primary,
+        .btn-play {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover,
+        .btn-play:hover {
+            background: #7209b7;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        .btn-play {
+            width: 100%;
+        }
+
+        button:disabled,
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============================================================================
+           📋 ABOUT SECTION
+           ============================================================================ */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Tablet */
+        @media (min-width: 768px) {
+            .about-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1200px) {
+            .about-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .about-card.full-width {
+                grid-column: 1 / -1;
+                max-width: 100%;
+            }
+        }
+
+        .about-card {
+            background: var(--color-card-bg);
+            border: 1.5px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .about-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(157, 78, 221, 0.3);
+        }
+
+        .about-icon {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: var(--spacing-md);
+            filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+        }
+
+        .about-card h3 {
+            font-size: var(--font-lg);
+            margin-bottom: var(--spacing-sm);
+            background: linear-gradient(90deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-card p {
+            font-size: var(--font-sm);
+            color: #c77dff;
+            line-height: 1.6;
+        }
+
+        .about-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ============================================================================
+           🦶 FOOTER
+           ============================================================================ */
+        .main-footer {
+            background: rgba(10, 10, 10, 0.95);
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+            padding: var(--spacing-xl) var(--spacing-md);
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-section h4 {
+            font-size: var(--font-md);
+            margin-bottom: var(--spacing-sm);
+            color: #e0aaff;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .footer-links a {
+            color: #c77dff;
+            text-decoration: none;
+            font-size: var(--font-sm);
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #e0aaff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+            font-size: var(--font-sm);
+            color: #c77dff;
+        }
+
+        /* Desktop Footer Optimierung */
+        @media (min-width: 1025px) {
+            .main-footer {
+                padding: 5rem var(--spacing-lg) 3rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 2fr 1fr;
+                gap: 6rem;
+                margin-bottom: 3rem;
+                align-items: start;
+            }
+
+            .footer-section:first-child {
+                text-align: left;
+            }
+
+            .footer-section:last-child {
+                text-align: left;
+            }
+
+            .footer-section h4 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .footer-links {
+                gap: 0.75rem;
+            }
+
+            .footer-links a {
+                font-size: 1.125rem;
+                padding: 0.5rem 0;
+                display: inline-block;
+            }
+
+            .footer-bottom {
+                padding-top: 3rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* ============================================================================
+           💬 MODAL
+           ============================================================================ */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: var(--spacing-md);
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--color-card-bg);
+            border: 2px solid #c77dff;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: #e0aaff;
+            font-size: var(--font-xl);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .epic-login-title {
+            font-size: var(--font-xl);
+            background: linear-gradient(45deg, #e0aaff, #c77dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: var(--spacing-md);
+            background: transparent;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            color: #c77dff;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            font-size: var(--font-sm);
+        }
+
+        .auth-tab.active {
+            background: rgba(157, 78, 221, 0.3);
+            color: #e0aaff;
+            border-color: #c77dff;
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-sm);
+            color: #e0aaff;
+        }
+
+        .epic-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: rgba(10, 10, 10, 0.5);
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            border-radius: var(--border-radius);
+            color: #e0aaff;
+            font-size: max(16px, var(--font-sm));
+            min-height: 44px;
+        }
+
+        .epic-input:focus {
+            outline: none;
+            border-color: #c77dff;
+            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+        }
+
+        .epic-password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: var(--font-md);
+        }
+
+        .auth-info {
+            padding: var(--spacing-md);
+            background: rgba(157, 78, 221, 0.1);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-xs);
+        }
+
+        .auth-error,
+        .auth-success {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-sm);
+        }
+
+        .auth-error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            color: #ff6b6b;
+        }
+
+        .auth-success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid rgba(0, 255, 0, 0.5);
+            color: #51cf66;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: var(--spacing-md);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .modal-btn.btn-primary {
+            background: var(--color-accent);
+            color: #fff;
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+            color: #c77dff;
+        }
+
+        /* Desktop Modal Optimierung */
+        @media (min-width: 1025px) {
+            .modal-content {
+                max-width: 600px;
+                padding: 3rem;
+            }
+
+            .modal-header {
+                margin-bottom: 2rem;
+            }
+
+            .epic-login-title {
+                font-size: 2.5rem;
+            }
+
+            .epic-input {
+                padding: 1rem 1.25rem;
+                font-size: 1.125rem;
+            }
+
+            .modal-btn {
+                padding: 1rem 2rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        /* ============================================================================
+           📱 RESPONSIVE BREAKPOINTS
+           ============================================================================ */
+
+        /* Mobile Navigation Toggle */
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1001;
+        }
+
+        .nav-toggle span {
+            width: 100%;
+            height: 3px;
+            background-color: var(--color-primary);
+            border-radius: 10px;
+            transition: all 0.3s linear;
+            position: relative;
+            transform-origin: 1px;
+        }
+
+        .nav-auth-mobile {
+            display: none;
+            width: 100%;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid rgba(157, 78, 221, 0.2);
+        }
+
+        /* Tablet (< 1024px) */
+        @media (max-width: 1024px) {
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 100vh;
+                width: min(80vw, 300px);
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 80px 2rem 2rem;
+                transform: translateX(100%);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+                border-left: 1px solid rgba(157, 78, 221, 0.2);
+            }
+
+            .nav-menu.open {
+                transform: translateX(0);
+            }
+
+            .nav-auth {
+                display: none;
+            }
+
+            .nav-auth-mobile {
+                display: block;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .nav-title {
+                font-size: var(--font-md);
+            }
+
+            .game-card-footer {
+                flex-direction: column;
+            }
+
+            .game-card-footer .btn-play {
+                width: 100%;
+            }
+        }
+
+        /* Hamburger Animation */
+        .nav-toggle.open span:nth-child(1) {
+            transform: rotate(45deg);
+        }
+
+        .nav-toggle.open span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(20px);
+        }
+
+        .nav-toggle.open span:nth-child(3) {
+            transform: rotate(-45deg);
+        }
+
+        /* Small Mobile (< 480px) */
+        @media (max-width: 480px) {
+            :root {
+                --spacing-md: clamp(0.75rem, 2.5vw, 1rem);
+                --spacing-lg: clamp(1rem, 3.5vw, 1.5rem);
+            }
+
+            .nav-logo {
+                width: 32px;
+                height: 32px;
+            }
+
+            .hero-section {
+                padding: var(--spacing-lg) var(--spacing-sm);
+            }
+
+            .modal-content {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Landscape Mode */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .hero-section {
+                padding: var(--spacing-md);
+            }
+
+            .modal-content {
+                max-height: 85vh;
+            }
+        }
+
+        /* ============================================================================
+           ♿ ACCESSIBILITY
+           ============================================================================ */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+
+            .game-card,
+            .about-card,
+            .modal-content {
+                border-width: 3px;
+            }
+        }
+
+        /* ============================================================================
+           🎨 UTILITY CLASSES
+           ============================================================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Safe Area für Notch-Geräte */
+        @supports (padding: max(0px)) {
+
+            .nav-container,
+            .section-container,
+            .hero-content {
+                padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+                padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+            }
+        }
+
+        /* Moderner Changelog-Toggle-Button */
+        .changelog-toggle-btn {
+            margin: 1.2rem auto 0.7rem auto;
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            padding: 0.85em 1.7em;
+            font-size: 1.08rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 2em;
+            background: linear-gradient(90deg, #a259ec 0%, #c77dff 100%);
+            color: #fff;
+            box-shadow: 0 2px 12px 0 rgba(157, 78, 221, 0.10);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            outline: none;
+            min-width: 160px;
+            justify-content: center;
+            letter-spacing: 0.02em;
+        }
+
+        .changelog-toggle-btn:hover,
+        .changelog-toggle-btn:focus {
+            background: linear-gradient(90deg, #c77dff 0%, #a259ec 100%);
+            box-shadow: 0 4px 24px 0 rgba(157, 78, 221, 0.18);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .changelog-toggle-btn span {
+            font-size: 1.18em;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .changelog-toggle-btn.open span {
+            transform: rotate(180deg);
+        }
+
+        /* Ende moderner Changelog-Toggle-Button */
+
+        /* Notification Badge Style - Fix Clipping & Visibility */
+        .notification-badge {
+            position: absolute !important;
+            top: -8px !important;
+            right: -8px !important;
+            background: linear-gradient(135deg, #ff0055, #d90429) !important;
+            color: white !important;
+            border-radius: 50% !important;
+            min-width: 22px !important;
+            height: 22px !important;
+            padding: 0 5px !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.8rem !important;
+            font-weight: 800 !important;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.8) !important;
+            border: 2px solid #0a0a0a !important;
+            z-index: 9999 !important;
+            pointer-events: none !important;
+            animation: badgePulse 2s infinite !important;
+            transform: scale(1) !important;
+        }
+
+        /* Verhindert Clipping an abgerundeten Buttons */
+        .btn[style*="position: relative"],
+        .btn-play[style*="position: relative"],
+        #chatButtonHero,
+        #chatButton {
+            overflow: visible !important;
+        }
+
+        @keyframes badgePulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 0, 85, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 85, 0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Bubble-Hintergrund -->
+    <iframe src="background-bubbles-boxes.html"
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;border:none;pointer-events:none;"
+        aria-hidden="true" tabindex="-1"></iframe>
+
+    <!-- Notification Service Script -->
+    <script>
+        // Helper für Pfad-Korrektur (Global verfügbar machen)
+        function fixAssetPath(path) {
+            if (!path) return null;
+
+            // Fix für falsche absolute URLs (z.B. .../seiten/assets/...)
+            if (path.includes('/seiten/assets/')) {
+                return path.replace('/seiten/assets/', '/assets/');
+            }
+
+            if (path.startsWith('http') || path.startsWith('data:')) return path;
+
+            // "seiten/" entfernen falls vorhanden
+            if (path.includes('seiten/')) path = path.replace('seiten/', '');
+
+            // "../" sicherstellen wenn assets enthalten ist
+            if (path.includes('assets/') && !path.startsWith('../')) {
+                return '../' + path;
+            }
+            return path;
+        }
+
+        const bc = new BroadcastChannel('chat_notifications');
+        bc.onmessage = (event) => {
+            const { type, user, text, chat_id } = event.data;
+            if (type === 'new_message') {
+                showGlobalNotification(user, text, chat_id);
+                // Badge sofort aktualisieren (Polling würde es auch tun, aber das ist schneller)
+                updateChatBadge(true, true); // true = hasNew, true = increment
+            }
+        };
+
+        // Polling für Unread Messages (Fallback für geschlossenen Chat)
+        async function fetchUnreadCount() {
+            // Nur prüfen wenn eingeloggt
+            if (!window.authManager || !window.authManager.isLoggedIn()) {
+                updateChatBadge(false);
+                return;
+            }
+            try {
+                const response = await fetch('../php/chat_api.php?action=list_chats');
+                if (!response.ok) return;
+                const data = await response.json();
+
+                if (data.success && Array.isArray(data.data)) {
+                    let totalUnread = 0;
+                    const users = data.data; // List of chats/users
+
+                    users.forEach(user => {
+                        if (user.last_message_time) {
+                            // Vergleiche mit letztem Zeitstempel aus localStorage
+                            let lastSeen = localStorage.getItem(`last_seen_${user.chat_id}`);
+
+                            // Wenn kein Wert im LocalStorage, nehmen wir ein sehr altes Datum
+                            // WICHTIG: Wir parsen beide Werte zu Date Objekten für den Vergleich.
+                            const lastMsgDate = new Date(user.last_message_time);
+                            const lastSeenDate = lastSeen ? new Date(lastSeen) : new Date(0);
+
+                            if (lastMsgDate > lastSeenDate) {
+                                totalUnread++;
+                            }
+                        }
+                    });
+
+                    // Badge aktualisieren mit exakter Anzahl
+                    updateChatBadge(totalUnread > 0, false, totalUnread);
+                }
+            } catch (e) {
+                console.error('Fetch unread count failed:', e);
+            }
+        }
+
+        // Start Polling (alle 15 Sekunden)
+        setInterval(fetchUnreadCount, 15000);
+
+        // Initialer Check nach kurzem Delay (damit Auth bereit ist)
+        setTimeout(fetchUnreadCount, 1000);
+
+        function updateChatBadge(hasNew, increment = false, exactCount = -1) {
+            const badges = ['chatBadge', 'chatBadgeHero'];
+
+            badges.forEach(id => {
+                const badge = document.getElementById(id);
+                if (badge) {
+                    if (hasNew) {
+                        badge.style.setProperty('display', 'flex', 'important');
+                        if (exactCount >= 0) {
+                            badge.textContent = exactCount > 9 ? '9+' : exactCount;
+                        } else if (increment) {
+                            let count = parseInt(badge.textContent) || 0;
+                            badge.textContent = count < 9 ? count + 1 : '9+';
+                        }
+                    } else {
+                        badge.style.setProperty('display', 'none', 'important');
+                        badge.textContent = '0';
+                    }
+                }
+            });
+        }
+
+        // Reset Badge beim Klick
+        document.addEventListener('DOMContentLoaded', () => {
+            ['chatButton', 'chatButtonHero'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.addEventListener('click', () => updateChatBadge(false));
+            });
+        });
+
+        function showGlobalNotification(username, text, chatId) {
+            // Nur anzeigen, wenn erlaubt
+            if (Notification.permission === "granted") {
+                const n = new Notification(`Neue Nachricht von ${username}`, {
+                    body: text,
+                    icon: '../icons/logo-simple.svg',
+                    tag: 'chat-msg-' + chatId
+                });
+
+                n.onclick = () => {
+                    window.focus();
+                    window.location.href = 'lehrer-chat.html'; // Oder Fokus auf bereits offenen Tab (komplexer in Web)
+                };
+            }
+        }
+    </script>
+
+    <!-- Hauptinhalt -->
+    <main class="page-container">
+        <!-- Header & Navigation -->
+        <header class="main-header">
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <img src="../icons/logo-simple.svg" alt="Lehrer Tools Logo" class="nav-logo">
+                        <span class="nav-title">Lehrer Tools</span>
+                    </div>
+
+
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="#home" class="nav-link active">Home</a></li>
+                        <li><a href="#games" class="nav-link">Spiele</a></li>
+                        <li><a href="#tools" class="nav-link">Tools</a></li>
+                        <li><a href="#changelog" class="nav-link">Changelog</a></li>
+                        <li><a href="#about" class="nav-link">Über uns</a></li>
+                        <li class="nav-auth-mobile">
+                            <button id="loginBtnMobile" class="btn-login">Anmelden</button>
+                        </li>
+                    </ul>
+
+                    <div class="nav-auth">
+                        <span id="userDisplayNav" class="user-display" style="display: none;"></span>
+                        <button id="loginBtnNav" class="btn-login">Anmelden</button>
+                        <button id="logoutBtnNav" class="btn-logout" style="display: none;">Abmelden</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Willkommen bei den Lehrer Tools</h1>
+                <p class="hero-subtitle">Gute Tools für Lehrer</p>
+                <div class="hero-buttons">
+                    <a href="#games" class="btn btn-primary">Zu den Spielen</a>
+                    <a href="#tools" class="btn btn-primary">Zu den Tools</a>
+                    <a href="../seiten/lehrer-chat.html" class="btn btn-primary" id="chatButtonHero"
+                        style="position: relative;">
+                        Zum Chat
+                        <span id="chatBadgeHero" class="notification-badge" style="display: none;">0</span>
+                    </a>
+                    <a href="#about" class="btn btn-secondary">Mehr erfahren</a>
+                    <button id="openFeedbackBtn" class="btn btn-secondary" type="button">Feedback geben</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Spiele Section -->
+        <section id="games" class="games-section">
+            <div class="section-container">
+                <h2 class="section-title">Verfügbare Spiele</h2>
+                <p class="section-subtitle">Wähle ein Spiel und starte deine Lernreise!</p>
+                <div class="games-grid">
+                    <!-- Jeopardy Quiz -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎯</div>
+                            <span class="game-badge">Verfügbar</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Jeopardy Quiz</h3>
+                            <p class="game-description">Teste dein Wissen in diesem spannenden Quiz-Spiel! Verschiedene
+                                Modi verfügbar.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Mehrere Modi</span>
+                                <span class="feature-tag">25 Fragen</span>
+                                <span class="feature-tag">Multiplayer</span>
+                            </div>
+                            <div class="game-stats">
+                                <div class="stat"><span class="stat-icon">⏱️</span><span>10-20 Min</span></div>
+                                <div class="stat"><span class="stat-icon">👥</span><span>1-6 Spieler</span></div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="game.html" class="btn-play">Jetzt spielen</a>
+                        </div>
+                    </div>
+
+                    <!-- Stadt Land Fluss -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🌍</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Stadt Land Fluss</h3>
+                            <p class="game-description">Digitale Version mit Timer und automatischer Punkteberechnung.
+                            </p>
+                            <div class="game-features">
+                                <span class="feature-tag">Timer-Funktion</span>
+                                <span class="feature-tag">Duplikat-Erkennung</span>
+                            </div>
+                            <div class="game-stats">
+                                <div class="stat"><span class="stat-icon">👥</span><span>Multiplayer</span></div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="stadt-land-fluss.html" class="btn-play">Spiel starten</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="tools-section">
+            <div class="section-container">
+                <h2 class="section-title">Lehrer Tools</h2>
+                <p class="section-subtitle">Praktische Werkzeuge für den Unterricht!</p>
+                <div class="games-grid">
+                    <!-- Timer Tool -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">⏰</div>
+                            <span class="game-badge">Verfügbar</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Digitale Uhr & Timer</h3>
+                            <p class="game-description">Professionelle Uhr mit Timer-Funktion für den Unterricht.</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Countdown</span>
+                                <span class="feature-tag">Alarm-Sounds</span>
+                                <span class="feature-tag">Vollbild</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="timer.html" class="btn-play">
+                                Uhr öffnen
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Zufalls-Generator -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎲</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Zufalls-Generator</h3>
+                            <p class="game-description">Schüler auswählen, Teams bilden, Würfeln & Glücksrad!</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Schülerauswahl</span>
+                                <span class="feature-tag">Teams</span>
+                                <span class="feature-tag">Glücksrad</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="zufallsgenerator.html" class="btn-play">Generator öffnen</a>
+                        </div>
+                    </div>
+
+                    <!-- Noten-Rechner -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">📊</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Noten-Rechner</h3>
+                            <p class="game-description">Notenschlüssel mit IHK, Linear oder Gauß-Verteilung generieren.
+                            </p>
+                            <div class="game-features">
+                                <span class="feature-tag">IHK Standard</span>
+                                <span class="feature-tag">3 Verteilungen</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="notenrechner.html" class="btn-play">Rechner öffnen</a>
+                        </div>
+                    </div>
+
+                    <!-- Aufgaben-Roulette -->
+                    <div class="game-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎯</div>
+                            <span class="game-badge">Neu</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Aufgaben-Roulette</h3>
+                            <p class="game-description">Faire Zufallsverteilung von Hausaufgaben und Referaten!</p>
+                            <div class="game-features">
+                                <span class="feature-tag">Fair</span>
+                                <span class="feature-tag">Export</span>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <a href="aufgabenroulette.html" class="btn-play">Roulette öffnen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Changelog Section -->
+        <section id="changelog" class="tools-section">
+            <div class="section-container">
+                <h2 class="section-title">Changelog</h2>
+                <p class="section-subtitle">Alle Änderungen und Verbesserungen im Überblick</p>
+                <div class="changelog-beta-hint"
+                    style="background:rgba(60,30,90,0.85);color:#e0c3fc;padding:1.2rem 1.7rem;border-radius:14px;border:1.5px solid #a259ec;margin-bottom:2rem;box-shadow:0 2px 16px 0 rgba(130,80,220,0.10);font-size:1.13rem;line-height:1.7;max-width:700px;margin-left:auto;margin-right:auto;">
+                    <span style="font-weight:700;color:#c77dff;letter-spacing:0.5px;">Beta-Hinweis:</span> Diese
+                    Anwendung befindet sich noch in der <b style="color:#fff;">Beta-Phase</b>.<br>
+                    Es sind noch nicht alle Funktionen fertiggestellt und es können Fehler auftreten.<br>
+                    Wenn Sie einen Fehler finden, melden Sie ihn gerne über
+                    <a href="#"
+                        onclick="document.getElementById('feedbackModal').classList.remove('hidden');document.body.classList.add('modal-open');return false;"
+                        style="color:#a259ec;text-decoration:underline;font-weight:600;">Feedback geben</a>.
+                </div>
+                <div class="games-grid">
+
+                    <!-- Version 1.2.0 (Aktuelle Version) -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">💎</div>
+                            <span class="game-badge">Aktuelle Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.2.0 – 06.02.2026</h3>
+                            <p class="game-description">Das große UI-Standardisierungs-Update! Premium-Header in allen
+                                Tools, verbesserte Profileinbindung und wichtige Bugfixes für ein flüssiges
+                                Nutzererlebnis. 🎨✨🚀</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">✨
+                                        Globale Header-Standardisierung (Premium Glassmorphism)</span>
+                                    <span class="feature-tag">Nahtlose Integration von Benutzer-Avatar & Name in allen
+                                        Tools</span>
+                                    <span class="feature-tag">Fix: "Laden..." Anzeige korrigiert (restaurierte
+                                        CSS-Animationen)</span>
+                                    <span class="feature-tag">Support für separate Anzeigenamen (Display Name)
+                                        implementiert</span>
+                                    <span class="feature-tag">Zufallsgenerator: Fehlende Abhängigkeiten & Stabilität
+                                        gefixt</span>
+                                    <span class="feature-tag">Optimierung: "Start"-Navigation vereinheitlicht</span>
+                                    <span class="feature-tag">Clean: Veraltete Skripte und Fallbacks entfernt</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">🎨</span><span>Alle seiten/*.html</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">🔐</span><span>javascript/auth.js</span>
+                                    </div>
+                                    <div class="stat"><span
+                                            class="stat-icon">✨</span><span>stylesheets/animations.css</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Aktuelle Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.9 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🚀</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.9 – 04.02.2026</h3>
+                            <p class="game-description">Die Sharing-Revolution ist da! Geteilte Kataloge direkt im Chat
+                                öffnen, speichern und im Spiel starten. Jetzt mit Auto-Start & Bugfixes. 🎮💬🚀</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">✨
+                                        Komplettes Sharing-Ökosystem implementiert</span>
+                                    <span class="feature-tag">📤 Neuer "Teilen"-Button im Katalog-Editor</span>
+                                    <span class="feature-tag">🔍 Integrierte User-Suche für gezielten Versand</span>
+                                    <span class="feature-tag">💬 Chat-Integration: Interaktive Katalog-Karten im
+                                        Lehrer-Chat</span>
+                                    <span class="feature-tag">📥 Direkt-Laden: Kataloge mit einem Klick ins Spiel
+                                        holen</span>
+                                    <span class="feature-tag">🔄 Profil-Sync: Geteilte Kataloge dauerhaft
+                                        favorisieren/speichern</span>
+                                    <span class="feature-tag">✅ Workflow: Bestätigungsdialog & Jeopardy!
+                                        Auto-Start</span>
+                                    <span class="feature-tag">🗄️ Datenbank: Dedizierte DB-Tabelle 'shared_catalogs' für
+                                        maximale Stabilität</span>
+                                    <span class="feature-tag">🛠️ Fix: Alle 403 (Zutritt verweigert) & 404 (CSS/API)
+                                        Fehler
+                                        behoben</span>
+                                    <span class="feature-tag">📱 PWA: Modernisierung der Meta-Tags in der
+                                        game.html</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span
+                                            class="stat-icon">🧬</span><span>php/question_sets_api.php</span></div>
+                                    <div class="stat"><span
+                                            class="stat-icon">🛠️</span><span>javascript/script.js</span></div>
+                                    <div class="stat"><span
+                                            class="stat-icon">📂</span><span>javascript/question_sets.js</span></div>
+                                    <div class="stat"><span
+                                            class="stat-icon">💬</span><span>seiten/lehrer-chat.html</span></div>
+                                    <div class="stat"><span class="stat-icon">🎮</span><span>seiten/game.html</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.8 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🔔</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.8 – 01.02.2026</h3>
+                            <p class="game-description">Umfassendes Update für das Benachrichtigungs-System, Fix der
+                                Profilanzeige im Header und verbesserte UI-Konsistenz. 🚀🔔✨
+                            </p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🔔
+                                        Echtzeit-Benachrichtigungs-Badges für den Chat</span>
+                                    <span class="feature-tag">👤 Fix: Benutzeranzeige im Header ("??" behoben)</span>
+                                    <span class="feature-tag">🔄 Automatischer Seiten-Reload nach Login/Logout</span>
+                                    <span class="feature-tag">🔍 E-Mail-Suche im Chat ermöglicht</span>
+                                    <span class="feature-tag">🛠️ Korrektur der Verlinkung & Badge-Clipping</span>
+                                    <span class="feature-tag">⚙️ Hintergrund-Polling optimiert & abgesichert</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span
+                                            class="stat-icon">🔔</span><span>javascript/auth-ui.js</span></div>
+                                    <div class="stat"><span class="stat-icon">👤</span><span>javascript/auth.js</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">🏠</span><span>seiten/start.html</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.7 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🍪</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.7 – 18.01.2026</h3>
+                            <p class="game-description">Willkommens-E-Mail nach erfolgreicher Verifizierung & komplett
+                                überarbeitete Keks-Style Verifizierungsseite mit animiertem Keks-Regen! 🍪🎉✨</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">📧
+                                        Willkommens-E-Mail nach Verifizierung implementiert</span>
+                                    <span class="feature-tag">🍪 Neue `verification_result.html` im Keks-Design</span>
+                                    <span class="feature-tag">✨ Animierter Keks-Regen bei Erfolg</span>
+                                    <span class="feature-tag">🏷️ Username-Badge mit Glow & Animation</span>
+                                    <span class="feature-tag">📱 Verbesserte Accessibility & Responsive-Design</span>
+                                    <span class="feature-tag">🚀 Bugfix: E-Mail-Versand jetzt zuverlässig</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">📧</span><span>verify_email.php</span>
+                                    </div>
+                                    <div class="stat"><span
+                                            class="stat-icon">🍪</span><span>seiten/verification_result.html</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">📨</span><span>php/sendEmail.php</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.6 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">💬</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.6 – 17.01.2026</h3>
+                            <p class="game-description">Komplette Integration der modernen Chat-Anwendung im Microsoft
+                                Teams-Stil. Alle Pfade und APIs sind produktiv! 💻💬📦✨</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">✨
+                                        Neue Chat-App: Teams-Style UI/UX implementiert</span>
+                                    <span class="feature-tag">👥 Echte Benutzer & Chats aus der Datenbank</span>
+                                    <span class="feature-tag">🖼️ Bild- & Datei-Upload mit Instant-Vorschau</span>
+                                    <span class="feature-tag">🔐 Session-Login & granulare Rechteprüfung</span>
+                                    <span class="feature-tag">⚙️ API: Optimiert für Benutzer, Nachrichten &
+                                        Uploads</span>
+                                    <span class="feature-tag">🎨 Changelog-Design weiter verfeinert</span>
+                                    <span class="feature-tag">📚 Installationsanleitung & Struktur-Check</span>
+                                    <span class="feature-tag">🚀 Bugfix: Demo-Daten vollständig entfernt</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">💻</span><span>chat.php</span></div>
+                                    <div class="stat"><span class="stat-icon">🗂️</span><span>assets/uploads/</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">📦</span><span>php/chat_api.php</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.5 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">✨</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.5 – 17.01.2026</h3>
+                            <p class="game-description">Modernes UI/UX-Update für den Changelog-Bereich: Neue Karten,
+                                flüssige Animationen und einheitliche Buttons. 🖥️✨🎨🚀</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">📱
+                                        Changelog-Karten: Responsive Grid-System implementiert</span>
+                                    <span class="feature-tag">⚖️ Intelligentes Toggling: Nur eine Karte gleichzeitig
+                                        offen</span>
+                                    <span class="feature-tag">🚀 Performance-Boost durch `requestAnimationFrame`</span>
+                                    <span class="feature-tag">✨ Flüssige `max-height` Transitionen</span>
+                                    <span class="feature-tag">🎨 Modernisiertes Button-Design (Premium Look)</span>
+                                    <span class="feature-tag">🛠️ UI/UX-Fix: Überlappungen vollständig behoben</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">🖥️</span><span>seiten/start.html</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">🎨</span><span>stylesheets/ &
+                                            javascript/</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.4 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🔒</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.4 – 17.01.2026</h3>
+                            <p class="game-description">Großes Sicherheits- und Performance-Update für alle
+                                PHP-Funktionen und die E-Mail-Verifizierung. 🔐🚀⚙️🛡️</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🔒
+                                        Rate Limiting & Sicherheits-Header implementiert</span>
+                                    <span class="feature-tag">📝 Verbessertes Logging (IP, User-Agent,
+                                        Zeitstempel)</span>
+                                    <span class="feature-tag">🛡️ SQL-Injection-Schutz & Prepared Statements</span>
+                                    <span class="feature-tag">📧 Asynchroner E-Mail-Versand (Willkommensmail)</span>
+                                    <span class="feature-tag">📱 UI/UX: Animierte, responsive Verifizierungsseite</span>
+                                    <span class="feature-tag">⚡ Performance-Optimierungen für Datenbankabfragen</span>
+                                    <span class="feature-tag">🌐 `.htaccess` für Hetzner Hosting optimiert</span>
+                                    <span class="feature-tag">🛠️ PHP-Fehlerbehandlung & Namespace-Fixes</span>
+                                    <span class="feature-tag">🛡️ Sicherheits-Header & CSP verbessert</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">📧</span><span>verify_email.php</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">🔐</span><span>register.php</span></div>
+                                    <div class="stat"><span class="stat-icon">⚙️</span><span>.htaccess</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.3 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">💬</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.3 – 02.01.2026</h3>
+                            <p class="game-description">Feedback-System und E-Mail-Integration für Kontakt und
+                                Bug-Reports. Direktes Feedback per Formular! 💬🐞📨</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🐞
+                                        Zentrales Feedback-System & Modal implementiert</span>
+                                    <span class="feature-tag">🎯 Bezug-Auswahl mit Emojis</span>
+                                    <span class="feature-tag">✨ Feedback-Typen mit Emojis</span>
+                                    <span class="feature-tag">⚠️ Dringlichkeits-Auswahl bei Fehlern</span>
+                                    <span class="feature-tag">📋 Modernes, validiertes Formular</span>
+                                    <span class="feature-tag">📧 Feedback per E-Mail (PHPMailer)</span>
+                                    <span class="feature-tag">👤 Absenderadresse gefixt</span>
+                                    <span class="feature-tag">📨 Portfolio-Kontakt sendet E-Mail</span>
+                                    <span class="feature-tag">🏛️ Head-Bereich & Titel auf allen Seiten
+                                        vereinheitlicht</span>
+                                    <span class="feature-tag">🔐 Performance und Sicherheit verbessert</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">💬</span><span>seiten/start.html</span>
+                                    </div>
+                                    <div class="stat"><span
+                                            class="stat-icon">📧</span><span>php/sendPortfolioEmail.php</span></div>
+                                    <div class="stat"><span class="stat-icon">🐞</span><span>php/feedback.php</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.2 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🖥️</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.2 – 01.01.2026</h3>
+                            <p class="game-description">Umfassende Desktop-Optimierung für timer.html und
+                                zufallsgenerator.html mit Desktop-First-Ansatz. 🖥️⏰🎲🚀</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🖥️
+                                        Desktop-First & UX-Optimierung implementiert</span>
+                                    <span class="feature-tag">⏰ timer.html optimiert</span>
+                                    <span class="feature-tag">🎲 zufallsgenerator.html optimiert</span>
+                                    <span class="feature-tag">🎨 Desktop-First CSS</span>
+                                    <span class="feature-tag">🎡 Glücksrad-Animation</span>
+                                    <span class="feature-tag">🏷️ Glücksrad mit Beschriftungen</span>
+                                    <span class="feature-tag">🐞 "Laden..."-Bug behoben</span>
+                                    <span class="feature-tag">📱 Responsive Skalierung</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">⏰</span><span>seiten/timer.html</span>
+                                    </div>
+                                    <div class="stat"><span
+                                            class="stat-icon">🎲</span><span>seiten/zufallsgenerator.html</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.1.1 -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">🎨</div>
+                            <span class="game-badge">Vorherige Version</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.1.1 – 31.12.2025</h3>
+                            <p class="game-description">Umfassende Desktop-Optimierung und Anonymisierung für
+                                start.html, index.html und game.html. 🎨📱🏠🎮✨</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🎨
+                                        Desktop-Layout & Responsiveness optimiert</span>
+                                    <span class="feature-tag">📱 Responsive Design für alle Screens</span>
+                                    <span class="feature-tag">🔒 Anonymisierung wichtiger Daten</span>
+                                    <span class="feature-tag">🏛️ Footer auf allen Seiten vereinheitlicht</span>
+                                    <span class="feature-tag">✨ Footer-Inhalt verbessert</span>
+                                    <span class="feature-tag">🔗 Links öffnen im gleichen Tab</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">📱</span><span>seiten/start.html</span>
+                                    </div>
+                                    <div class="stat"><span class="stat-icon">🏠</span><span>index.html</span></div>
+                                    <div class="stat"><span class="stat-icon">🎮</span><span>seiten/game.html</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Vorherige Version</button>
+                        </div>
+                    </div>
+
+                    <!-- Version 1.0.0 (Erste Veröffentlichung) -->
+                    <div class="game-card changelog-card">
+                        <div class="game-card-header">
+                            <div class="game-icon">📦</div>
+                            <span class="game-badge">Erste Veröffentlichung</span>
+                        </div>
+                        <div class="game-card-body">
+                            <h3 class="game-title">Version 1.0.0 – 26.12.2025</h3>
+                            <p class="game-description">Erste stabile Veröffentlichung der Lehrer Tools mit
+                                Performance-Optimierungen und bereinigtem Code. 🚀📦✨</p>
+                            <button class="changelog-toggle-btn" type="button"
+                                onclick="toggleChangelogDetails(this)">Mehr anzeigen <span>▼</span></button>
+                            <div class="changelog-details"
+                                style="display:none;overflow:hidden;max-height:0;transition:max-height 0.35s cubic-bezier(.4,0,.2,1);">
+                                <div class="game-features">
+                                    <span class="feature-tag"
+                                        style="background: rgba(162, 89, 236, 0.2); color: #c77dff; font-weight: bold;">🚀
+                                        Erste stabile Veröffentlichung</span>
+                                    <span class="feature-tag">⚡ Performance-Optimierungen</span>
+                                    <span class="feature-tag">📝 Code bereinigt & strukturiert</span>
+                                    <span class="feature-tag">📋 Changelog hinzugefügt</span>
+                                </div>
+                                <div class="game-stats">
+                                    <div class="stat"><span class="stat-icon">✨</span><span>Stabile Version 1.0.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="game-card-footer">
+                            <button class="btn-play" disabled>Erste Veröffentlichung</button>
+                        </div>
+                    </div>
+
+                    <!-- Platzhalter für zukünftige Versionen -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="section-container">
+                <h2 class="section-title">Über das Projekt</h2>
+                <div class="about-content">
+                    <div class="about-card">
+                        <div class="about-icon">🏫</div>
+                        <h3>Für Bildung</h3>
+                        <p>Entwickelt für moderne Bildungseinrichtungen mit innovativen digitalen Lernmethoden.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">🎯</div>
+                        <h3>Unser Ziel</h3>
+                        <p>Wissen spielerisch vermitteln und das Lernen unterhaltsam gestalten.</p>
+                    </div>
+                    <div class="about-card">
+                        <div class="about-icon">🚀</div>
+                        <h3>Die Zukunft</h3>
+                        <p>Kontinuierliche Entwicklung neuer Spiele und Features.</p>
+                    </div>
+                    <div class="about-card full-width">
+                        <div class="about-icon">👤</div>
+                        <h3>Über mich</h3>
+                        <p>Erfahre mehr über den Entwickler und die Motivation hinter diesem Projekt.</p>
+                        <a href="../portfolio/Portfolio.html" class="btn btn-primary" style="margin-top:1.5rem;">Mehr
+                            über mich</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lehrer Tools</h4>
+                    <p style="color: #c77dff; line-height: 1.8; margin-top: 1rem;">Digitale Werkzeuge und Spiele für
+                        modernen Unterricht. Entwickelt mit Leidenschaft für Lehrerinnen und Lehrer.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#games">Spiele</a></li>
+                        <li><a href="#tools">Tools</a></li>
+                        <li><a href="#changelog">Changelog</a></li>
+                        <li><a href="#about">Über uns</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span class="footer-icon">⚡</span>
+                <span class="footer-text">Entwickelt mit Leidenschaft für moderne Bildung von Nico • 2025</span>
+                <span class="footer-icon">🎮</span>
+            </div>
+        </footer>
+        <!-- Feedback Modal -->
+        <script>
+            // Toggle für Changelog-Details (nur eine Karte wird lang, Animation optimiert)
+            function toggleChangelogDetails(btn) {
+                // Alle Karten und Details zurücksetzen
+                document.querySelectorAll('.game-card').forEach(function (card) {
+                    card.classList.remove('changelog-open');
+                });
+                document.querySelectorAll('.changelog-details').forEach(function (d) {
+                    if (d !== btn.nextElementSibling) {
+                        d.style.overflow = 'hidden';
+                        d.style.maxHeight = '0px';
+                        setTimeout(() => { d.style.display = "none"; }, 350);
+                        if (d.previousElementSibling && d.previousElementSibling.classList.contains('changelog-toggle-btn')) {
+                            d.previousElementSibling.classList.remove('open');
+                            d.previousElementSibling.innerHTML = 'Mehr anzeigen <span>▼</span>';
+                        }
+                        if (d.parentElement && d.parentElement.parentElement.classList.contains('game-card')) {
+                            d.parentElement.parentElement.classList.remove('changelog-open');
+                        }
+                    }
+                });
+                const details = btn.nextElementSibling;
+                const card = btn.closest('.game-card');
+                if (!details || !card) return;
+                const expanded = details.style.display === "block";
+                if (!expanded) {
+                    details.style.display = "block";
+                    // Timeout für reflow, damit Animation greift
+                    setTimeout(() => {
+                        details.style.overflow = 'hidden';
+                        details.style.maxHeight = details.scrollHeight + 'px';
+                    }, 10);
+                    btn.classList.add('open');
+                    btn.innerHTML = 'Weniger anzeigen <span>▼</span>';
+                    card.classList.add('changelog-open');
+                } else {
+                    details.style.maxHeight = '0px';
+                    setTimeout(() => {
+                        details.style.display = "none";
+                        card.classList.remove('changelog-open');
+                    }, 350);
+                    btn.classList.remove('open');
+                    btn.innerHTML = 'Mehr anzeigen <span>▼</span>';
+                }
+            }
+        </script>
+        <div id="feedbackModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="login-animation-container">
+                        <img src="../icons/logo-simple.svg" alt="Logo"
+                            style="width:48px;height:48px;filter:drop-shadow(0 0 12px #9d4edd);">
+                    </div>
+                    <h3 class="epic-login-title">Feedback geben</h3>
+                    <button class="modal-close-btn" id="closeFeedbackBtn" aria-label="Schließen">✖</button>
+                </div>
+                <form id="feedbackForm" class="auth-form" autocomplete="off">
+                    <div class="form-group">
+                        <label for="feedbackTarget">Bezug:</label>
+                        <select id="feedbackTarget" class="epic-input" required>
+                            <option value="">Bitte wählen…</option>
+                            <option value="Webseite">🌐 Webseite allgemein</option>
+                            <option value="Jeopardy Quiz">🎯 Jeopardy Quiz</option>
+                            <option value="Stadt Land Fluss">🌍 Stadt Land Fluss</option>
+                            <option value="Timer">⏰ Timer</option>
+                            <option value="Zufalls-Generator">🎲 Zufalls-Generator</option>
+                            <option value="Noten-Rechner">📊 Noten-Rechner</option>
+                            <option value="Aufgaben-Roulette">🎡 Aufgaben-Roulette</option>
+                            <option value="Sonstiges">✨ Sonstiges</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackType">Art des Feedbacks:</label>
+                        <select id="feedbackType" class="epic-input" required>
+                            <option value="">Bitte wählen…</option>
+                            <option value="Fehler">🐞 Fehler/Bug</option>
+                            <option value="Vorschlag">💡 Vorschlag/Feature</option>
+                            <option value="Lob">🌟 Lob</option>
+                            <option value="Kritik">📝 Kritik</option>
+                            <option value="Frage">❓ Frage</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackSeverity">Wie stark betrifft der Fehler die Nutzung?:</label>
+                        <select id="feedbackSeverity" class="epic-input">
+                            <option value="">Bitte wählen…</option>
+                            <option value="niedrig">🟢 Niedrig</option>
+                            <option value="mittel">🟡 Mittel</option>
+                            <option value="hoch">🟠 Hoch</option>
+                            <option value="kritisch">🔴 Kritisch</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackName">Name (optional):</label>
+                        <input type="text" id="feedbackName" class="epic-input" maxlength="50" placeholder="Dein Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackEmail">E-Mail (optional):</label>
+                        <input type="email" id="feedbackEmail" class="epic-input" maxlength="100"
+                            placeholder="E-Mail-Adresse">
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackReason">Grund / Nachricht:</label>
+                        <textarea id="feedbackReason" class="epic-input" rows="2" maxlength="300" required
+                            placeholder="Was möchtest du mitteilen?"></textarea>
+                    </div>
+                    <div class="form-group" id="feedbackErrorDescGroup" style="display:none;">
+                        <label for="feedbackErrorDesc">Fehlerbeschreibung (wie/wo/wann?):</label>
+                        <textarea id="feedbackErrorDesc" class="epic-input" rows="2" maxlength="400"
+                            placeholder="Wie ist der Fehler entstanden? Wo und wann?"></textarea>
+                    </div>
+                    <div id="feedbackMsg" class="auth-info" style="display:none;"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="modal-btn btn-primary">Absenden</button>
+                        <button type="button" class="modal-btn-secondary" id="cancelFeedbackBtn">Abbrechen</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="login-animation-container">
+                        <img src="../icons/logo-simple.svg" alt="Logo"
+                            style="width:48px;height:48px;filter:drop-shadow(0 0 12px #9d4edd);">
+                    </div>
+                    <h3 class="epic-login-title">Anmelden</h3>
+                    <button class="modal-close-btn" id="closeLoginBtn" aria-label="Schließen">✖</button>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login">Anmelden</button>
+                        <button class="auth-tab" data-tab="register">Registrieren</button>
+                    </div>
+                    <form id="loginForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="loginUsername">Benutzername:</label>
+                            <input type="text" id="loginUsername" class="epic-input" placeholder="Benutzername" required
+                                autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Passwort:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="loginPassword" class="epic-input" placeholder="Passwort"
+                                    required autocomplete="current-password">
+                                <span class="toggle-password" id="toggleLoginPassword"
+                                    title="Passwort anzeigen">👁️</span>
+                            </div>
+                            <div style="text-align: right; margin-top: 8px;">
+                                <a href="#" data-action="forgot-password"
+                                    style="color: #c77dff; font-size: 0.875rem; text-decoration: none; transition: color 0.3s ease;"
+                                    onmouseover="this.style.color='#e0aaff'" onmouseout="this.style.color='#c77dff'">
+                                    Passwort vergessen?
+                                </a>
+                            </div>
+                        </div>
+                        <div id="loginError" class="auth-error" style="display: none;"></div>
+                        <div id="loginSuccess" class="auth-success" style="display: none;"></div>
+                    </form>
+                    <form id="registerForm" class="auth-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="registerUsername">Benutzername:</label>
+                            <input type="text" id="registerUsername" class="epic-input" placeholder="Min. 3 Zeichen"
+                                required autocomplete="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">E-Mail:</label>
+                            <input type="email" id="registerEmail" class="epic-input" placeholder="E-Mail-Adresse"
+                                required autocomplete="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Passwort:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="registerPassword" class="epic-input"
+                                    placeholder="Min. 6 Zeichen" required autocomplete="new-password">
+                                <span class="toggle-password" id="toggleRegisterPassword"
+                                    title="Passwort anzeigen">👁️</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPasswordConfirm">Passwort bestätigen:</label>
+                            <div class="epic-password-wrapper">
+                                <input type="password" id="registerPasswordConfirm" class="epic-input"
+                                    placeholder="Wiederholen" required autocomplete="new-password">
+                                <span class="toggle-password" id="toggleRegisterPasswordConfirm"
+                                    title="Passwort anzeigen">👁️</span>
+                            </div>
+                        </div>
+                        <div id="registerError" class="auth-error" style="display: none;"></div>
+                        <div id="registerSuccess" class="auth-success" style="display: none;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="submitLoginBtn" class="modal-btn btn-primary">Anmelden</button>
+                    <button type="button" id="submitRegisterBtn" class="modal-btn btn-primary"
+                        style="display: none;">Registrieren</button>
+                    <button type="button" id="cancelLoginBtn" class="modal-btn-secondary">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../javascript/auth.js"></script>
+    <script src="../javascript/auth-ui.js"></script>
+    <script src="../javascript/animations.js"></script>
+    <script src="../javascript/responsive.js?v=1.2"></script>
+    <script src="../javascript/main.js"></script>
+    <script src="../javascript/password-reset-ui.js"></script>
+    </main>
+    <script>
+        // Feedback Modal Logik
+        const openFeedbackBtn = document.getElementById('openFeedbackBtn');
+        const feedbackModal = document.getElementById('feedbackModal');
+        const closeFeedbackBtn = document.getElementById('closeFeedbackBtn');
+        const cancelFeedbackBtn = document.getElementById('cancelFeedbackBtn');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const feedbackType = document.getElementById('feedbackType');
+        const feedbackErrorDescGroup = document.getElementById('feedbackErrorDescGroup');
+        const feedbackSeverityGroup = document.getElementById('feedbackSeverity').closest('.form-group');
+        const feedbackMsg = document.getElementById('feedbackMsg');
+
+        openFeedbackBtn.addEventListener('click', () => {
+            feedbackModal.classList.remove('hidden');
+        });
+        closeFeedbackBtn.addEventListener('click', () => {
+            feedbackModal.classList.add('hidden');
+            feedbackForm.reset();
+            feedbackMsg.style.display = 'none';
+            feedbackErrorDescGroup.style.display = 'none';
+            feedbackSeverityGroup.style.display = 'none';
+        });
+        cancelFeedbackBtn.addEventListener('click', () => {
+            feedbackModal.classList.add('hidden');
+            feedbackForm.reset();
+            feedbackMsg.style.display = 'none';
+            feedbackErrorDescGroup.style.display = 'none';
+            feedbackSeverityGroup.style.display = 'none';
+        });
+        // Zeige Schweregrad und Fehlerbeschreibung nur bei Fehler
+        feedbackType.addEventListener('change', function () {
+            if (this.value === 'Fehler') {
+                feedbackSeverityGroup.style.display = '';
+                feedbackErrorDescGroup.style.display = '';
+            } else {
+                feedbackSeverityGroup.style.display = 'none';
+                feedbackErrorDescGroup.style.display = 'none';
+                document.getElementById('feedbackSeverity').value = '';
+                document.getElementById('feedbackErrorDesc').value = '';
+            }
+        });
+        // Initial ausblenden
+        feedbackSeverityGroup.style.display = 'none';
+
+
+
+        feedbackForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            feedbackMsg.style.display = 'block';
+            feedbackMsg.textContent = 'Feedback wird gesendet...';
+            feedbackMsg.className = 'auth-info';
+
+            const formData = new FormData();
+            formData.append('target', document.getElementById('feedbackTarget').value);
+            formData.append('type', document.getElementById('feedbackType').value);
+            formData.append('severity', document.getElementById('feedbackSeverity').value);
+            formData.append('name', document.getElementById('feedbackName').value);
+            formData.append('email', document.getElementById('feedbackEmail').value);
+            formData.append('reason', document.getElementById('feedbackReason').value);
+            formData.append('errorDesc', document.getElementById('feedbackErrorDesc').value);
+
+            fetch('../php/feedback.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        feedbackMsg.textContent = data.msg || 'Vielen Dank für dein Feedback!';
+                        feedbackMsg.className = 'auth-success';
+                        feedbackForm.reset();
+                        feedbackErrorDescGroup.style.display = 'none';
+                        setTimeout(() => {
+                            feedbackModal.classList.add('hidden');
+                            feedbackMsg.style.display = 'none';
+                        }, 1800);
+                    } else {
+                        feedbackMsg.textContent = data.msg || 'Fehler beim Senden.';
+                        feedbackMsg.className = 'auth-error';
+                    }
+                })
+                .catch(() => {
+                    feedbackMsg.textContent = 'Netzwerkfehler. Bitte später erneut versuchen.';
+                    feedbackMsg.className = 'auth-error';
+                });
+        });
+    </script>
+</body>
+
+</html>
